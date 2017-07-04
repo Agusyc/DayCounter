@@ -5,14 +5,15 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
 import android.util.Log;
 import android.widget.RemoteViews;
+
+import org.joda.time.DateTime;
+import org.joda.time.Days;
 
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
 
 public class WidgetUpdater extends AppWidgetProvider {
 
@@ -78,35 +79,30 @@ public class WidgetUpdater extends AppWidgetProvider {
             // We get all the needed data
             String key_base = Integer.toString(appWidgetId);
             String label = prefs.getString(key_base + "label", "");
-            Long date = prefs.getLong(key_base + "date", 0);
-            Long currentTime = System.currentTimeMillis();
-            Long difference = currentTime - date;
+            long date = prefs.getLong(key_base + "date", 0);
+            long currentTime = System.currentTimeMillis();
+
+            // We use the Joda-Time method to calculate the difference
+            int difference = Days.daysBetween(new DateTime(date), new DateTime(currentTime)).getDays();
 
             String type;
 
-            // We check the sign of the number (Positive or negative)
+            // We check the sign of the number (Positive or negative). So we know if we use "since" or "until"
             // TODO: Add special case for when the number is 0
             if (difference > 0) {
                 type = context.getString(R.string.days_since);
             } else {
-                type = context.getString(R.string.days_for);
+                type = context.getString(R.string.days_until);
             }
 
             views.setTextViewText(R.id.txtLabel, type + " " + label);
 
-
             Log.d("WidgetUpdater", "Updating widget " + appWidgetId + " with label " + label + ", original/target date " + date);
 
-            float dayCount = Math.abs(TimeUnit.DAYS.convert(difference, TimeUnit.MILLISECONDS));
+            Log.d("WidgetUpdater", "The new difference is " + difference + ". The current time is " + currentTime);
 
-            Log.d("WidgetUpdater", "The new difference is " + dayCount + ". The current time is " + currentTime);
-
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                views.setTextViewText(R.id.txtDays, String.format(context.getResources().getConfiguration().getLocales().get(0), "%.0f", dayCount));
-            } else {
-                //noinspection deprecation
-                views.setTextViewText(R.id.txtDays, String.format(context.getResources().getConfiguration().locale, "%.0f", dayCount));
-            }
+            // We set the days text to the *absolute* difference
+            views.setTextViewText(R.id.txtDays, Integer.toString(Math.abs(difference)));
 
             // Tell the AppWidgetManager to perform an update on the current app widget
             appWidgetManager.updateAppWidget(appWidgetId, views);

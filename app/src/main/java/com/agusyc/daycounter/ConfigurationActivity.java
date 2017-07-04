@@ -13,6 +13,8 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import org.joda.time.DateTime;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -35,7 +37,7 @@ public class ConfigurationActivity extends AppCompatActivity {
 
         ArrayList<String> types = new ArrayList<>();
         types.add(" " + getString(R.string.days_since) + " ");
-        types.add(" " + getString(R.string.days_for) + " ");
+        types.add(" " + getString(R.string.days_until) + " ");
 
         // Creating adapter for the Spinner
         final ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, types);
@@ -50,7 +52,7 @@ public class ConfigurationActivity extends AppCompatActivity {
                 if (i == 0) {
                     edtLabel.setHint(getString(R.string.days_since_hint));
                 } else {
-                    edtLabel.setHint(getString(R.string.days_for_hint));
+                    edtLabel.setHint(getString(R.string.days_until_hint));
                 }
             }
 
@@ -83,21 +85,22 @@ public class ConfigurationActivity extends AppCompatActivity {
 
                     currentIDs_set.add(key_base);
 
-                    Long date;
-
                     try {
+                        DateTime date = new DateTime(System.currentTimeMillis());
 
                         if (spnType.getSelectedItemPosition() == 0) {
-                            date = System.currentTimeMillis() - 86400000 * Integer.parseInt(edtDays.getText().toString());
+                            date = date.minusDays(Integer.parseInt(edtDays.getText().toString()));
+                            Log.d("ad", date.toString());
                         } else {
-                            date = System.currentTimeMillis() + 86400000 * Integer.parseInt(edtDays.getText().toString());
+                            date = date.plusDays(Integer.parseInt(edtDays.getText().toString()));
+                            Log.d("ad", date.toString());
                         }
 
                         prefs.edit().putString(key_base + "label", edtLabel.getText().toString()).apply();
-                        prefs.edit().putLong(key_base + "date", date).apply();
+                        prefs.edit().putLong(key_base + "date", date.getMillis()).apply();
                         prefs.edit().putStringSet("ids", currentIDs_set).apply();
 
-                        Log.d("ConfigurationActivity", "Added new Widget with label" + edtLabel.getText() + ", ID " + key_base + " and date " + date);
+                        Log.d("ConfigurationActivity", "Added new Widget with label" + edtLabel.getText() + ", ID " + key_base + " and date " + date.getMillis());
 
                         Intent update_intent = new Intent("com.agusyc.daycounter.UPDATE_WIDGETS");
                         sendBroadcast(update_intent);
