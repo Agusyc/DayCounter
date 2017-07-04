@@ -4,8 +4,6 @@ import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.support.constraint.ConstraintLayout;
-import android.support.constraint.ConstraintSet;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -28,17 +26,12 @@ public class ConfigurationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuration);
 
+        // We instantiate all the Views
         final EditText edtDays = (EditText) findViewById(R.id.edtDays);
 
         final EditText edtLabel = (EditText) findViewById(R.id.edtLabel);
 
         final Spinner spnType = (Spinner) findViewById(R.id.spnType);
-
-        final ConstraintLayout constraintLayout = (ConstraintLayout) findViewById(R.id.lytMain);
-
-        final ConstraintSet set = new ConstraintSet();
-
-        set.clone(constraintLayout);
 
         ArrayList<String> types = new ArrayList<>();
         types.add(" " + getString(R.string.days_since) + " ");
@@ -62,7 +55,8 @@ public class ConfigurationActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {}
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
         });
 
         Intent intent = getIntent();
@@ -91,23 +85,28 @@ public class ConfigurationActivity extends AppCompatActivity {
 
                     Long date;
 
-                    if (spnType.getSelectedItemPosition() == 0) {
-                        date = System.currentTimeMillis() - 86400000 * Integer.parseInt(edtDays.getText().toString());
-                    } else {
-                        date = System.currentTimeMillis() + 86400000 * Integer.parseInt(edtDays.getText().toString());
+                    try {
+
+                        if (spnType.getSelectedItemPosition() == 0) {
+                            date = System.currentTimeMillis() - 86400000 * Integer.parseInt(edtDays.getText().toString());
+                        } else {
+                            date = System.currentTimeMillis() + 86400000 * Integer.parseInt(edtDays.getText().toString());
+                        }
+
+                        prefs.edit().putString(key_base + "label", edtLabel.getText().toString()).apply();
+                        prefs.edit().putLong(key_base + "date", date).apply();
+                        prefs.edit().putStringSet("ids", currentIDs_set).apply();
+
+                        Log.d("ConfigurationActivity", "Added new Widget with label" + edtLabel.getText() + ", ID " + key_base + " and date " + date);
+
+                        Intent update_intent = new Intent("com.agusyc.daycounter.UPDATE_WIDGETS");
+                        sendBroadcast(update_intent);
+
+                        setResult(RESULT_OK, resultValue);
+                        finish();
+                    } catch (NumberFormatException e) {
+                        edtDays.setError("This number is too big!");
                     }
-
-                    prefs.edit().putString(key_base + "label", edtLabel.getText().toString()).apply();
-                    prefs.edit().putLong(key_base + "date", date).apply();
-                    prefs.edit().putStringSet("ids", currentIDs_set).apply();
-
-                    Log.d("ConfigurationActivity", "Added new Widget with label" + edtLabel.getText() + ", ID " + key_base + " and date " + date);
-
-                    Intent update_intent = new Intent("com.agusyc.daycounter.UPDATE_WIDGETS");
-                    sendBroadcast(update_intent);
-
-                    setResult(RESULT_OK, resultValue);
-                    finish();
                 }
             }
         });

@@ -18,23 +18,32 @@ public class WidgetUpdater extends AppWidgetProvider {
 
     @Override
     public void onReceive(Context context, Intent intent) {
+        // The receiver caught a broadcast:
         Log.d("WidgetUpdater", "Broadcast received! Action: " + intent.getAction());
+        // If the action isn't null, we check if the broadcast is telling us that a widget has been deleted
         if (intent.getAction() != null) {
             if (intent.getAction().equals("android.appwidget.action.APPWIDGET_DELETED")) {
+                // We call the deleteWidget method, that deletes the widget from the prefs
                 deleteWidget(context, intent.getExtras().getInt(AppWidgetManager.EXTRA_APPWIDGET_ID));
             }
         }
 
+        // This means that the broadcast was sent from the UpdateBroadcastReceiver:
         if (intent.hasExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS)) {
             Log.d("WidgetUpdater", "IDs available. Updating widgets...");
             int[] ids = intent.getExtras().getIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS);
+            // We update the widgets
             this.onUpdate(context, AppWidgetManager.getInstance(context), ids);
-        } else super.onReceive(context, intent);
+        } else {
+            // This is in case it wasn't.
+            super.onReceive(context, intent);
+        }
     }
 
     private void deleteWidget(Context context, int id) {
         Log.d("MainActivity", "Removing widget with id " + id);
 
+        // We remove the label and date from the preferences
         SharedPreferences prefs = context.getSharedPreferences("DaysPrefs", Context.MODE_PRIVATE);
         prefs.edit().remove(id + "label").apply();
         prefs.edit().remove(id + "date").apply();
@@ -51,6 +60,7 @@ public class WidgetUpdater extends AppWidgetProvider {
             }
         }
 
+        // We put the new set to the prefs
         prefs.edit().putStringSet("ids", ids_set).apply();
     }
 
@@ -65,6 +75,7 @@ public class WidgetUpdater extends AppWidgetProvider {
             // We get all the views that are in the widget
             RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.daycounter);
 
+            // We get all the needed data
             String key_base = Integer.toString(appWidgetId);
             String label = prefs.getString(key_base + "label", "");
             Long date = prefs.getLong(key_base + "date", 0);
@@ -73,6 +84,8 @@ public class WidgetUpdater extends AppWidgetProvider {
 
             String type;
 
+            // We check the sign of the number (Positive or negative)
+            // TODO: Add special case for when the number is 0
             if (difference > 0) {
                 type = context.getString(R.string.days_since);
             } else {
@@ -80,6 +93,7 @@ public class WidgetUpdater extends AppWidgetProvider {
             }
 
             views.setTextViewText(R.id.txtLabel, type + " " + label);
+
 
             Log.d("WidgetUpdater", "Updating widget " + appWidgetId + " with label " + label + ", original/target date " + date);
 

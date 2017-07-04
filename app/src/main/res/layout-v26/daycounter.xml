@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/layout_background"
-    android:weightSum="5">
+    android:weightSum="5" >
 
     <TextView
         android:id="@+id/txtThereAre"
@@ -21,7 +21,8 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_weight="3"
-        android:textSize="24sp"
+        android:textSize="30sp"
+        android:autoSizeTextType="uniform"
         android:textStyle="bold"
         android:textAlignment="center"
         android:textColor="@android:color/white" />
