@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">Day Counter</string>
+    <string name="days_since">días desde</string>
+    <string name="days_for">días para</string>
+    <string name="there_are">Hay</string>
+    <string name="ok">Aceptar</string>
+    <string name="number_of_days">Número de días</string>
+    <string name="days_since_hint">Algo que de lo que estás contando los días que pasaron</string>
+    <string name="days_for_hint">Algo de lo que estás contando los días que faltan para que pase</string>
+</resources>
