@@ -125,17 +125,28 @@ public class ConfigurationActivity extends AppCompatActivity {
             }
         });
 
-        GridLayout colorView = (GridLayout) findViewById(R.id.colorView);
+        final GridLayout colorView = (GridLayout) findViewById(R.id.colorView);
 
         for (int i = 0; i < colorView.getChildCount(); i++) {
-               final View v = colorView.getChildAt(i);
-               v.setOnClickListener(new View.OnClickListener() {
-                   @Override
-                   public void onClick(View view) {
-                       selectedColor = ((ColorImageView) v).getColor();
-                       Log.d("ConfigurationActivity", "The new color is " + selectedColor);
-                   }
-               });
-            }
+            final ColorImageView v = (ColorImageView) colorView.getChildAt(i);
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    for (int j = 0; j < colorView.getChildCount(); j++) {
+                        final ColorImageView in_view = (ColorImageView) colorView.getChildAt(j);
+                        in_view.setColorFilter(in_view.getColor());
+
+                    }
+
+                    selectedColor = v.getColor();
+
+                    float[] hsv = new float[3];
+                    Color.colorToHSV(selectedColor, hsv);
+                    hsv[2] *= 0.6f; // We make the color darker with this
+
+                    ((ColorImageView) view).setColorFilter(Color.HSVToColor(hsv));
+                }
+            });
+        }
     }
 }

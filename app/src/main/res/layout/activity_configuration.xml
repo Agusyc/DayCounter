@@ -14,9 +14,7 @@
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        tools:layout_editor_absoluteX="0dp"
-        android:textColor="@android:color/white" />
+        app:layout_constraintEnd_toEndOf="parent" />
 
     <EditText
         android:id="@+id/edtDays"
@@ -26,9 +24,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         android:inputType="numberDecimal"
-        android:hint="@string/number_of_days"
-        android:textColor="@android:color/white"
-        android:textColorHint="@android:color/white" />
+        android:hint="@string/number_of_days" />
 
     <EditText
         android:id="@+id/edtLabel"
@@ -38,9 +34,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/spnType"
         android:inputType="textAutoCorrect"
-        android:maxLength="30"
-        android:textColor="@android:color/white"
-        android:textColorHint="@android:color/white" />
+        android:maxLength="30" />
 
     <GridLayout
         android:id="@+id/colorView"
