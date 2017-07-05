@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:background="@drawable/layout_background"
-    android:weightSum="5" >
+    android:weightSum="5">
 
     <TextView
         android:id="@+id/txtThereAre"

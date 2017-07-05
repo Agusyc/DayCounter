@@ -3,6 +3,7 @@ package com.agusyc.daycounter;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -12,6 +13,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import org.joda.time.DateTime;
 
@@ -28,6 +30,8 @@ public class ConfigurationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuration);
 
+        findViewById(R.id.lytMain).setBackgroundColor(Color.parseColor("#3F51B5"));
+
         // We instantiate all the Views
         final EditText edtDays = (EditText) findViewById(R.id.edtDays);
 
@@ -42,7 +46,7 @@ public class ConfigurationActivity extends AppCompatActivity {
         // Creating adapter for the Spinner
         final ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, types);
 
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        dataAdapter.setDropDownViewResource(R.layout.spinner_item);
 
         spnType.setAdapter(dataAdapter);
 
@@ -53,6 +57,12 @@ public class ConfigurationActivity extends AppCompatActivity {
                     edtLabel.setHint(getString(R.string.days_since_hint));
                 } else {
                     edtLabel.setHint(getString(R.string.days_until_hint));
+                }
+
+                try {
+                    ((TextView) adapterView.getChildAt(0)).setTextColor(Color.WHITE);
+                } catch (NullPointerException e) {
+                    e.printStackTrace();
                 }
             }
 

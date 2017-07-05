@@ -7,4 +7,6 @@
     <string name="number_of_days">Number of days</string>
     <string name="days_since_hint">Something that you are counting days since it happened</string>
     <string name="days_until_hint">Something that you are counting days until it happens</string>
+    <string name="there_is_nothing1">There is nothing here!</string>
+    <string name="there_is_nothing2">Add some widgets on your home screen and you will be able to see and edit them here.</string>
 </resources>
