@@ -5,5 +5,4 @@
     android:previewImage="@drawable/preview"
     android:initialLayout="@layout/daycounter"
     android:configure="com.agusyc.daycounter.ConfigurationActivity"
-    android:resizeMode="horizontal|vertical"
-    android:widgetCategory="home_screen"></appwidget-provider>
+    android:widgetCategory="home_screen" />

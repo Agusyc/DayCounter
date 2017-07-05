@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.GridLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -24,13 +25,12 @@ import java.util.Set;
 public class ConfigurationActivity extends AppCompatActivity {
 
     private int mAppWidgetId;
+    private int selectedColor;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuration);
-
-        findViewById(R.id.lytMain).setBackgroundColor(Color.parseColor("#3F51B5"));
 
         // We instantiate all the Views
         final EditText edtDays = (EditText) findViewById(R.id.edtDays);
@@ -108,6 +108,7 @@ public class ConfigurationActivity extends AppCompatActivity {
 
                         prefs.edit().putString(key_base + "label", edtLabel.getText().toString()).apply();
                         prefs.edit().putLong(key_base + "date", date.getMillis()).apply();
+                        prefs.edit().putInt(key_base + "color", selectedColor).apply();
                         prefs.edit().putStringSet("ids", currentIDs_set).apply();
 
                         Log.d("ConfigurationActivity", "Added new Widget with label" + edtLabel.getText() + ", ID " + key_base + " and date " + date.getMillis());
@@ -123,5 +124,18 @@ public class ConfigurationActivity extends AppCompatActivity {
                 }
             }
         });
+
+        GridLayout colorView = (GridLayout) findViewById(R.id.colorView);
+
+        for (int i = 0; i < colorView.getChildCount(); i++) {
+               final View v = colorView.getChildAt(i);
+               v.setOnClickListener(new View.OnClickListener() {
+                   @Override
+                   public void onClick(View view) {
+                       selectedColor = ((ColorImageView) v).getColor();
+                       Log.d("ConfigurationActivity", "The new color is " + selectedColor);
+                   }
+               });
+            }
     }
 }

@@ -5,6 +5,15 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffXfermode;
+import android.graphics.Rect;
+import android.graphics.RectF;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.widget.RemoteViews;
 
@@ -104,8 +113,44 @@ public class WidgetUpdater extends AppWidgetProvider {
             // We set the days text to the *absolute* difference
             views.setTextViewText(R.id.txtDays, Integer.toString(Math.abs(difference)));
 
+            DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+            int width  = Math.round(100 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+            int height = Math.round(40 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+
+            Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
+            Canvas canvas = new Canvas(bmp);
+            canvas.drawColor(prefs.getInt(appWidgetId + "color", Color.BLUE));
+
+            views.setImageViewBitmap(R.id.bkgView, getRoundedCornerStrokedBitmap(context, bmp, 5, 5));
+
             // Tell the AppWidgetManager to perform an update on the current app widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }
+    }
+
+    private Bitmap getRoundedCornerStrokedBitmap(Context context, Bitmap bitmap, int widthDp, int heightDp) {
+        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap
+                .getHeight(), Bitmap.Config.ARGB_8888);
+        Canvas canvas = new Canvas(output);
+
+        final int color = 0xff424242;
+        final Paint paint = new Paint();
+        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
+        final RectF rectF = new RectF(rect);
+
+
+        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
+        final int heightPx = Math.round(heightDp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+        final int widthPx = Math.round(widthDp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+
+        paint.setAntiAlias(true);
+        canvas.drawARGB(0, 0, 0, 0);
+        paint.setColor(color);
+        canvas.drawRoundRect(rectF, (float) widthPx, (float) heightPx, paint);
+
+        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
+        canvas.drawBitmap(bitmap, rect, rect, paint);
+
+        return output;
     }
 }
