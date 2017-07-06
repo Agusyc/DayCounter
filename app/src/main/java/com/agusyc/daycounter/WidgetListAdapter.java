@@ -3,6 +3,7 @@ package com.agusyc.daycounter;
 import android.content.Context;
 import android.support.annotation.NonNull;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -32,30 +33,33 @@ class WidgetListAdapter extends ArrayAdapter<Widget> {
         }
 
         assert widget != null;
-        String type;
         long date = widget.getDate();
         long currentTime = System.currentTimeMillis();
 
         int difference = Days.daysBetween(new DateTime(date), new DateTime(currentTime)).getDays();
 
-        // We check the sign of the number (Positive or negative)
-        // TODO: Add special case for when the number is 0
-        if (difference > 0) {
-            type = getContext().getString(R.string.days_since);
-        } else {
-            type = getContext().getString(R.string.days_until);
-        }
-
-        TextView txtLabel = convertView.findViewById(R.id.txtLabel);
-
-        txtLabel.setText(type + " " + widget.getLabel());
-
-        Log.d("WidgetUpdater", "Adding widget " + widget.getID() + " with label " + widget.getLabel() + ", original/target date " + date);
-
         TextView txtDays = convertView.findViewById(R.id.txtDays);
 
         // We set the days text to the *absolute* difference
         txtDays.setText(Integer.toString(Math.abs(difference)));
+
+        TextView txtLabel = convertView.findViewById(R.id.txtLabel);
+
+        // We check the sign of the number (Positive or negative)
+        if (difference > 0) {
+
+            txtLabel.setText(getContext().getString(R.string.days_since) + " " + widget.getLabel());
+        } else if (difference < 0) {
+            txtLabel.setText(getContext().getString(R.string.days_until) + " " + widget.getLabel());
+        } else {
+            txtLabel.setText(getContext().getString(R.string.there_are_no_days_since) + " " + widget.getLabel() + ". " + getContext().getString(R.string.today));
+            txtLabel.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
+
+            txtDays.setVisibility(View.GONE);
+            convertView.findViewById(R.id.txtThereAre).setVisibility(View.GONE);
+        }
+
+        Log.d("WidgetUpdater", "Adding widget " + widget.getID() + " with label " + widget.getLabel() + ", original/target date " + date);
 
         Log.d("WidgetUpdater", "The new difference is " + difference + ". The current time is " + currentTime);
 

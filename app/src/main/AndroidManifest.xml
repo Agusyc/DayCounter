@@ -26,6 +26,7 @@
         <receiver android:name=".WidgetUpdater">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="com.agusyc.daycounter.RESET_COUNTER" />
             </intent-filter>
 
             <meta-data
@@ -41,6 +42,7 @@
                 <action android:name="com.agusyc.daycounter.UPDATE_WIDGETS" />
             </intent-filter>
         </receiver>
+
     </application>
 
 </manifest>

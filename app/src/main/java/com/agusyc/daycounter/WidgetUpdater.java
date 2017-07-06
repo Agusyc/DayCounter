@@ -1,5 +1,6 @@
 package com.agusyc.daycounter;
 
+import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
 import android.content.Context;
@@ -15,6 +16,8 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.TypedValue;
+import android.view.View;
 import android.widget.RemoteViews;
 
 import org.joda.time.DateTime;
@@ -26,27 +29,33 @@ import java.util.Set;
 
 public class WidgetUpdater extends AppWidgetProvider {
 
+    public static String WIDGET_BUTTON = "com.agusyc.daycounter.RESET_COUNTER";
+
     @Override
     public void onReceive(Context context, Intent intent) {
+        super.onReceive(context, intent);
+
         // The receiver caught a broadcast:
         Log.d("WidgetUpdater", "Broadcast received! Action: " + intent.getAction());
-        // If the action isn't null, we check if the broadcast is telling us that a widget has been deleted
+
         if (intent.getAction() != null) {
+            // We check if the broadcast is telling us that a widget has been deleted
             if (intent.getAction().equals("android.appwidget.action.APPWIDGET_DELETED")) {
                 // We call the deleteWidget method, that deletes the widget from the prefs
                 deleteWidget(context, intent.getExtras().getInt(AppWidgetManager.EXTRA_APPWIDGET_ID));
-            }
-        }
+            } else if (intent.getAction().equals(WIDGET_BUTTON)) {
+                // Here, the button was clicked
+                SharedPreferences prefs = context.getSharedPreferences("DaysPrefs", Context.MODE_PRIVATE);
 
-        // This means that the broadcast was sent from the UpdateBroadcastReceiver:
-        if (intent.hasExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS)) {
-            Log.d("WidgetUpdater", "IDs available. Updating widgets...");
-            int[] ids = intent.getExtras().getIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS);
-            // We update the widgets
-            this.onUpdate(context, AppWidgetManager.getInstance(context), ids);
-        } else {
-            // This is in case it wasn't.
-            super.onReceive(context, intent);
+                String key_base = Integer.toString(intent.getIntExtra("id", 0));
+                prefs.edit().putLong(key_base + "date", System.currentTimeMillis()).apply();
+                onUpdate(context, AppWidgetManager.getInstance(context), new int[]{intent.getIntExtra("id", 0)});
+            } else if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
+                Log.d("WidgetUpdater", "Updating widgets...");
+                int[] ids = intent.getExtras().getIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS);
+                // We update the widgets
+                this.onUpdate(context, AppWidgetManager.getInstance(context), ids);
+            }
         }
     }
 
@@ -57,6 +66,8 @@ public class WidgetUpdater extends AppWidgetProvider {
         SharedPreferences prefs = context.getSharedPreferences("DaysPrefs", Context.MODE_PRIVATE);
         prefs.edit().remove(id + "label").apply();
         prefs.edit().remove(id + "date").apply();
+        prefs.edit().remove(id + "color").apply();
+        prefs.edit().remove(id + "color_index").apply();
 
         Set<String> ids_set = prefs.getStringSet("ids", new HashSet<String>());
 
@@ -94,24 +105,34 @@ public class WidgetUpdater extends AppWidgetProvider {
             // We use the Joda-Time method to calculate the difference
             int difference = Days.daysBetween(new DateTime(date), new DateTime(currentTime)).getDays();
 
-            String type;
+            // We set the days text to the *absolute* difference
+            views.setTextViewText(R.id.txtDays, Integer.toString(Math.abs(difference)));
 
             // We check the sign of the number (Positive or negative). So we know if we use "since" or "until"
-            // TODO: Add special case for when the number is 0
             if (difference > 0) {
-                type = context.getString(R.string.days_since);
-            } else {
-                type = context.getString(R.string.days_until);
-            }
+                views.setTextViewText(R.id.txtLabel, context.getString(R.string.days_since) + " " + label);
 
-            views.setTextViewText(R.id.txtLabel, type + " " + label);
+                Intent intent = new Intent(WIDGET_BUTTON);
+                intent.putExtra("id", appWidgetId);
+                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+                views.setOnClickPendingIntent(R.id.btnReset, pendingIntent);
+                views.setViewVisibility(R.id.btnReset, View.VISIBLE);
+                // We check the sign of the number (Positive or negative)
+            } else if (difference < 0) {
+                views.setTextViewText(R.id.txtLabel, context.getString(R.string.days_until) + " " + label);
+                views.setViewVisibility(R.id.btnReset, View.GONE);
+            } else {
+                views.setTextViewText(R.id.txtLabel, context.getString(R.string.there_are_no_days_since) + " " + label + ". " + context.getString(R.string.today));
+                views.setTextViewTextSize(R.id.txtLabel, TypedValue.COMPLEX_UNIT_SP, 27);
+
+                views.setViewVisibility(R.id.btnReset, View.GONE);
+                views.setViewVisibility(R.id.txtDays, View.GONE);
+                views.setViewVisibility(R.id.txtThereAre, View.GONE);
+            }
 
             Log.d("WidgetUpdater", "Updating widget " + appWidgetId + " with label " + label + ", original/target date " + date);
 
             Log.d("WidgetUpdater", "The new difference is " + difference + ". The current time is " + currentTime);
-
-            // We set the days text to the *absolute* difference
-            views.setTextViewText(R.id.txtDays, Integer.toString(Math.abs(difference)));
 
             DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
             int width = Math.round(100 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
@@ -121,7 +142,7 @@ public class WidgetUpdater extends AppWidgetProvider {
             Canvas canvas = new Canvas(bmp);
             canvas.drawColor(prefs.getInt(appWidgetId + "color", Color.BLUE));
 
-            views.setImageViewBitmap(R.id.bkgView, getRoundedCornerStrokedBitmap(context, bmp, 5, 5));
+            views.setImageViewBitmap(R.id.bkgView, getRoundedCornerStrokedBitmap(context, bmp, 3, 3));
 
             // Tell the AppWidgetManager to perform an update on the current app widget
             appWidgetManager.updateAppWidget(appWidgetId, views);

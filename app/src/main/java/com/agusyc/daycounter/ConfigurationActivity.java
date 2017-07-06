@@ -94,7 +94,7 @@ public class ConfigurationActivity extends AppCompatActivity {
             edtDays.setText(Integer.toString(Math.abs(difference)));
             edtLabel.setText(widget.getLabel());
 
-            if (difference > 0) {
+            if (difference >= 0) {
                 spnType.setSelection(0);
             } else {
                 spnType.setSelection(1);
@@ -146,7 +146,7 @@ public class ConfigurationActivity extends AppCompatActivity {
 
                         Log.d("ConfigurationActivity", "Added new Widget with label" + edtLabel.getText() + ", ID " + key_base + " and date " + date.getMillis());
 
-                        Intent update_intent = new Intent("com.agusyc.daycounter.UPDATE_WIDGETS");
+                        Intent update_intent = new Intent(UpdaterBroadcastReceiver.UPDATE_WIDGETS);
                         sendBroadcast(update_intent);
 
                         setResult(RESULT_OK, resultValue);

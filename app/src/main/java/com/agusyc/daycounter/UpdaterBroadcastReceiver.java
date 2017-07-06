@@ -11,10 +11,13 @@ import java.util.HashSet;
 import java.util.Set;
 
 public class UpdaterBroadcastReceiver extends BroadcastReceiver {
+
+    public static String UPDATE_WIDGETS = "com.agusyc.daycounter.UPDATE_WIDGETS";
+
     @Override
     public void onReceive(Context context, Intent intent) {
         Intent updaterIntent = new Intent(context, WidgetUpdater.class);
-        intent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+        updaterIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
 
         Log.d("UpdaterReceiver", "Broadcast received! Updating widgets...");
 

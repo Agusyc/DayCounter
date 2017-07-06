@@ -33,7 +33,11 @@ class Widget {
         return date;
     }
 
-    int getColor() { return color; }
+    int getColor() {
+        return color;
+    }
 
-    int getColorIndex() { return color_index; }
+    int getColorIndex() {
+        return color_index;
+    }
 }
