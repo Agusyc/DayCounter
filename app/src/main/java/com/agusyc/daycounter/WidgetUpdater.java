@@ -36,26 +36,28 @@ public class WidgetUpdater extends AppWidgetProvider {
         super.onReceive(context, intent);
 
         // The receiver caught a broadcast:
-        Log.d("WidgetUpdater", "Broadcast received! Action: " + intent.getAction());
+        Log.d("WidgetUpdater", "Broadcast received!");
 
-        if (intent.getAction() != null) {
-            // We check if the broadcast is telling us that a widget has been deleted
-            if (intent.getAction().equals("android.appwidget.action.APPWIDGET_DELETED")) {
-                // We call the deleteWidget method, that deletes the widget from the prefs
-                deleteWidget(context, intent.getExtras().getInt(AppWidgetManager.EXTRA_APPWIDGET_ID));
-            } else if (intent.getAction().equals(WIDGET_BUTTON)) {
-                // Here, the button was clicked
-                SharedPreferences prefs = context.getSharedPreferences("DaysPrefs", Context.MODE_PRIVATE);
 
-                String key_base = Integer.toString(intent.getIntExtra("id", 0));
-                prefs.edit().putLong(key_base + "date", System.currentTimeMillis()).apply();
-                onUpdate(context, AppWidgetManager.getInstance(context), new int[]{intent.getIntExtra("id", 0)});
-            } else if (intent.getAction().equals(AppWidgetManager.ACTION_APPWIDGET_UPDATE)) {
-                Log.d("WidgetUpdater", "Updating widgets...");
-                int[] ids = intent.getExtras().getIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS);
-                // We update the widgets
-                this.onUpdate(context, AppWidgetManager.getInstance(context), ids);
-            }
+        Log.d("WidgetUpdater", "The action is: " + intent.getAction());
+        // We check if the broadcast is telling us that a widget has been deleted
+        if ("android.appwidget.action.APPWIDGET_DELETED".equals(intent.getAction())) {
+            // We call the deleteWidget method, that deletes the widget from the prefs
+            deleteWidget(context, intent.getExtras().getInt(AppWidgetManager.EXTRA_APPWIDGET_ID));
+        } else if (WIDGET_BUTTON.equals(intent.getAction())) {
+            Log.d("WidgetUpdater", "The reset counter button was clicked");
+
+            // Here, the button was clicked
+            SharedPreferences prefs = context.getSharedPreferences("DaysPrefs", Context.MODE_PRIVATE);
+
+            String key_base = Integer.toString(intent.getIntExtra("id", 0));
+            prefs.edit().putLong(key_base + "date", System.currentTimeMillis()).apply();
+            onUpdate(context, AppWidgetManager.getInstance(context), new int[]{intent.getIntExtra("id", 0)});
+        } else if (AppWidgetManager.ACTION_APPWIDGET_UPDATE.equals(intent.getAction())) {
+            Log.d("WidgetUpdater", "Updating widgets...");
+            int[] ids = intent.getExtras().getIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS);
+            // We update the widgets
+            this.onUpdate(context, AppWidgetManager.getInstance(context), ids);
         }
     }
 
@@ -112,10 +114,11 @@ public class WidgetUpdater extends AppWidgetProvider {
             if (difference > 0) {
                 views.setTextViewText(R.id.txtLabel, context.getString(R.string.days_since) + " " + label);
 
-                Intent intent = new Intent(WIDGET_BUTTON);
+                Intent intent = new Intent(context, getClass());
                 intent.putExtra("id", appWidgetId);
-                PendingIntent pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
-                views.setOnClickPendingIntent(R.id.btnReset, pendingIntent);
+                intent.setAction(WIDGET_BUTTON);
+
+                views.setOnClickPendingIntent(R.id.btnReset, PendingIntent.getBroadcast(context, 0, intent, 0));
                 views.setViewVisibility(R.id.btnReset, View.VISIBLE);
                 // We check the sign of the number (Positive or negative)
             } else if (difference < 0) {
