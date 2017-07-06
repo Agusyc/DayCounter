@@ -7,8 +7,8 @@ android {
         applicationId "com.agusyc.daycounter"
         minSdkVersion 22
         targetSdkVersion 26
-        versionCode 5
-        versionName "Beta 0.5"
+        versionCode 6
+        versionName "Beta 0.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {

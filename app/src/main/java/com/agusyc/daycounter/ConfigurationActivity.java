@@ -2,7 +2,6 @@ package com.agusyc.daycounter;
 
 import android.app.DialogFragment;
 import android.appwidget.AppWidgetManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -108,6 +107,17 @@ public class ConfigurationActivity extends AppCompatActivity {
             hsv[2] *= 0.6f; // We make the color darker with this
 
             ((ColorImageView) colorView.getChildAt(widget.getColorIndex())).setColorFilter(Color.HSVToColor(hsv));
+        } else {
+            ColorImageView colorImageView = (ColorImageView) colorView.getChildAt(4);
+
+            selectedColor = colorImageView.getColor();
+            selectedColor_index = 4;
+
+            float[] hsv = new float[3];
+            Color.colorToHSV(selectedColor, hsv);
+            hsv[2] *= 0.6f; // We make the color darker with this
+
+            colorImageView.setColorFilter(Color.HSVToColor(hsv));
         }
 
         Button okButton = (Button) findViewById(R.id.okButton);
