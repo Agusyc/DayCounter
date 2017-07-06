@@ -36,7 +36,7 @@ class WidgetListAdapter extends ArrayAdapter<Widget> {
         long date = widget.getDate();
         long currentTime = System.currentTimeMillis();
 
-        int difference = Days.daysBetween(new DateTime(date), new DateTime(System.currentTimeMillis())).getDays();
+        int difference = Days.daysBetween(new DateTime(date), new DateTime(currentTime)).getDays();
 
         // We check the sign of the number (Positive or negative)
         // TODO: Add special case for when the number is 0
@@ -58,6 +58,8 @@ class WidgetListAdapter extends ArrayAdapter<Widget> {
         txtDays.setText(Integer.toString(Math.abs(difference)));
 
         Log.d("WidgetUpdater", "The new difference is " + difference + ". The current time is " + currentTime);
+
+        convertView.setBackgroundColor(widget.getColor());
 
         // Return the completed view to render on the main activity
         return convertView;

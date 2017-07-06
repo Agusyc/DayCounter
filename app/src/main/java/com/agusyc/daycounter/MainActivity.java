@@ -1,5 +1,6 @@
 package com.agusyc.daycounter;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -46,7 +47,11 @@ public class MainActivity extends AppCompatActivity {
         lstWidgetsView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                
+                Widget item = adapter.getItem(i);
+                Intent configuration_intent = new Intent(getApplicationContext(), ConfigurationActivity.class);
+                assert item != null;
+                configuration_intent.putExtra("widget_id", Long.toString(item.getID()));
+                startActivity(configuration_intent);
             }
         });
 
@@ -67,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         for (String widget_id : widget_ids) {
             Widget alarm = new Widget(MainActivity.this, Long.parseLong(widget_id));
             lstWidgets.add(alarm);
-            Log.d("MainActivity", "Parsed alarm with ID " + widget_id);
+            Log.d("MainActivity", "Parsed widget with ID " + widget_id);
         }
 
         if (lstWidgets.size() == 0) {

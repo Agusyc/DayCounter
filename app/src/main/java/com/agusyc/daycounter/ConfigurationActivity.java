@@ -14,9 +14,9 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 
 import org.joda.time.DateTime;
+import org.joda.time.Days;
 
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -26,11 +26,14 @@ public class ConfigurationActivity extends AppCompatActivity {
 
     private int mAppWidgetId;
     private int selectedColor;
+    private int selectedColor_index;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_configuration);
+
+        final GridLayout colorView = (GridLayout) findViewById(R.id.colorView);
 
         // We instantiate all the Views
         final EditText edtDays = (EditText) findViewById(R.id.edtDays);
@@ -46,7 +49,7 @@ public class ConfigurationActivity extends AppCompatActivity {
         // Creating adapter for the Spinner
         final ArrayAdapter<String> dataAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, types);
 
-        dataAdapter.setDropDownViewResource(R.layout.spinner_item);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spnType.setAdapter(dataAdapter);
 
@@ -58,12 +61,6 @@ public class ConfigurationActivity extends AppCompatActivity {
                 } else {
                     edtLabel.setHint(getString(R.string.days_until_hint));
                 }
-
-                try {
-                    ((TextView) adapterView.getChildAt(0)).setTextColor(Color.WHITE);
-                } catch (NullPointerException e) {
-                    e.printStackTrace();
-                }
             }
 
             @Override
@@ -71,12 +68,43 @@ public class ConfigurationActivity extends AppCompatActivity {
             }
         });
 
-        Intent intent = getIntent();
+        final Intent intent = getIntent();
         Bundle extras = intent.getExtras();
         if (extras != null) {
             mAppWidgetId = extras.getInt(
                     AppWidgetManager.EXTRA_APPWIDGET_ID,
                     AppWidgetManager.INVALID_APPWIDGET_ID);
+        }
+
+        final SharedPreferences prefs = getSharedPreferences("DaysPrefs", MODE_PRIVATE);
+
+        Widget widget;
+
+        if (intent.hasExtra("widget_id")) {
+            widget = new Widget(getApplicationContext(), Long.parseLong(intent.getStringExtra("widget_id")));
+
+            selectedColor = widget.getColor();
+            selectedColor_index = widget.getColorIndex();
+
+            long date = widget.getDate();
+            long currentTime = System.currentTimeMillis();
+
+            int difference = Days.daysBetween(new DateTime(date), new DateTime(currentTime)).getDays();
+
+            edtDays.setText(Integer.toString(Math.abs(difference)));
+            edtLabel.setText(widget.getLabel());
+
+            if (difference > 0) {
+                spnType.setSelection(0);
+            } else {
+                spnType.setSelection(1);
+            }
+
+            float[] hsv = new float[3];
+            Color.colorToHSV(selectedColor, hsv);
+            hsv[2] *= 0.6f; // We make the color darker with this
+
+            ((ColorImageView) colorView.getChildAt(widget.getColorIndex())).setColorFilter(Color.HSVToColor(hsv));
         }
 
         Button okButton = (Button) findViewById(R.id.okButton);
@@ -87,29 +115,34 @@ public class ConfigurationActivity extends AppCompatActivity {
                     Intent resultValue = new Intent();
                     resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
 
-                    SharedPreferences prefs = getSharedPreferences("DaysPrefs", MODE_PRIVATE);
+                    String key_base;
 
-                    String key_base = Integer.toString(mAppWidgetId);
+                    if (intent.hasExtra("widget_id")) {
+                        key_base = intent.getStringExtra("widget_id");
+                    } else {
+                        key_base = Integer.toString(mAppWidgetId);
 
-                    Set<String> currentIDs_set = prefs.getStringSet("ids", new HashSet<String>());
+                        Set<String> currentIDs_set = prefs.getStringSet("ids", new HashSet<String>());
 
-                    currentIDs_set.add(key_base);
+                        currentIDs_set.add(key_base);
+
+                        prefs.edit().putStringSet("ids", currentIDs_set).apply();
+                    }
+
 
                     try {
                         DateTime date = new DateTime(System.currentTimeMillis());
 
                         if (spnType.getSelectedItemPosition() == 0) {
                             date = date.minusDays(Integer.parseInt(edtDays.getText().toString()));
-                            Log.d("ad", date.toString());
                         } else {
                             date = date.plusDays(Integer.parseInt(edtDays.getText().toString()));
-                            Log.d("ad", date.toString());
                         }
 
                         prefs.edit().putString(key_base + "label", edtLabel.getText().toString()).apply();
                         prefs.edit().putLong(key_base + "date", date.getMillis()).apply();
                         prefs.edit().putInt(key_base + "color", selectedColor).apply();
-                        prefs.edit().putStringSet("ids", currentIDs_set).apply();
+                        prefs.edit().putInt(key_base + "color_index", selectedColor_index).apply();
 
                         Log.d("ConfigurationActivity", "Added new Widget with label" + edtLabel.getText() + ", ID " + key_base + " and date " + date.getMillis());
 
@@ -125,10 +158,9 @@ public class ConfigurationActivity extends AppCompatActivity {
             }
         });
 
-        final GridLayout colorView = (GridLayout) findViewById(R.id.colorView);
-
         for (int i = 0; i < colorView.getChildCount(); i++) {
             final ColorImageView v = (ColorImageView) colorView.getChildAt(i);
+            final int finalI = i;
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -139,6 +171,9 @@ public class ConfigurationActivity extends AppCompatActivity {
                     }
 
                     selectedColor = v.getColor();
+                    System.out.println("New selected color is " + selectedColor);
+
+                    selectedColor_index = finalI;
 
                     float[] hsv = new float[3];
                     Color.colorToHSV(selectedColor, hsv);

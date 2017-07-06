@@ -8,6 +8,8 @@ class Widget {
     private long id;
     private String label;
     private long date;
+    private int color;
+    private int color_index;
 
     // The constructor
     Widget(Context context, long id) {
@@ -15,6 +17,8 @@ class Widget {
         SharedPreferences prefs = context.getSharedPreferences("DaysPrefs", Context.MODE_PRIVATE);
         label = prefs.getString(id + "label", null);
         date = prefs.getLong(id + "date", 0);
+        color = prefs.getInt(id + "color", 0);
+        color_index = prefs.getInt(id + "color_index", 0);
     }
 
     long getID() {
@@ -25,5 +29,11 @@ class Widget {
         return label;
     }
 
-    long getDate() { return date; }
+    long getDate() {
+        return date;
+    }
+
+    int getColor() { return color; }
+
+    int getColorIndex() { return color_index; }
 }

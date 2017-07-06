@@ -114,7 +114,7 @@ public class WidgetUpdater extends AppWidgetProvider {
             views.setTextViewText(R.id.txtDays, Integer.toString(Math.abs(difference)));
 
             DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-            int width  = Math.round(100 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+            int width = Math.round(100 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
             int height = Math.round(40 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
 
             Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
