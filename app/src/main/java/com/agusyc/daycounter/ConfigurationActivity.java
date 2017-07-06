@@ -1,5 +1,6 @@
 package com.agusyc.daycounter;
 
+import android.app.DialogFragment;
 import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -13,6 +14,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
+import android.widget.ImageView;
 import android.widget.Spinner;
 
 import org.joda.time.DateTime;
@@ -183,5 +185,14 @@ public class ConfigurationActivity extends AppCompatActivity {
                 }
             });
         }
+
+        ImageView btnDate = (ImageView) findViewById(R.id.btnDate);
+        btnDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogFragment newFragment = new DatePickerFragment();
+                newFragment.show(getFragmentManager(), "datePicker");
+            }
+        });
     }
 }

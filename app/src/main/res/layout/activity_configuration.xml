@@ -16,12 +16,22 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent" />
 
+    <ImageView
+        android:id="@+id/btnDate"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:maxHeight="5dp"
+        android:maxWidth="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/spnType"
+        android:src="@drawable/preview"/>
+
     <EditText
         android:id="@+id/edtDays"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@+id/spnType"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/btnDate"
         app:layout_constraintStart_toStartOf="parent"
         android:inputType="numberDecimal"
         android:hint="@string/number_of_days" />
