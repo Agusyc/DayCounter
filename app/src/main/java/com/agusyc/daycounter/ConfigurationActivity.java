@@ -2,6 +2,7 @@ package com.agusyc.daycounter;
 
 import android.app.DialogFragment;
 import android.appwidget.AppWidgetManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -119,12 +120,12 @@ public class ConfigurationActivity extends AppCompatActivity {
 
                     String key_base;
 
+                    Set<String> currentIDs_set = prefs.getStringSet("ids", new HashSet<String>());
+
                     if (intent.hasExtra("widget_id")) {
                         key_base = intent.getStringExtra("widget_id");
                     } else {
                         key_base = Integer.toString(mAppWidgetId);
-
-                        Set<String> currentIDs_set = prefs.getStringSet("ids", new HashSet<String>());
 
                         currentIDs_set.add(key_base);
 
@@ -148,8 +149,24 @@ public class ConfigurationActivity extends AppCompatActivity {
 
                         Log.d("ConfigurationActivity", "Added new Widget with label" + edtLabel.getText() + ", ID " + key_base + " and date " + date.getMillis());
 
-                        Intent update_intent = new Intent(UpdaterBroadcastReceiver.UPDATE_WIDGETS);
-                        sendBroadcast(update_intent);
+                        Intent updaterIntent = new Intent(getApplicationContext(), WidgetUpdater.class);
+                        updaterIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+
+                        Log.d("UpdaterReceiver", "Broadcast received! Updating widgets...");
+
+                        String[] IDs_array_str = currentIDs_set.toArray(new String[currentIDs_set.size()]);
+
+                        int[] IDs_array = new int[IDs_array_str.length];
+
+                        for (int i = 0; i < IDs_array_str.length; i++) {
+                            IDs_array[i] = Integer.parseInt(IDs_array_str[i]);
+                            Log.d("UpdateReceiver", "Parsed ID: " + IDs_array[i]);
+                        }
+
+                        updaterIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, IDs_array);
+
+                        Log.d("UpdateReceiver", "Telling the WidgetUpdater to start");
+                        getApplicationContext().sendBroadcast(updaterIntent);
 
                         setResult(RESULT_OK, resultValue);
                         finish();
