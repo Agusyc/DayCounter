@@ -2,20 +2,25 @@ package com.agusyc.daycounter;
 
 import android.app.DialogFragment;
 import android.appwidget.AppWidgetManager;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageView;
-import android.widget.Spinner;
 
 import org.joda.time.DateTime;
 import org.joda.time.Days;
@@ -23,6 +28,8 @@ import org.joda.time.Days;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+
+import fr.ganfra.materialspinner.MaterialSpinner;
 
 public class ConfigurationActivity extends AppCompatActivity {
 
@@ -42,7 +49,7 @@ public class ConfigurationActivity extends AppCompatActivity {
 
         final EditText edtLabel = (EditText) findViewById(R.id.edtLabel);
 
-        final Spinner spnType = (Spinner) findViewById(R.id.spnType);
+        final MaterialSpinner spnType = (MaterialSpinner) findViewById(R.id.spnType);
 
         ArrayList<String> types = new ArrayList<>();
         types.add(" " + getString(R.string.days_since) + " ");
@@ -54,21 +61,6 @@ public class ConfigurationActivity extends AppCompatActivity {
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         spnType.setAdapter(dataAdapter);
-
-        spnType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                if (i == 0) {
-                    edtLabel.setHint(getString(R.string.days_since_hint));
-                } else {
-                    edtLabel.setHint(getString(R.string.days_until_hint));
-                }
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
-        });
 
         final Intent intent = getIntent();
         Bundle extras = intent.getExtras();
@@ -97,16 +89,16 @@ public class ConfigurationActivity extends AppCompatActivity {
             edtLabel.setText(widget.getLabel());
 
             if (difference >= 0) {
-                spnType.setSelection(0);
-            } else {
                 spnType.setSelection(1);
+            } else {
+                spnType.setSelection(2);
             }
 
             float[] hsv = new float[3];
             Color.colorToHSV(selectedColor, hsv);
             hsv[2] *= 0.6f; // We make the color darker with this
 
-            ((ColorImageView) colorView.getChildAt(widget.getColorIndex())).setColorFilter(Color.HSVToColor(hsv));
+
         } else {
             ColorImageView colorImageView = (ColorImageView) colorView.getChildAt(4);
 
@@ -117,98 +109,119 @@ public class ConfigurationActivity extends AppCompatActivity {
             Color.colorToHSV(selectedColor, hsv);
             hsv[2] *= 0.6f; // We make the color darker with this
 
-            colorImageView.setColorFilter(Color.HSVToColor(hsv));
+            Drawable checked = ContextCompat.getDrawable(getApplicationContext(), R.drawable.checked);
+
+            colorImageView.setImageDrawable(ColorImageView.getOverlay(getApplicationContext(), ColorImageView.getCircle(getApplicationContext(), Color.HSVToColor(hsv)), checked));
         }
 
         Button okButton = (Button) findViewById(R.id.okButton);
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (edtLabel.getText().length() != 0 && edtDays.getText().length() != 0) {
-                    Intent resultValue = new Intent();
-                    resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
+                Intent resultValue = new Intent();
+                resultValue.putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, mAppWidgetId);
 
-                    String key_base;
+                String key_base;
 
-                    Set<String> currentIDs_set = prefs.getStringSet("ids", new HashSet<String>());
+                Set<String> currentIDs_set = prefs.getStringSet("ids", new HashSet<String>());
 
-                    if (intent.hasExtra("widget_id")) {
-                        key_base = intent.getStringExtra("widget_id");
-                    } else {
-                        key_base = Integer.toString(mAppWidgetId);
+                if (intent.hasExtra("widget_id")) {
+                    key_base = intent.getStringExtra("widget_id");
+                } else {
+                    key_base = Integer.toString(mAppWidgetId);
 
-                        currentIDs_set.add(key_base);
+                    currentIDs_set.add(key_base);
+                }
 
-                        prefs.edit().putStringSet("ids", currentIDs_set).apply();
+
+                try {
+                    DateTime date = new DateTime(System.currentTimeMillis());
+
+                    int selectedPosition = spnType.getSelectedItemPosition();
+                    String days_s = edtDays.getText().toString();
+
+                    if (days_s.length() == 0) {
+                        edtDays.setError(getString(R.string.input_something_error));
+                        return;
+                    }
+                    int days = Integer.parseInt(days_s);
+
+                    switch (selectedPosition) {
+                        case 0:
+                            spnType.setError(getString(R.string.kind_of_event_error));
+                            break;
+                        case 1:
+                            date = date.minusDays(days);
+                            break;
+                        case 2:
+                            date = date.plusDays(days);
                     }
 
+                    String label = edtLabel.getText().toString();
 
-                    try {
-                        DateTime date = new DateTime(System.currentTimeMillis());
-
-                        if (spnType.getSelectedItemPosition() == 0) {
-                            date = date.minusDays(Integer.parseInt(edtDays.getText().toString()));
-                        } else {
-                            date = date.plusDays(Integer.parseInt(edtDays.getText().toString()));
-                        }
-
-                        prefs.edit().putString(key_base + "label", edtLabel.getText().toString()).apply();
-                        prefs.edit().putLong(key_base + "date", date.getMillis()).apply();
-                        prefs.edit().putInt(key_base + "color", selectedColor).apply();
-                        prefs.edit().putInt(key_base + "color_index", selectedColor_index).apply();
-
-                        Log.d("ConfigurationActivity", "Added new Widget with label" + edtLabel.getText() + ", ID " + key_base + " and date " + date.getMillis());
-
-                        Intent updaterIntent = new Intent(getApplicationContext(), WidgetUpdater.class);
-                        updaterIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-
-                        Log.d("UpdaterReceiver", "Broadcast received! Updating widgets...");
-
-                        String[] IDs_array_str = currentIDs_set.toArray(new String[currentIDs_set.size()]);
-
-                        int[] IDs_array = new int[IDs_array_str.length];
-
-                        for (int i = 0; i < IDs_array_str.length; i++) {
-                            IDs_array[i] = Integer.parseInt(IDs_array_str[i]);
-                            Log.d("UpdateReceiver", "Parsed ID: " + IDs_array[i]);
-                        }
-
-                        updaterIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, IDs_array);
-
-                        Log.d("UpdateReceiver", "Telling the WidgetUpdater to start");
-                        getApplicationContext().sendBroadcast(updaterIntent);
-
-                        setResult(RESULT_OK, resultValue);
-                        finish();
-                    } catch (NumberFormatException e) {
-                        edtDays.setError("This number is too big!");
+                    if (label.length() == 0) {
+                        edtLabel.setError(getString(R.string.input_something_error));
+                        return;
                     }
+
+                    prefs.edit().putString(key_base + "label", edtLabel.getText().toString()).apply();
+                    prefs.edit().putLong(key_base + "date", date.getMillis()).apply();
+                    prefs.edit().putInt(key_base + "color", selectedColor).apply();
+                    prefs.edit().putInt(key_base + "color_index", selectedColor_index).apply();
+                    prefs.edit().putStringSet("ids", currentIDs_set).apply();
+
+                    Log.d("ConfigurationActivity", "Added new Widget with label" + edtLabel.getText() + ", ID " + key_base + " and date " + date.getMillis());
+
+                    Intent updaterIntent = new Intent(getApplicationContext(), WidgetUpdater.class);
+                    updaterIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
+
+                    Log.d("UpdaterReceiver", "Broadcast received! Updating widgets...");
+
+                    String[] IDs_array_str = currentIDs_set.toArray(new String[currentIDs_set.size()]);
+
+                    int[] IDs_array = new int[IDs_array_str.length];
+
+                    for (int i = 0; i < IDs_array_str.length; i++) {
+                        IDs_array[i] = Integer.parseInt(IDs_array_str[i]);
+                        Log.d("UpdateReceiver", "Parsed ID: " + IDs_array[i]);
+                    }
+
+                    updaterIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, IDs_array);
+
+                    Log.d("UpdateReceiver", "Telling the WidgetUpdater to start");
+                    getApplicationContext().sendBroadcast(updaterIntent);
+
+                    setResult(RESULT_OK, resultValue);
+                    finish();
+                } catch (NumberFormatException e) {
+                    edtDays.setError(getString(R.string.number_too_big_error));
                 }
             }
         });
 
-        for (int i = 0; i < colorView.getChildCount(); i++) {
+        for (int i = 0; i < colorView.getChildCount() - 1; i++) {
             final ColorImageView v = (ColorImageView) colorView.getChildAt(i);
             final int finalI = i;
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    for (int j = 0; j < colorView.getChildCount(); j++) {
-                        final ColorImageView in_view = (ColorImageView) colorView.getChildAt(j);
-                        in_view.setColorFilter(in_view.getColor());
-
+                    ColorImageView in_view;
+                    for (int j = 0; j < colorView.getChildCount() - 1; j++) {
+                        in_view = (ColorImageView) colorView.getChildAt(j);
+                        in_view.setImageBitmap(ColorImageView.getCircle(getApplicationContext(), in_view.getColor()));
                     }
 
                     selectedColor = v.getColor();
-                    System.out.println("New selected color is " + selectedColor);
-
                     selectedColor_index = finalI;
 
                     float[] hsv = new float[3];
                     Color.colorToHSV(selectedColor, hsv);
                     hsv[2] *= 0.6f; // We make the color darker with this
 
-                    ((ColorImageView) view).setColorFilter(Color.HSVToColor(hsv));
+                    ColorImageView clicked_view = (ColorImageView) view;
+                    Drawable checked = ContextCompat.getDrawable(getApplicationContext(), R.drawable.checked);
+
+                    clicked_view.setImageDrawable(ColorImageView.getOverlay(getApplicationContext(), ColorImageView.getCircle(getApplicationContext(), Color.HSVToColor(hsv)), checked));
                 }
             });
         }

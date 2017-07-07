@@ -1,0 +1,22 @@
+<resources>
+    <string name="app_name">Day Counter</string>
+    <string name="today">¡Es hoy!</string>
+    <string name="days_since">días desde</string>
+    <string name="days_until">días hasta</string>
+    <string name="there_are_no_days_since">No hay ningún día desde</string>
+    <string name="there_are">Hay</string>
+    <string name="ok">Acepta</string>
+    <string name="number_of_days">Número de días</string>
+    <string name="event">Evento</string>
+    <string name="there_is_nothing1">¡No hay nada aquí!</string>
+    <string name="there_is_nothing2">Añade algunos widgets en tu pantalla de inicio y podrás verlos y editarlos aquí.</string>
+    <string name="reset_counter">Reiniciar contados</string>
+    <string name="about">Day Counter está licensiado bajo la MIT license. Más información aquí: https://goo.gl/cxRvtw\n\nEsta aplicación fue programada por Agustín Roth y diseñada por Agustín Roth y Christen Edmundson (especialmente este último ¡Muchas gracias!). La idea original vino del comentario de un Redditor que borró su cuenta.\n\nComentario de Reddit: https://goo.gl/huVoro\n\nRepositorio de GitHub: https://goo.gl/ZH6yv5</string>
+    <string name="until_or_since">Hasta o Desde</string>
+    <string name="event_desc">¿Qué es el evento?</string>
+    <string name="until_or_since_desc">¿Estás contando los días desde un evento o hasta uno?</string>
+    <string name="days_desc">¿Cuántos días desde/hasta el evento hay?</string>
+    <string name="input_something_error">Debes tipear algo aquí</string>
+    <string name="number_too_big_error">¡Este número es muy grande!</string>
+    <string name="kind_of_event_error">Debes seleccionar un tipo de evento</string>
+</resources>

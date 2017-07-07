@@ -47,7 +47,6 @@ class WidgetListAdapter extends ArrayAdapter<Widget> {
 
         // We check the sign of the number (Positive or negative)
         if (difference > 0) {
-
             txtLabel.setText(getContext().getString(R.string.days_since) + " " + widget.getLabel());
         } else if (difference < 0) {
             txtLabel.setText(getContext().getString(R.string.days_until) + " " + widget.getLabel());

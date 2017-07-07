@@ -7,10 +7,16 @@
     <string name="there_are">There are</string>
     <string name="ok">OK</string>
     <string name="number_of_days">Number of days</string>
-    <string name="days_since_hint">Something that you are counting days since it happened</string>
-    <string name="days_until_hint">Something that you are counting days until it happens</string>
+    <string name="event">Event</string>
     <string name="there_is_nothing1">There is nothing here!</string>
     <string name="there_is_nothing2">Add some widgets on your home screen and you will be able to see and edit them here.</string>
     <string name="reset_counter">Reset counter</string>
-    <string name="about">Day Counter is licensed under the MIT license. More info here: https://goo.gl/cxRvtw\n\nThis app was programmed by Agustín Roth and designed by Agustín Roth and Christen Edmundson. The idea came from a Reddittor\'s comment that has deleted their account.\n\nReddit comment: https://goo.gl/huVoro\n\nGitHub repository: https://goo.gl/ZH6yv5</string>
+    <string name="about">Day Counter is licensed under the MIT license. More info here: https://goo.gl/cxRvtw\n\nThis app was programmed by Agustín Roth and designed by Agustín Roth and Christen Edmundson (Specially the last one. Thank you very much!). The idea came from a Reddittor\'s comment that has deleted their account.\n\nReddit comment: https://goo.gl/huVoro\n\nGitHub repository: https://goo.gl/ZH6yv5</string>
+    <string name="until_or_since">Until or Since</string>
+    <string name="event_desc">What is the event?</string>
+    <string name="until_or_since_desc">Are you counting the days since and event, or until an event?</string>
+    <string name="days_desc">How many days until/since the event?</string>
+    <string name="input_something_error">You have to type something here</string>
+    <string name="number_too_big_error">This number is too big!</string>
+    <string name="kind_of_event_error">You have to select a kind of event</string>
 </resources>

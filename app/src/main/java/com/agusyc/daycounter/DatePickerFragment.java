@@ -40,9 +40,9 @@ public class DatePickerFragment extends DialogFragment implements
         int difference = Days.daysBetween(new DateTime().withDate(year, month + 1, day), new DateTime(currentTime)).getDays();
 
         if (difference >= 0) {
-            spnType.setSelection(0);
-        } else {
             spnType.setSelection(1);
+        } else {
+            spnType.setSelection(2);
         }
 
 

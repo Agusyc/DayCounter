@@ -7,8 +7,8 @@ android {
         applicationId "com.agusyc.daycounter"
         minSdkVersion 22
         targetSdkVersion 26
-        versionCode 7
-        versionName "Beta 0.7"
+        versionCode 8
+        versionName "Beta 0.8"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -26,7 +26,9 @@ dependencies {
     })
     compile 'com.android.support:appcompat-v7:26.0.0-alpha1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
+    compile 'com.android.support:design:26.0.0-alpha1'
     compile 'joda-time:joda-time:2.9.9'
+    compile 'com.github.ganfra:material-spinner:1.1.1'
 
     testCompile 'junit:junit:4.12'
 }
