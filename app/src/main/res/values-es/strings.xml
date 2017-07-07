@@ -5,7 +5,7 @@
     <string name="days_until">días hasta</string>
     <string name="there_are_no_days_since">No hay ningún día desde</string>
     <string name="there_are">Hay</string>
-    <string name="ok">Acepta</string>
+    <string name="ok">Aceptar</string>
     <string name="number_of_days">Número de días</string>
     <string name="event">Evento</string>
     <string name="there_is_nothing1">¡No hay nada aquí!</string>
@@ -21,4 +21,5 @@
     <string name="kind_of_event_error">Debes seleccionar un tipo de evento</string>
     <string name="event_desc_image">Escoger la fecha manualmente</string>
     <string name="custom_color_desc">Elige un color personalizado</string>
+    <string name="there_have_been">Han pasado</string>
 </resources>

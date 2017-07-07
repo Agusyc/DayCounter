@@ -185,11 +185,6 @@ public class ConfigurationActivity extends AppCompatActivity {
 
                     Log.d("ConfigurationActivity", "Added new Widget with label" + edtLabel.getText() + ", ID " + key_base + " and date " + date.getMillis());
 
-                    Intent updaterIntent = new Intent(getApplicationContext(), WidgetUpdater.class);
-                    updaterIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
-
-                    Log.d("UpdaterReceiver", "Broadcast received! Updating widgets...");
-
                     String[] IDs_array_str = currentIDs_set.toArray(new String[currentIDs_set.size()]);
 
                     int[] IDs_array = new int[IDs_array_str.length];
@@ -198,6 +193,9 @@ public class ConfigurationActivity extends AppCompatActivity {
                         IDs_array[i] = Integer.parseInt(IDs_array_str[i]);
                         Log.d("UpdateReceiver", "Parsed ID: " + IDs_array[i]);
                     }
+
+                    Intent updaterIntent = new Intent(getApplicationContext(), WidgetUpdater.class);
+                    updaterIntent.setAction(AppWidgetManager.ACTION_APPWIDGET_UPDATE);
 
                     updaterIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, IDs_array);
 

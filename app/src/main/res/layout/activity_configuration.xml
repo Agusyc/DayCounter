@@ -17,6 +17,12 @@
         app:ms_hint="@string/until_or_since"
         app:ms_enableFloatingLabel="true" />
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="12sp"
+        android:text="@string/until_or_since_desc" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

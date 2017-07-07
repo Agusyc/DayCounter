@@ -6,15 +6,7 @@ import android.appwidget.AppWidgetProvider;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
-import android.graphics.RectF;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.widget.RemoteViews;
@@ -118,37 +110,35 @@ public class WidgetUpdater extends AppWidgetProvider {
 
             // We check the sign of the number (Positive or negative). So we know if we use "since" or "until"
             if (difference > 0) {
+                views.setTextViewText(R.id.txtThereAreHaveBeen, context.getString(R.string.there_have_been));
                 views.setTextViewText(R.id.txtLabel, context.getString(R.string.days_since) + " " + label);
 
                 views.setOnClickPendingIntent(R.id.btnReset, getPendingSelfIntent(context, WIDGET_BUTTON, appWidgetId));
                 views.setViewVisibility(R.id.btnReset, View.VISIBLE);
                 // We check the sign of the number (Positive or negative)
             } else if (difference < 0) {
+                views.setTextViewText(R.id.txtThereAreHaveBeen, context.getString(R.string.there_are));
                 views.setTextViewText(R.id.txtLabel, context.getString(R.string.days_until) + " " + label);
                 views.setViewVisibility(R.id.btnReset, View.GONE);
+                views.setViewVisibility(R.id.divider, View.GONE);
             } else {
                 views.setTextViewText(R.id.txtNoDays, context.getString(R.string.there_are_no_days_since) + " " + label + ". " + context.getString(R.string.today));
 
                 views.setViewVisibility(R.id.txtNoDays, View.VISIBLE);
                 views.setViewVisibility(R.id.btnReset, View.GONE);
                 views.setViewVisibility(R.id.txtDays, View.GONE);
-                views.setViewVisibility(R.id.txtThereAre, View.GONE);
+                views.setViewVisibility(R.id.txtThereAreHaveBeen, View.GONE);
                 views.setViewVisibility(R.id.txtLabel, View.GONE);
+                views.setViewVisibility(R.id.divider, View.GONE);
             }
 
             Log.d("WidgetUpdater", "Updating widget " + appWidgetId + " with label " + label + ", original/target date " + date);
 
             Log.d("WidgetUpdater", "The new difference is " + difference + ". The current time is " + currentTime);
 
-            DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-            int width = Math.round(100 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
-            int height = Math.round(40 * (displayMetrics.ydpi / DisplayMetrics.DENSITY_DEFAULT));
-
             int color = prefs.getInt(appWidgetId + "color", Color.BLUE);
 
-            Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-            Canvas canvas = new Canvas(bmp);
-            canvas.drawColor(color);
+            views.setInt(R.id.bkgView, "setColorFilter", color);
 
             float[] hsv = new float[3];
 
@@ -159,40 +149,14 @@ public class WidgetUpdater extends AppWidgetProvider {
             if (brightness >= 0.7) {
                 views.setTextColor(R.id.txtLabel, Color.BLACK);
                 views.setTextColor(R.id.txtDays, Color.BLACK);
-                views.setTextColor(R.id.txtThereAre, Color.BLACK);
+                views.setTextColor(R.id.txtThereAreHaveBeen, Color.BLACK);
                 views.setTextColor(R.id.txtNoDays, Color.BLACK);
             }
 
-            views.setImageViewBitmap(R.id.bkgView, getRoundedCornerStrokedBitmap(context, bmp, 3, 3));
+            views.setInt(R.id.lytWidget, "setVisibility", View.VISIBLE);
 
             // Tell the AppWidgetManager to perform an update on the current app widget
             appWidgetManager.updateAppWidget(appWidgetId, views);
         }
-    }
-
-    private Bitmap getRoundedCornerStrokedBitmap(Context context, Bitmap bitmap, int widthDp, int heightDp) {
-        Bitmap output = Bitmap.createBitmap(bitmap.getWidth(), bitmap
-                .getHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(output);
-
-        final int color = 0xff424242;
-        final Paint paint = new Paint();
-        final Rect rect = new Rect(0, 0, bitmap.getWidth(), bitmap.getHeight());
-        final RectF rectF = new RectF(rect);
-
-
-        DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
-        final int heightPx = Math.round(heightDp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
-        final int widthPx = Math.round(widthDp * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
-
-        paint.setAntiAlias(true);
-        canvas.drawARGB(0, 0, 0, 0);
-        paint.setColor(color);
-        canvas.drawRoundRect(rectF, (float) widthPx, (float) heightPx, paint);
-
-        paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-        canvas.drawBitmap(bitmap, rect, rect, paint);
-
-        return output;
     }
 }

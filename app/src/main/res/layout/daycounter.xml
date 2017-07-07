@@ -2,7 +2,9 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    xmlns:tools="http://schemas.android.com/tools">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/lytWidget"
+    android:visibility="invisible" >
 
     <ImageView
         android:id="@+id/bkgView"
@@ -11,31 +13,31 @@
         android:layout_height="match_parent"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        tools:ignore="ContentDescription" />
+        tools:ignore="ContentDescription"
+        android:src="@drawable/widget_background" />
 
 
     <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:weightSum="6"
+        android:weightSum="7"
         android:padding="5dp" >
 
         <TextView
-            android:id="@+id/txtThereAre"
+            android:id="@+id/txtThereAreHaveBeen"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="1"
             android:textSize="16sp"
             android:textAlignment="center"
             android:textColor="@android:color/white"
-            android:text="@string/there_are"
             android:paddingTop="2dp" />
 
         <TextView
             android:id="@+id/txtDays"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:layout_weight="3"
             android:textSize="24sp"
             android:textStyle="bold"
@@ -45,29 +47,40 @@
         <TextView
             android:id="@+id/txtNoDays"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="0dp"
             android:textAlignment="center"
             android:textSize="24sp"
-            android:layout_weight="1"
+            android:layout_weight="6"
             android:textColor="@android:color/white"
             android:visibility="gone" />
 
         <TextView
             android:id="@+id/txtLabel"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="0dp"
             android:textAlignment="center"
             android:textSize="16sp"
             android:layout_weight="1"
             android:textColor="@android:color/white"
             android:paddingBottom="2dp" />
 
-        <Button
+        <ImageView
+            android:id="@+id/divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:src="@android:color/darker_gray"
+            android:paddingStart="-5dp"
+            android:paddingEnd="-5dp" />
+
+        <ImageView
             android:id="@+id/btnReset"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="@string/reset_counter" />
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:text="@string/reset_counter"
+            android:src="@drawable/reset_counter"
+            tools:ignore="ContentDescription"
+            android:layout_gravity="center" />
 
     </LinearLayout>
 

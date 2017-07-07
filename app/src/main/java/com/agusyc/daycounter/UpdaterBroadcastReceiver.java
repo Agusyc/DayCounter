@@ -20,6 +20,7 @@ public class UpdaterBroadcastReceiver extends BroadcastReceiver {
 
         SharedPreferences prefs = context.getSharedPreferences("DaysPrefs", Context.MODE_PRIVATE);
 
+
         Set<String> IDs_set = prefs.getStringSet("ids", new HashSet<String>());
 
         String[] IDs_array_str = IDs_set.toArray(new String[IDs_set.size()]);
