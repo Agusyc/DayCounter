@@ -167,7 +167,7 @@ public class ConfigurationActivity extends AppCompatActivity {
                             date = date.minusDays(days);
                             break;
                         case 2:
-                            date = date.plusDays(days);
+                            date = date.plusDays(days + 1);
                     }
 
                     String label = edtLabel.getText().toString();

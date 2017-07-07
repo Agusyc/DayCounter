@@ -68,9 +68,7 @@
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:src="@android:color/darker_gray"
-            android:paddingStart="-5dp"
-            android:paddingEnd="-5dp" />
+            android:src="@android:color/darker_gray" />
 
         <ImageView
             android:id="@+id/btnReset"
