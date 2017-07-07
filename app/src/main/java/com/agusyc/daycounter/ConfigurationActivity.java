@@ -5,6 +5,8 @@ import android.appwidget.AppWidgetManager;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.PorterDuffColorFilter;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.annotation.ColorInt;
@@ -102,8 +104,11 @@ public class ConfigurationActivity extends AppCompatActivity {
 
             ImageView selected_view = (ImageView) colorView.getChildAt(selectedColor_index);
             Drawable checked = ContextCompat.getDrawable(getApplicationContext(), R.drawable.checked);
+            Drawable circle = ContextCompat.getDrawable(getApplicationContext(), R.drawable.circle);
+            circle.setColorFilter(new
+                            PorterDuffColorFilter(selectedColor, PorterDuff.Mode.SRC_ATOP));
 
-            selected_view.setImageDrawable(ColorImageView.getOverlay(getApplicationContext(), ColorImageView.getCircle(getApplicationContext(), Color.HSVToColor(hsv)), checked));
+            selected_view.setImageDrawable(ColorImageView.getOverlay(circle, checked));
         } else {
             ColorImageView colorImageView = (ColorImageView) colorView.getChildAt(4);
 
@@ -115,8 +120,11 @@ public class ConfigurationActivity extends AppCompatActivity {
             hsv[2] *= 0.6f; // We make the color darker with this
 
             Drawable checked = ContextCompat.getDrawable(getApplicationContext(), R.drawable.checked);
+            Drawable circle = ContextCompat.getDrawable(getApplicationContext(), R.drawable.circle);
+            circle.setColorFilter(new
+                    PorterDuffColorFilter(selectedColor, PorterDuff.Mode.SRC_ATOP));
 
-            colorImageView.setImageDrawable(ColorImageView.getOverlay(getApplicationContext(), ColorImageView.getCircle(getApplicationContext(), Color.HSVToColor(hsv)), checked));
+            colorImageView.setImageDrawable(ColorImageView.getOverlay(circle, checked));
         }
 
         Button okButton = (Button) findViewById(R.id.okButton);
@@ -213,7 +221,11 @@ public class ConfigurationActivity extends AppCompatActivity {
                     ColorImageView in_view;
                     for (int j = 0; j < colorView.getChildCount() - 1; j++) {
                         in_view = (ColorImageView) colorView.getChildAt(j);
-                        in_view.setImageBitmap(ColorImageView.getCircle(getApplicationContext(), in_view.getColor()));
+                        Drawable circle = ContextCompat.getDrawable(getApplicationContext(), R.drawable.circle);
+                        circle.setColorFilter(new
+                                PorterDuffColorFilter(in_view.getColor(), PorterDuff.Mode.SRC_ATOP));
+
+                        in_view.setImageDrawable(circle);
                     }
                     selectedColor = v.getColor();
                     selectedColor_index = finalI;
@@ -229,8 +241,12 @@ public class ConfigurationActivity extends AppCompatActivity {
 
                     ColorImageView clicked_view = (ColorImageView) view;
                     Drawable checked = ContextCompat.getDrawable(getApplicationContext(), R.drawable.checked);
+                    Drawable circle = ContextCompat.getDrawable(getApplicationContext(), R.drawable.circle);
 
-                    clicked_view.setImageDrawable(ColorImageView.getOverlay(getApplicationContext(), ColorImageView.getCircle(getApplicationContext(), Color.HSVToColor(hsv)), checked));
+                    circle.setColorFilter(new
+                            PorterDuffColorFilter(selectedColor, PorterDuff.Mode.SRC_ATOP));
+
+                    clicked_view.setImageDrawable(ColorImageView.getOverlay(circle, checked));
                 }
             });
         }
@@ -260,7 +276,11 @@ public class ConfigurationActivity extends AppCompatActivity {
                         ColorImageView in_view;
                         for (int j = 0; j < colorView.getChildCount() - 1; j++) {
                             in_view = (ColorImageView) colorView.getChildAt(j);
-                            in_view.setImageBitmap(ColorImageView.getCircle(getApplicationContext(), in_view.getColor()));
+                            Drawable circle = ContextCompat.getDrawable(getApplicationContext(), R.drawable.circle);
+                            circle.setColorFilter(new
+                                    PorterDuffColorFilter(in_view.getColor(), PorterDuff.Mode.SRC_ATOP));
+
+                            in_view.setImageDrawable(circle);
                         }
 
                         selectedColor = color;
@@ -274,8 +294,11 @@ public class ConfigurationActivity extends AppCompatActivity {
                         hsv[2] *= 0.6f; // We make the color darker with this
 
                         Drawable checked = ContextCompat.getDrawable(getApplicationContext(), R.drawable.checked);
+                        Drawable circle = ContextCompat.getDrawable(getApplicationContext(), R.drawable.circle);
+                        circle.setColorFilter(new
+                                PorterDuffColorFilter(selectedColor, PorterDuff.Mode.SRC_ATOP));
 
-                        btnCustomColor.setImageDrawable(ColorImageView.getOverlay(getApplicationContext(), ColorImageView.getCircle(getApplicationContext(), Color.HSVToColor(hsv)), checked));
+                        btnCustomColor.setImageDrawable(ColorImageView.getOverlay(circle, checked));
 
                         cp.dismiss();
                     }

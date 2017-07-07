@@ -142,7 +142,7 @@ public class WidgetUpdater extends AppWidgetProvider {
 
             DisplayMetrics displayMetrics = context.getResources().getDisplayMetrics();
             int width = Math.round(100 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
-            int height = Math.round(40 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
+            int height = Math.round(40 * (displayMetrics.ydpi / DisplayMetrics.DENSITY_DEFAULT));
 
             int color = prefs.getInt(appWidgetId + "color", Color.BLUE);
 
