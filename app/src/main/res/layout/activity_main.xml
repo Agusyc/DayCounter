@@ -8,30 +8,33 @@
 
     <ListView
         android:id="@+id/lstWidgets"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="395dp"
+        android:layout_height="0dp"
         android:divider="#50000000"
         android:dividerHeight="1dp"
         android:footerDividersEnabled="true"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="8dp" />
 
     <TextView
         android:id="@+id/txtThere_Is_Nothing1"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:text="@string/there_is_nothing1"
         android:textSize="24sp"
         android:gravity="center"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:layout_editor_absoluteX="8dp" />
 
     <TextView
         android:id="@+id/txtThere_Is_Nothing2"
         android:layout_height="wrap_content"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:text="@string/there_is_nothing2"
         android:textSize="16sp"
         android:gravity="center"
-        app:layout_constraintTop_toBottomOf="@id/txtThere_Is_Nothing1" />
+        app:layout_constraintTop_toBottomOf="@+id/txtThere_Is_Nothing1"
+        tools:layout_editor_absoluteX="8dp" />
 </android.support.constraint.ConstraintLayout>

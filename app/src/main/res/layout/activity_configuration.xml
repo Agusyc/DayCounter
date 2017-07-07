@@ -23,19 +23,20 @@
         android:orientation="vertical"
         android:showDividers="middle"
         android:divider="@drawable/empty_tall_divider"
-        android:paddingTop="30dp" >
+        android:paddingTop="4dp" >
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal" >
 
         <ImageButton
             android:id="@+id/btnDate"
             android:layout_width="24dp"
             android:layout_height="24dp"
             android:src="@drawable/event"
-            android:layout_gravity="center_vertical" />
+            android:layout_gravity="center_vertical"
+            android:contentDescription="@string/event_desc_image" />
 
         <com.agusyc.daycounter.CustomTextInputLayout
             android:layout_height="wrap_content"
@@ -70,121 +71,122 @@
 
     <com.agusyc.daycounter.AutoGridLayout
         android:id="@+id/colorView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:columnCount="6"
         android:rowCount="4"
-        app:columnWidth="60dp"
-        android:paddingStart="8dp"
-        android:paddingEnd="0dp" >
+        app:columnWidth="48dp"
+        android:layout_gravity="center" >
 
         <com.agusyc.daycounter.ColorImageView
             app:picked_color="#F44336"
-            android:layout_height="60dp"
-            android:layout_width="60dp"
+            android:layout_height="48dp"
+            android:layout_width="48dp"
             android:padding="2dp" />
 
         <com.agusyc.daycounter.ColorImageView
             app:picked_color="#E91E63"
-            android:layout_height="60dp"
-            android:layout_width="60dp"
+            android:layout_height="48dp"
+            android:layout_width="48dp"
             android:padding="2dp" />
 
         <com.agusyc.daycounter.ColorImageView
             app:picked_color="#9C27B0"
-            android:layout_height="60dp"
-            android:layout_width="60dp"
+            android:layout_height="48dp"
+            android:layout_width="48dp"
             android:padding="2dp" />
 
         <com.agusyc.daycounter.ColorImageView
             app:picked_color="#673AB7"
-            android:layout_height="60dp"
-            android:layout_width="60dp"
+            android:layout_height="48dp"
+            android:layout_width="48dp"
             android:padding="2dp" />
 
         <com.agusyc.daycounter.ColorImageView
             app:picked_color="#3F51B5"
-            android:layout_height="60dp"
-            android:layout_width="60dp"
+            android:layout_height="48dp"
+            android:layout_width="48dp"
             android:padding="2dp" />
 
         <com.agusyc.daycounter.ColorImageView
             app:picked_color="#2196F3"
-            android:layout_height="60dp"
-            android:layout_width="60dp"
+            android:layout_height="48dp"
+            android:layout_width="48dp"
             android:padding="2dp" />
 
         <com.agusyc.daycounter.ColorImageView
             app:picked_color="#03A9F4"
-            android:layout_height="60dp"
-            android:layout_width="60dp"
+            android:layout_height="48dp"
+            android:layout_width="48dp"
             android:padding="2dp" />
 
         <com.agusyc.daycounter.ColorImageView
             app:picked_color="#009688"
-            android:layout_height="60dp"
-            android:layout_width="60dp"
+            android:layout_height="48dp"
+            android:layout_width="48dp"
             android:padding="2dp" />
 
         <com.agusyc.daycounter.ColorImageView
             app:picked_color="#4CAF50"
-            android:layout_height="60dp"
-            android:layout_width="60dp"
+            android:layout_height="48dp"
+            android:layout_width="48dp"
             android:padding="2dp" />
 
         <com.agusyc.daycounter.ColorImageView
             app:picked_color="#8BC34A"
-            android:layout_height="60dp"
-            android:layout_width="60dp"
+            android:layout_height="48dp"
+            android:layout_width="48dp"
             android:padding="2dp" />
 
         <com.agusyc.daycounter.ColorImageView
             app:picked_color="#CDDC39"
-            android:layout_height="60dp"
-            android:layout_width="60dp"
+            android:layout_height="48dp"
+            android:layout_width="48dp"
             android:padding="2dp" />
 
         <com.agusyc.daycounter.ColorImageView
             app:picked_color="#FFEB3B"
-            android:layout_height="60dp"
-            android:layout_width="60dp"
+            android:layout_height="48dp"
+            android:layout_width="48dp"
             android:padding="2dp" />
 
         <com.agusyc.daycounter.ColorImageView
             app:picked_color="#FFC107"
-            android:layout_height="60dp"
-            android:layout_width="60dp"
+            android:layout_height="48dp"
+            android:layout_width="48dp"
             android:padding="2dp" />
 
         <com.agusyc.daycounter.ColorImageView
             app:picked_color="#FF9800"
-            android:layout_height="60dp"
-            android:layout_width="60dp"
+            android:layout_height="48dp"
+            android:layout_width="48dp"
             android:padding="2dp" />
 
         <com.agusyc.daycounter.ColorImageView
             app:picked_color="#FF5722"
-            android:layout_height="60dp"
-            android:layout_width="60dp"
+            android:layout_height="48dp"
+            android:layout_width="48dp"
             android:padding="2dp" />
 
         <com.agusyc.daycounter.ColorImageView
             app:picked_color="#795548"
-            android:layout_height="60dp"
-            android:layout_width="60dp"
+            android:layout_height="48dp"
+            android:layout_width="48dp"
             android:padding="2dp" />
 
         <com.agusyc.daycounter.ColorImageView
             app:picked_color="#607D8B"
-            android:layout_height="60dp"
-            android:layout_width="60dp"
+            android:layout_height="48dp"
+            android:layout_width="48dp"
             android:padding="2dp" />
 
         <ImageView
             android:id="@+id/btnCustomColor"
-            android:layout_height="60dp"
-            android:layout_width="60dp"
-            android:src="@drawable/custom_color" />
+            android:layout_height="48dp"
+            android:layout_width="48dp"
+            android:padding="2dp"
+            android:src="@drawable/custom_color"
+            android:contentDescription="@string/custom_color_desc" />
 
     </com.agusyc.daycounter.AutoGridLayout>
 

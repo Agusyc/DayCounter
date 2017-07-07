@@ -19,4 +19,6 @@
     <string name="input_something_error">Debes tipear algo aquí</string>
     <string name="number_too_big_error">¡Este número es muy grande!</string>
     <string name="kind_of_event_error">Debes seleccionar un tipo de evento</string>
+    <string name="event_desc_image">Escoger la fecha manualmente</string>
+    <string name="custom_color_desc">Elige un color personalizado</string>
 </resources>
