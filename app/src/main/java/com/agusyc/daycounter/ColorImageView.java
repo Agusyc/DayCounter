@@ -5,7 +5,6 @@ import android.content.res.TypedArray;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
@@ -54,8 +53,7 @@ public class ColorImageView extends android.support.v7.widget.AppCompatImageView
 
     public static LayerDrawable getOverlay(Context context, Bitmap bmp1, Drawable d2) {
         BitmapDrawable bd1 = new BitmapDrawable(context.getResources(), bmp1);
-        LayerDrawable ld = new LayerDrawable(new Drawable[]{bd1, d2});
-        return ld;
+        return new LayerDrawable(new Drawable[]{bd1, d2});
     }
 }
 

@@ -139,13 +139,14 @@
             android:padding="2dp" />
 
         <com.agusyc.daycounter.ColorImageView
-            app:picked_color="#FFFFFF"
+            app:picked_color="#607D8B"
             android:padding="2dp" />
 
         <ImageView
             android:id="@+id/btnCustomColor"
             android:layout_height="60dp"
-            android:layout_width="60dp" />
+            android:layout_width="60dp"
+            android:src="@drawable/custom_color" />
     </GridLayout>
 
     <Button

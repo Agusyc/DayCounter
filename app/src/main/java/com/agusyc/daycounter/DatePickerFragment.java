@@ -12,6 +12,7 @@ import android.widget.Spinner;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
+import java.text.DecimalFormat;
 import java.util.Calendar;
 
 public class DatePickerFragment extends DialogFragment implements
@@ -45,8 +46,9 @@ public class DatePickerFragment extends DialogFragment implements
             spnType.setSelection(2);
         }
 
+        DecimalFormat formatter = new DecimalFormat("#,###,###");
 
         // We set the days text to the *absolute* difference
-        edtDays.setText(Integer.toString(Math.abs(difference)));
+        edtDays.setText(formatter.format(Math.abs(difference)));
     }
 }

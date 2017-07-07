@@ -1,6 +1,7 @@
 package com.agusyc.daycounter;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.util.TypedValue;
@@ -13,6 +14,7 @@ import android.widget.TextView;
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 class WidgetListAdapter extends ArrayAdapter<Widget> {
@@ -40,8 +42,10 @@ class WidgetListAdapter extends ArrayAdapter<Widget> {
 
         TextView txtDays = convertView.findViewById(R.id.txtDays);
 
+        DecimalFormat formatter = new DecimalFormat("#,###,###");
+
         // We set the days text to the *absolute* difference
-        txtDays.setText(Integer.toString(Math.abs(difference)));
+        txtDays.setText(formatter.format((Math.abs(difference))));
 
         TextView txtLabel = convertView.findViewById(R.id.txtLabel);
 
@@ -62,7 +66,22 @@ class WidgetListAdapter extends ArrayAdapter<Widget> {
 
         Log.d("WidgetUpdater", "The new difference is " + difference + ". The current time is " + currentTime);
 
-        convertView.setBackgroundColor(widget.getColor());
+        int color = widget.getColor();
+
+        convertView.setBackgroundColor(color);
+
+        float[] hsv = new float[3];
+        Color.colorToHSV(color, hsv);
+
+        float brightness = (1 - hsv[1] + hsv[2]) / 2;
+
+        Log.d("WidgetListAdapter", "Brightness is " + brightness);
+
+        if (brightness >= 0.7) {
+            txtDays.setTextColor(Color.BLACK);
+            txtLabel.setTextColor(Color.BLACK);
+            ((TextView) convertView.findViewById(R.id.txtThereAre)).setTextColor(Color.BLACK);
+        }
 
         // Return the completed view to render on the main activity
         return convertView;

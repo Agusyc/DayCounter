@@ -2,16 +2,12 @@ package com.agusyc.daycounter;
 
 import android.app.DialogFragment;
 import android.appwidget.AppWidgetManager;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Matrix;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.support.annotation.ColorInt;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -22,9 +18,13 @@ import android.widget.EditText;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 
+import com.pes.androidmaterialcolorpickerdialog.ColorPicker;
+import com.pes.androidmaterialcolorpickerdialog.ColorPickerCallback;
+
 import org.joda.time.DateTime;
 import org.joda.time.Days;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -85,7 +85,9 @@ public class ConfigurationActivity extends AppCompatActivity {
 
             int difference = Days.daysBetween(new DateTime(date), new DateTime(currentTime)).getDays();
 
-            edtDays.setText(Integer.toString(Math.abs(difference)));
+            DecimalFormat formatter = new DecimalFormat("#,###,###");
+
+            edtDays.setText(formatter.format(Math.abs(difference)));
             edtLabel.setText(widget.getLabel());
 
             if (difference >= 0) {
@@ -98,7 +100,10 @@ public class ConfigurationActivity extends AppCompatActivity {
             Color.colorToHSV(selectedColor, hsv);
             hsv[2] *= 0.6f; // We make the color darker with this
 
+            ImageView selected_view = (ImageView) colorView.getChildAt(selectedColor_index);
+            Drawable checked = ContextCompat.getDrawable(getApplicationContext(), R.drawable.checked);
 
+            selected_view.setImageDrawable(ColorImageView.getOverlay(getApplicationContext(), ColorImageView.getCircle(getApplicationContext(), Color.HSVToColor(hsv)), checked));
         } else {
             ColorImageView colorImageView = (ColorImageView) colorView.getChildAt(4);
 
@@ -210,12 +215,16 @@ public class ConfigurationActivity extends AppCompatActivity {
                         in_view = (ColorImageView) colorView.getChildAt(j);
                         in_view.setImageBitmap(ColorImageView.getCircle(getApplicationContext(), in_view.getColor()));
                     }
-
                     selectedColor = v.getColor();
                     selectedColor_index = finalI;
 
+                    ((ImageView) colorView.getChildAt(colorView.getChildCount() - 1)).setImageDrawable(getDrawable(R.drawable.custom_color));
+
                     float[] hsv = new float[3];
                     Color.colorToHSV(selectedColor, hsv);
+
+                    Log.d("ConfigurationActivity", "The brightness is " + (1 - hsv[1] + hsv[2]) / 2);
+
                     hsv[2] *= 0.6f; // We make the color darker with this
 
                     ColorImageView clicked_view = (ColorImageView) view;
@@ -232,6 +241,45 @@ public class ConfigurationActivity extends AppCompatActivity {
             public void onClick(View view) {
                 DialogFragment newFragment = new DatePickerFragment();
                 newFragment.show(getFragmentManager(), "datePicker");
+            }
+        });
+
+        final ImageView btnCustomColor = (ImageView) findViewById(R.id.btnCustomColor);
+
+        btnCustomColor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                final ColorPicker cp = new ColorPicker(ConfigurationActivity.this, 255, 255, 255);
+                    /* Show color picker dialog */
+                cp.show();
+
+                /* Set a new Listener called when user click "select" */
+                cp.setCallback(new ColorPickerCallback() {
+                    @Override
+                    public void onColorChosen(@ColorInt int color) {
+                        ColorImageView in_view;
+                        for (int j = 0; j < colorView.getChildCount() - 1; j++) {
+                            in_view = (ColorImageView) colorView.getChildAt(j);
+                            in_view.setImageBitmap(ColorImageView.getCircle(getApplicationContext(), in_view.getColor()));
+                        }
+
+                        selectedColor = color;
+                        selectedColor_index = colorView.getChildCount() - 1;
+
+                        float[] hsv = new float[3];
+                        Color.colorToHSV(selectedColor, hsv);
+
+                        Log.d("ConfigurationActivity", "The brightness is " + (((1-hsv[1])+hsv[2])/2));
+
+                        hsv[2] *= 0.6f; // We make the color darker with this
+
+                        Drawable checked = ContextCompat.getDrawable(getApplicationContext(), R.drawable.checked);
+
+                        btnCustomColor.setImageDrawable(ColorImageView.getOverlay(getApplicationContext(), ColorImageView.getCircle(getApplicationContext(), Color.HSVToColor(hsv)), checked));
+
+                        cp.dismiss();
+                    }
+                });
             }
         });
     }

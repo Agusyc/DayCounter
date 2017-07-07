@@ -16,7 +16,6 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.View;
 import android.widget.RemoteViews;
 
@@ -44,21 +43,28 @@ public class WidgetUpdater extends AppWidgetProvider {
         if ("android.appwidget.action.APPWIDGET_DELETED".equals(intent.getAction())) {
             // We call the deleteWidget method, that deletes the widget from the prefs
             deleteWidget(context, intent.getExtras().getInt(AppWidgetManager.EXTRA_APPWIDGET_ID));
-        } else if (WIDGET_BUTTON.equals(intent.getAction())) {
-            Log.d("WidgetUpdater", "The reset counter button was clicked");
+        } else if (intent.getAction() != null && intent.getAction().startsWith(WIDGET_BUTTON)) {
+            String id_s = intent.getAction().replace(WIDGET_BUTTON, "");
+
+            Log.d("WidgetUpdater", "The reset counter button was clicked for id " + id_s);
 
             // Here, the button was clicked
             SharedPreferences prefs = context.getSharedPreferences("DaysPrefs", Context.MODE_PRIVATE);
 
-            String key_base = Integer.toString(intent.getIntExtra("id", 0));
-            prefs.edit().putLong(key_base + "date", System.currentTimeMillis()).apply();
-            onUpdate(context, AppWidgetManager.getInstance(context), new int[]{intent.getIntExtra("id", 0)});
+            prefs.edit().putLong(id_s + "date", System.currentTimeMillis()).apply();
+            onUpdate(context, AppWidgetManager.getInstance(context), new int[]{Integer.parseInt(id_s)});
         } else if (AppWidgetManager.ACTION_APPWIDGET_UPDATE.equals(intent.getAction())) {
             Log.d("WidgetUpdater", "Updating widgets...");
             int[] ids = intent.getExtras().getIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS);
             // We update the widgets
             this.onUpdate(context, AppWidgetManager.getInstance(context), ids);
         }
+    }
+
+    protected PendingIntent getPendingSelfIntent(Context context, String action, int id) {
+        Intent intent = new Intent(context, getClass());
+        intent.setAction(action + id);
+        return PendingIntent.getBroadcast(context, 0, intent, 0);
     }
 
     private void deleteWidget(Context context, int id) {
@@ -114,23 +120,20 @@ public class WidgetUpdater extends AppWidgetProvider {
             if (difference > 0) {
                 views.setTextViewText(R.id.txtLabel, context.getString(R.string.days_since) + " " + label);
 
-                Intent intent = new Intent(context, getClass());
-                intent.putExtra("id", appWidgetId);
-                intent.setAction(WIDGET_BUTTON);
-
-                views.setOnClickPendingIntent(R.id.btnReset, PendingIntent.getBroadcast(context, 0, intent, 0));
+                views.setOnClickPendingIntent(R.id.btnReset, getPendingSelfIntent(context, WIDGET_BUTTON, appWidgetId));
                 views.setViewVisibility(R.id.btnReset, View.VISIBLE);
                 // We check the sign of the number (Positive or negative)
             } else if (difference < 0) {
                 views.setTextViewText(R.id.txtLabel, context.getString(R.string.days_until) + " " + label);
                 views.setViewVisibility(R.id.btnReset, View.GONE);
             } else {
-                views.setTextViewText(R.id.txtLabel, context.getString(R.string.there_are_no_days_since) + " " + label + ". " + context.getString(R.string.today));
-                views.setTextViewTextSize(R.id.txtLabel, TypedValue.COMPLEX_UNIT_SP, 27);
+                views.setTextViewText(R.id.txtNoDays, context.getString(R.string.there_are_no_days_since) + " " + label + ". " + context.getString(R.string.today));
 
+                views.setViewVisibility(R.id.txtNoDays, View.VISIBLE);
                 views.setViewVisibility(R.id.btnReset, View.GONE);
                 views.setViewVisibility(R.id.txtDays, View.GONE);
                 views.setViewVisibility(R.id.txtThereAre, View.GONE);
+                views.setViewVisibility(R.id.txtLabel, View.GONE);
             }
 
             Log.d("WidgetUpdater", "Updating widget " + appWidgetId + " with label " + label + ", original/target date " + date);
@@ -141,9 +144,24 @@ public class WidgetUpdater extends AppWidgetProvider {
             int width = Math.round(100 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
             int height = Math.round(40 * (displayMetrics.xdpi / DisplayMetrics.DENSITY_DEFAULT));
 
+            int color = prefs.getInt(appWidgetId + "color", Color.BLUE);
+
             Bitmap bmp = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
             Canvas canvas = new Canvas(bmp);
-            canvas.drawColor(prefs.getInt(appWidgetId + "color", Color.BLUE));
+            canvas.drawColor(color);
+
+            float[] hsv = new float[3];
+
+            Color.colorToHSV(color, hsv);
+
+            float brightness = (1 - hsv[1] + hsv[2]) / 2;
+
+            if (brightness >= 0.7) {
+                views.setTextColor(R.id.txtLabel, Color.BLACK);
+                views.setTextColor(R.id.txtDays, Color.BLACK);
+                views.setTextColor(R.id.txtThereAre, Color.BLACK);
+                views.setTextColor(R.id.txtNoDays, Color.BLACK);
+            }
 
             views.setImageViewBitmap(R.id.bkgView, getRoundedCornerStrokedBitmap(context, bmp, 3, 3));
 

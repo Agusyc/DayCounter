@@ -26,8 +26,8 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:textSize="24sp"
             android:textAlignment="center"
+            android:autoSizeTextType="uniform"
             android:textColor="@android:color/white"
             android:text="@string/there_are"
             android:paddingTop="2dp" />
@@ -37,9 +37,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="3"
-            android:textSize="36sp"
             android:textStyle="bold"
-            android:textAlignment="center"
+            android:autoSizeTextType="uniform"
+            android:gravity="center"
             android:textColor="@android:color/white" />
 
         <TextView
@@ -47,11 +47,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:textSize="24sp"
             android:autoSizeTextType="uniform"
             android:layout_weight="1"
             android:textColor="@android:color/white"
             android:paddingBottom="2dp" />
+
+        <TextView
+            android:id="@+id/txtNoDays"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:textAlignment="center"
+            android:autoSizeTextType="uniform"
+            android:autoSizeMinTextSize="24sp"
+            android:layout_weight="1"
+            android:textColor="@android:color/white"
+            android:visibility="gone" />
 
         <Button
             android:id="@+id/btnReset"
