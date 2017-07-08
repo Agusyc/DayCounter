@@ -150,19 +150,21 @@ public class ConfigurationActivity extends AppCompatActivity {
                 try {
                     DateTime date = new DateTime(System.currentTimeMillis());
 
-                    int selectedPosition = spnType.getSelectedItemPosition();
                     String days_s = edtDays.getText().toString();
 
                     if (days_s.length() == 0) {
                         edtDays.setError(getString(R.string.input_something_error));
                         return;
                     }
+
                     int days = Integer.parseInt(days_s);
+
+                    int selectedPosition = spnType.getSelectedItemPosition();
 
                     switch (selectedPosition) {
                         case 0:
                             spnType.setError(getString(R.string.kind_of_event_error));
-                            break;
+                            return;
                         case 1:
                             date = date.minusDays(days);
                             break;
