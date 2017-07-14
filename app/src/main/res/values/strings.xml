@@ -11,7 +11,6 @@
     <string name="event">Event</string>
     <string name="there_is_nothing1">There is nothing here!</string>
     <string name="there_is_nothing2">Add some widgets on your home screen and you will be able to see and edit them here.</string>
-    <string name="reset_counter">Reset counter</string>
     <string name="about">Day Counter is licensed under the MIT license. More info here: https://goo.gl/cxRvtw\n\nThis app was programmed by Agustín Roth and designed by Agustín Roth and Christen Edmundson (Specially the last one. Thank you very much!). The idea came from a Reddittor\'s comment that has deleted their account.\n\nReddit comment: https://goo.gl/huVoro\n\nGitHub repository: https://goo.gl/ZH6yv5</string>
     <string name="until_or_since">Until or Since</string>
     <string name="event_desc">What is the event?</string>
