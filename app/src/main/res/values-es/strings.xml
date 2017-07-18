@@ -10,7 +10,7 @@
     <string name="event">Evento</string>
     <string name="there_is_nothing1">¡No hay nada aquí!</string>
     <string name="there_is_nothing2">Añade algunos widgets en tu pantalla de inicio y podrás verlos y editarlos aquí.</string>
-    <string name="about">Day Counter está licensiado bajo la MIT license. Más información aquí: https://goo.gl/cxRvtw\n\nEsta aplicación fue programada por Agustín Roth y diseñada por Agustín Roth y Christen Edmundson (especialmente este último ¡Muchas gracias!). La idea original vino del comentario de un Redditor que borró su cuenta.\n\nComentario de Reddit: https://goo.gl/huVoro\n\nRepositorio de GitHub: https://goo.gl/ZH6yv5</string>
+    <string name="about">Day Counter está licensiado bajo la MIT license.\nMás información aquí: https://goo.gl/cxRvtw\n\nEsta aplicación fue programada por Agustín Roth y diseñada por Agustín Roth y Christen Edmundson (especialmente este último ¡Muchas gracias!). La idea original vino del comentario de un Redditor que borró su cuenta.\n\nComentario de Reddit: https://goo.gl/huVoro\n\nRepositorio de GitHub: https://goo.gl/ZH6yv5</string>
     <string name="until_or_since">Hasta o Desde</string>
     <string name="event_desc">¿Qué es el evento?</string>
     <string name="until_or_since_desc">¿Estás contando los días desde un evento o hasta uno?</string>
@@ -21,4 +21,5 @@
     <string name="event_desc_image">Escoger la fecha manualmente</string>
     <string name="custom_color_desc">Elige un color personalizado</string>
     <string name="there_have_been">Han pasado</string>
+    <string name="info">Información acerca de la aplicación</string>
 </resources>

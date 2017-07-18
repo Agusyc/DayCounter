@@ -114,13 +114,23 @@ public class WidgetUpdater extends AppWidgetProvider {
                 views.setTextViewText(R.id.txtLabel, context.getString(R.string.days_since) + " " + label);
 
                 views.setOnClickPendingIntent(R.id.btnReset, getPendingSelfIntent(context, WIDGET_BUTTON, appWidgetId));
+
+                views.setViewVisibility(R.id.txtNoDays, View.GONE);
                 views.setViewVisibility(R.id.btnReset, View.VISIBLE);
-                // We check the sign of the number (Positive or negative)
+                views.setViewVisibility(R.id.divider, View.VISIBLE);
+                views.setViewVisibility(R.id.txtDays, View.VISIBLE);
+                views.setViewVisibility(R.id.txtThereAreHaveBeen, View.VISIBLE);
+                views.setViewVisibility(R.id.txtLabel, View.VISIBLE);
             } else if (difference < 0) {
                 views.setTextViewText(R.id.txtThereAreHaveBeen, context.getString(R.string.there_are));
                 views.setTextViewText(R.id.txtLabel, context.getString(R.string.days_until) + " " + label);
+
+                views.setViewVisibility(R.id.txtNoDays, View.GONE);
                 views.setViewVisibility(R.id.btnReset, View.GONE);
                 views.setViewVisibility(R.id.divider, View.GONE);
+                views.setViewVisibility(R.id.txtDays, View.VISIBLE);
+                views.setViewVisibility(R.id.txtThereAreHaveBeen, View.VISIBLE);
+                views.setViewVisibility(R.id.txtLabel, View.VISIBLE);
             } else {
                 views.setTextViewText(R.id.txtNoDays, context.getString(R.string.there_are_no_days_since) + " " + label + ". " + context.getString(R.string.today));
 

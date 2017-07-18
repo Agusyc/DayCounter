@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import org.joda.time.DateTime;
@@ -48,18 +49,32 @@ class WidgetListAdapter extends ArrayAdapter<Widget> {
         txtDays.setText(formatter.format((Math.abs(difference))));
 
         TextView txtLabel = convertView.findViewById(R.id.txtLabel);
+        TextView txtThereAreHaveBeen = convertView.findViewById(R.id.txtThereAreHaveBeen);
+        ResetButton btnReset = convertView.findViewById(R.id.btnReset);
+        View divider = convertView.findViewById(R.id.divider);
 
         // We check the sign of the number (Positive or negative)
         if (difference > 0) {
             txtLabel.setText(getContext().getString(R.string.days_since) + " " + widget.getLabel());
+            btnReset.setWidgetID(widget.getID());
+            txtDays.setVisibility(View.VISIBLE);
+            btnReset.setVisibility(View.VISIBLE);
+            divider.setVisibility(View.VISIBLE);
+            txtThereAreHaveBeen.setVisibility(View.VISIBLE);
         } else if (difference < 0) {
             txtLabel.setText(getContext().getString(R.string.days_until) + " " + widget.getLabel());
+            txtDays.setVisibility(View.VISIBLE);
+            txtThereAreHaveBeen.setVisibility(View.VISIBLE);
+            btnReset.setVisibility(View.GONE);
+            divider.setVisibility(View.GONE);
         } else {
             txtLabel.setText(getContext().getString(R.string.there_are_no_days_since) + " " + widget.getLabel() + ". " + getContext().getString(R.string.today));
             txtLabel.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24);
 
             txtDays.setVisibility(View.GONE);
-            convertView.findViewById(R.id.txtThereAre).setVisibility(View.GONE);
+            btnReset.setVisibility(View.GONE);
+            divider.setVisibility(View.GONE);
+            txtThereAreHaveBeen.setVisibility(View.GONE);
         }
 
         Log.d("WidgetUpdater", "Adding widget " + widget.getID() + " with label " + widget.getLabel() + ", original/target date " + date);
@@ -80,7 +95,7 @@ class WidgetListAdapter extends ArrayAdapter<Widget> {
         if (brightness >= 0.7) {
             txtDays.setTextColor(Color.BLACK);
             txtLabel.setTextColor(Color.BLACK);
-            ((TextView) convertView.findViewById(R.id.txtThereAre)).setTextColor(Color.BLACK);
+            ((TextView) convertView.findViewById(R.id.txtThereAreHaveBeen)).setTextColor(Color.BLACK);
         }
 
         // Return the completed view to render on the main activity
