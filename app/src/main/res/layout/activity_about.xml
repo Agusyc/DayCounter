@@ -1,15 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.agusyc.daycounter.AboutActivity">
+    android:padding="16dp" >
 
     <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/about"
-        android:autoLink="web"
-        android:gravity="center" />
+        android:layout_height="wrap_content"
+        android:text="@string/about_title_1"
+        android:gravity="center"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:paddingBottom="10dp"/>
 
-</android.support.constraint.ConstraintLayout>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/about_section_1"
+        android:gravity="start"
+        android:textSize="16sp"
+        android:paddingBottom="15dp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="20dp">
+
+        <ImageView
+            android:id="@+id/imgGithub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/github"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:id="@+id/txtGithub"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/imgGithub"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@id/imgGithub"
+            android:layout_alignBottom="@id/imgGithub"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:gravity="center_vertical"/>
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/about_title_2"
+        android:gravity="center"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:paddingBottom="10dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/about_section_2"
+        android:gravity="start"
+        android:textSize="16sp"
+        android:paddingBottom="15dp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="20dp">
+
+        <ImageView
+            android:id="@+id/imgReddit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/reddit"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:id="@+id/txtReddit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/imgReddit"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@id/imgReddit"
+            android:layout_alignBottom="@id/imgReddit"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:gravity="center_vertical" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/about_title_3"
+        android:gravity="center"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:paddingBottom="10dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/about_section_3"
+        android:gravity="start"
+        android:textSize="16sp"
+        android:paddingBottom="15dp" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="20dp">
+
+        <ImageView
+            android:id="@+id/imgDonate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/gift"
+            android:layout_alignParentStart="true" />
+
+        <TextView
+            android:id="@+id/txtDonate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toEndOf="@id/imgDonate"
+            android:layout_alignParentEnd="true"
+            android:layout_alignTop="@id/imgDonate"
+            android:layout_alignBottom="@id/imgDonate"
+            android:paddingStart="10dp"
+            android:paddingEnd="10dp"
+            android:gravity="center_vertical"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

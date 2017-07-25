@@ -37,15 +37,14 @@
                 android:name="android.appwidget.provider"
                 android:resource="@xml/widgetconfiguration" />
         </receiver>
-        <receiver android:name=".UpdaterBroadcastReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-                <action android:name="android.intent.action.DATE_CHANGED" />
-                <action android:name="android.intent.action.TIME_SET" />
-            </intent-filter>
-        </receiver>
 
-        <activity android:name=".AboutActivity"></activity>
+        <receiver android:name=".UpdaterBroadcastReceiver" />
+
+        <activity android:name=".AboutActivity" android:theme="@style/AppTheme.ActionBar" >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".MainActivity" />
+        </activity>
     </application>
 
 </manifest>

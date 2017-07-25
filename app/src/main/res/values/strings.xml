@@ -1,9 +1,8 @@
 <resources>
     <string name="app_name">Day Counter</string>
-    <string name="today">It is today!</string>
-    <string name="days_since">days since</string>
-    <string name="days_until">days until</string>
-    <string name="there_are_no_days_since">There are no days since</string>
+    <string name="days_since">days since %1$s</string>
+    <string name="days_until">days until %1$s</string>
+    <string name="there_are_no_days_since">There are no days since %1$s. It is today!</string>
     <string name="there_are">There are</string>
     <string name="there_have_been">There have been</string>
     <string name="ok">OK</string>
@@ -11,7 +10,16 @@
     <string name="event">Event</string>
     <string name="there_is_nothing1">There is nothing here!</string>
     <string name="there_is_nothing2">Add some widgets on your home screen and you will be able to see and edit them here.</string>
-    <string name="about">Day Counter is licensed under the MIT license.\nMore info here: https://goo.gl/cxRvtw\n\nThis app was programmed by Agustín Roth and designed by Agustín Roth and Christen Edmundson (Specially the last one. Thank you very much!). The idea came from a Reddittor\'s comment that has deleted their account.\n\nReddit comment: https://goo.gl/huVoro\n\nGitHub repository: https://goo.gl/ZH6yv5</string>
+    <string name="about_title">About</string>
+    <string name="about_title_1">Licensing and GitHub</string>
+    <string name="about_section_1">Day Counter is licensed under the MIT open source license, and the source code can be found on GitHub.</string>
+    <string name="source_link">Source code available here</string>
+    <string name="about_title_2">Reddit</string>
+    <string name="about_section_2">Day Counter was created at the suggestion of a Reddit user (whose account has since been deleted).</string>
+    <string name="reddit_link">Reddit comment available here</string>
+    <string name="about_title_3">Donate</string>
+    <string name="about_section_3">This app was created for free by a developer and a designer looking to improve their skills. If you would like to support us and the work we do, a donation would be greatly appreciated!</string>
+    <string name="paypal_link">Donate here</string>
     <string name="until_or_since">Until or Since</string>
     <string name="event_desc">What is the event?</string>
     <string name="until_or_since_desc">Are you counting the days since and event, or until an event?</string>
