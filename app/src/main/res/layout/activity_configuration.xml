@@ -70,7 +70,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:inputType="textAutoCorrect"
-        android:maxLength="30"
+        android:maxLength="20"
         android:hint="@string/event" />
 
     </com.agusyc.daycounter.CustomTextInputLayout>

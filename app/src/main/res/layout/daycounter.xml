@@ -27,7 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="vertical"
-            android:layout_weight="53" >
+            android:layout_weight="63" >
 
             <TextView
                 android:id="@+id/txtThereAreHaveBeen"
@@ -66,12 +66,6 @@
         </LinearLayout>
 
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="8" >
-        </ImageView>
-
-        <ImageView
             android:id="@+id/divider"
             android:layout_width="match_parent"
             android:layout_height="1dp"
@@ -81,14 +75,15 @@
         <ImageView
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="8" >
+            android:layout_weight="5"
+            tools:ignore="ContentDescription">
         </ImageView>
 
         <ImageView
             android:id="@+id/btnReset"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="23"
+            android:layout_weight="32"
             android:src="@drawable/reset_counter"
             tools:ignore="ContentDescription" />
     </LinearLayout>
