@@ -86,78 +86,57 @@ class WidgetUpdater : AppWidgetProvider() {
 
         // Perform this loop procedure for each App Widget that belongs to this provider
         for (appWidgetId in appWidgetIds) {
-
-            // We get all the views that are in the widget
-            val views = RemoteViews(context.packageName, R.layout.daycounter)
+            val views: RemoteViews
 
             // / We get all the needed data
             val key_base = Integer.toString(appWidgetId)
             val label = prefs.getString(key_base + "label", "")
             val date = prefs.getLong(key_base + "date", 0)
             val currentTime = System.currentTimeMillis()
+            val color = prefs.getInt(appWidgetId.toString() + "color", Color.BLUE)
+            val hsv = FloatArray(3)
+            Color.colorToHSV(color, hsv)
+            val brightness = (1 - hsv[1] + hsv[2]) / 2
 
             // We use the Joda-Time method to calculate the difference
             val difference = Days.daysBetween(DateTime(date), DateTime(currentTime)).days
 
-            // We set the days text to the *absolute* difference
-            views.setTextViewText(R.id.txtDays, Integer.toString(Math.abs(difference)))
-
             // We check the sign of the number (Positive or negative). So we know if we use "since" or "until"
             if (difference > 0) {
+                views = RemoteViews(context.packageName, R.layout.daycounter_since)
                 views.setTextViewText(R.id.txtThereAreHaveBeen, context.getString(R.string.there_have_been))
                 views.setTextViewText(R.id.txtLabel, context.getString(R.string.days_since, label))
+                views.setTextViewText(R.id.txtDays, Math.abs(difference).toString())
+
+                if (brightness >= 0.65) {
+                    views.setTextColor(R.id.txtThereAreHaveBeen, Color.BLACK)
+                    views.setTextColor(R.id.txtLabel, Color.BLACK)
+                    views.setTextColor(R.id.txtDays, Color.BLACK)
+                    views.setInt(R.id.btnReset, "setColorFilter", Color.BLACK)
+                }
 
                 views.setOnClickPendingIntent(R.id.btnReset, getPendingSelfIntent(context, WIDGET_BUTTON, appWidgetId))
-
-                views.setViewVisibility(R.id.txtNoDays, View.GONE)
-                views.setViewVisibility(R.id.btnReset, View.VISIBLE)
-                views.setViewVisibility(R.id.divider, View.VISIBLE)
-                views.setViewVisibility(R.id.txtDays, View.VISIBLE)
-                views.setViewVisibility(R.id.txtThereAreHaveBeen, View.VISIBLE)
-                views.setViewVisibility(R.id.txtLabel, View.VISIBLE)
             } else if (difference < 0) {
+                views = RemoteViews(context.packageName, R.layout.daycounter_until)
                 views.setTextViewText(R.id.txtThereAreHaveBeen, context.getString(R.string.there_are))
                 views.setTextViewText(R.id.txtLabel, context.getString(R.string.days_until, label))
+                views.setTextViewText(R.id.txtDays, Math.abs(difference).toString())
 
-                views.setViewVisibility(R.id.txtNoDays, View.GONE)
-                views.setViewVisibility(R.id.btnReset, View.GONE)
-                views.setViewVisibility(R.id.divider, View.GONE)
-                views.setViewVisibility(R.id.txtDays, View.VISIBLE)
-                views.setViewVisibility(R.id.txtThereAreHaveBeen, View.VISIBLE)
-                views.setViewVisibility(R.id.txtLabel, View.VISIBLE)
+                if (brightness >= 0.65) {
+                    views.setTextColor(R.id.txtThereAreHaveBeen, Color.BLACK)
+                    views.setTextColor(R.id.txtLabel, Color.BLACK)
+                    views.setTextColor(R.id.txtDays, Color.BLACK)
+                }
             } else {
+                views = RemoteViews(context.packageName, R.layout.daycounter_nodays)
                 views.setTextViewText(R.id.txtNoDays, context.getString(R.string.there_are_no_days_since, label))
-                views.setViewVisibility(R.id.txtNoDays, View.VISIBLE)
-                views.setViewVisibility(R.id.btnReset, View.GONE)
-                views.setViewVisibility(R.id.divider, View.GONE)
-                views.setViewVisibility(R.id.txtDays, View.GONE)
-                views.setViewVisibility(R.id.txtThereAreHaveBeen, View.GONE)
-                views.setViewVisibility(R.id.txtLabel, View.GONE)
             }
 
             Log.d("WidgetUpdater", "Updating widget $appWidgetId with label $label, original/target date $date")
 
             Log.d("WidgetUpdater", "The new difference is $difference. The current time is $currentTime")
 
-            val color = prefs.getInt(appWidgetId.toString() + "color", Color.BLUE)
-
             views.setInt(R.id.bkgView, "setColorFilter", color)
-
-            val hsv = FloatArray(3)
-
-            Color.colorToHSV(color, hsv)
-
-            val brightness = (1 - hsv[1] + hsv[2]) / 2
-
-            if (brightness >= 0.65) {
-                views.setTextColor(R.id.txtLabel, Color.BLACK)
-                views.setTextColor(R.id.txtDays, Color.BLACK)
-                views.setTextColor(R.id.txtThereAreHaveBeen, Color.BLACK)
-                views.setTextColor(R.id.txtNoDays, Color.BLACK)
-                views.setInt(R.id.btnReset, "setColorFilter", Color.BLACK)
-                views.setInt(R.id.divider, "setColorFilter", Color.BLACK)
-            }
-
             views.setInt(R.id.lytWidget, "setVisibility", View.VISIBLE)
 
             // Tell the AppWidgetManager to perform an update on the current app widget
