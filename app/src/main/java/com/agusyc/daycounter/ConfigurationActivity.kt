@@ -211,15 +211,21 @@ class ConfigurationActivity : AppCompatActivity() {
                 val hsv = FloatArray(3)
                 Color.colorToHSV(selectedColor, hsv)
 
-                Log.d("ConfigurationActivity", "The brightness is " + (1 - hsv[1] + hsv[2]) / 2)
-
                 hsv[2] *= 0.6f // We make the color darker with this
+
+                val brightness = (1 - hsv[1] + hsv[2]) / 2
 
                 val clicked_view = view as ColorImageView
                 val checked = ContextCompat.getDrawable(applicationContext, R.drawable.checked)
                 val circle = ContextCompat.getDrawable(applicationContext, R.drawable.circle)
 
-                circle.colorFilter = PorterDuffColorFilter(selectedColor, PorterDuff.Mode.SRC_ATOP)
+                if (brightness > 0.65) {
+                    checked.setTint(Color.BLACK)
+                } else {
+                    checked.setTint(Color.WHITE)
+                }
+
+                circle.colorFilter = PorterDuffColorFilter(Color.HSVToColor(hsv), PorterDuff.Mode.SRC_ATOP)
 
                 clicked_view.setImageDrawable(ColorImageView.getOverlay(circle, checked))
             }
@@ -255,13 +261,20 @@ class ConfigurationActivity : AppCompatActivity() {
                 val hsv = FloatArray(3)
                 Color.colorToHSV(selectedColor, hsv)
 
-                Log.d("ConfigurationActivity", "The brightness is " + (1 - hsv[1] + hsv[2]) / 2)
-
                 hsv[2] *= 0.6f // We make the color darker with this
 
+                val brightness = (1 - hsv[1] + hsv[2]) / 2
+
                 val checked = ContextCompat.getDrawable(applicationContext, R.drawable.checked)
+
+                if (brightness > 0.65) {
+                    checked.setTint(Color.BLACK)
+                } else {
+                    checked.setTint(Color.WHITE)
+                }
+
                 val circle = ContextCompat.getDrawable(applicationContext, R.drawable.circle)
-                circle.colorFilter = PorterDuffColorFilter(selectedColor, PorterDuff.Mode.SRC_ATOP)
+                circle.colorFilter = PorterDuffColorFilter(Color.HSVToColor(hsv), PorterDuff.Mode.SRC_ATOP)
 
                 btnCustomColor.setImageDrawable(ColorImageView.getOverlay(circle, checked))
 

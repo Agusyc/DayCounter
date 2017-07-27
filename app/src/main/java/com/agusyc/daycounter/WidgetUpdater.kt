@@ -5,7 +5,6 @@ import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
 import android.content.Context
 import android.content.Intent
-
 import android.graphics.Color
 import android.util.Log
 import android.view.View
@@ -91,63 +90,6 @@ class WidgetUpdater : AppWidgetProvider() {
             // We get all the views that are in the widget
             val views = RemoteViews(context.packageName, R.layout.daycounter)
 
-            /* Get Device and Widget orientation.
-               This is done by adding a boolean value to
-               a port resource directory like values-port/bools.xml */
-
-            val mIsPortraitOrientation = context.resources.getBoolean(R.bool.isPort)
-
-            // Get min dimensions from provider info
-            val providerInfo = AppWidgetManager.getInstance(
-                    context).getAppWidgetInfo(appWidgetId)
-
-            // Get current dimensions (in DIP, scaled by DisplayMetrics) of this
-            // Widget, if API Level allows to
-
-            val mAppWidgetOptions = appWidgetManager.getAppWidgetOptions(appWidgetId)
-
-            val mWidgetPortWidth: Int
-            val mWidgetLandWidth: Int
-            val mWidgetLandHeight: Int
-            val mWidgetPortHeight: Int
-            val mWidgetHeightPerOrientation: Int
-            val mWidgetWidthPerOrientation: Int
-
-            if (mAppWidgetOptions != null && mAppWidgetOptions.getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH) > 0) {
-                Log.d("WidgetUpdater", "appWidgetOptions not null, getting widget sizes...")
-                // Reduce width by a margin of 8dp (automatically added by
-                // Android, can vary with third party launchers)
-
-                /* Actually Min and Max is a bit irritating,
-                   because it depends on the homescreen orientation
-                   whether Min or Max should be used: */
-
-                mWidgetPortWidth = mAppWidgetOptions
-                        .getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH)
-                mWidgetLandWidth = mAppWidgetOptions
-                        .getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH)
-                mWidgetLandHeight = mAppWidgetOptions
-                        .getInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT)
-                mWidgetPortHeight = mAppWidgetOptions
-                        .getInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT)
-            } else {
-                Log.d("WidgetUpdater", "No AppWidgetOptions for this widget, using minimal dimensions from provider info!")
-                // For some reason I had to set this again here, may be obsolete
-                mWidgetLandWidth = providerInfo.minWidth
-                mWidgetPortHeight = providerInfo.minHeight
-                mWidgetPortWidth = providerInfo.minWidth
-                mWidgetLandHeight = providerInfo.minHeight
-            }
-
-            if (mIsPortraitOrientation) {
-                mWidgetWidthPerOrientation = mWidgetPortWidth
-                mWidgetHeightPerOrientation = mWidgetPortHeight
-            } else {
-                // We use the landscape sizes
-                mWidgetWidthPerOrientation = mWidgetLandWidth
-                mWidgetHeightPerOrientation = mWidgetLandHeight
-            }
-
             // / We get all the needed data
             val key_base = Integer.toString(appWidgetId)
             val label = prefs.getString(key_base + "label", "")
@@ -185,13 +127,12 @@ class WidgetUpdater : AppWidgetProvider() {
                 views.setViewVisibility(R.id.txtLabel, View.VISIBLE)
             } else {
                 views.setTextViewText(R.id.txtNoDays, context.getString(R.string.there_are_no_days_since, label))
-
                 views.setViewVisibility(R.id.txtNoDays, View.VISIBLE)
                 views.setViewVisibility(R.id.btnReset, View.GONE)
+                views.setViewVisibility(R.id.divider, View.GONE)
                 views.setViewVisibility(R.id.txtDays, View.GONE)
                 views.setViewVisibility(R.id.txtThereAreHaveBeen, View.GONE)
                 views.setViewVisibility(R.id.txtLabel, View.GONE)
-                views.setViewVisibility(R.id.divider, View.GONE)
             }
 
             Log.d("WidgetUpdater", "Updating widget $appWidgetId with label $label, original/target date $date")
@@ -208,11 +149,13 @@ class WidgetUpdater : AppWidgetProvider() {
 
             val brightness = (1 - hsv[1] + hsv[2]) / 2
 
-            if (brightness >= 0.7) {
+            if (brightness >= 0.65) {
                 views.setTextColor(R.id.txtLabel, Color.BLACK)
                 views.setTextColor(R.id.txtDays, Color.BLACK)
                 views.setTextColor(R.id.txtThereAreHaveBeen, Color.BLACK)
                 views.setTextColor(R.id.txtNoDays, Color.BLACK)
+                views.setInt(R.id.btnReset, "setColorFilter", Color.BLACK)
+                views.setInt(R.id.divider, "setColorFilter", Color.BLACK)
             }
 
             views.setInt(R.id.lytWidget, "setVisibility", View.VISIBLE)

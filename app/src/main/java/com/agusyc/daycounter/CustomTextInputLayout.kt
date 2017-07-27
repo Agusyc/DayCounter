@@ -57,6 +57,7 @@ class CustomTextInputLayout : TextInputLayout {
                 this.mHelperView = TextView(this.context)
                 val mHelperTextAppearance = R.style.HelperTextAppearance
                 if (Build.VERSION.SDK_INT < 23) {
+                    @Suppress("DEPRECATION")
                     this.mHelperView!!.setTextAppearance(this.context, mHelperTextAppearance)
                 } else {
                     this.mHelperView!!.setTextAppearance(mHelperTextAppearance)
@@ -96,6 +97,7 @@ class CustomTextInputLayout : TextInputLayout {
         if (!TextUtils.isEmpty(mHelperText)) {
             this.mHelperView!!.text = mHelperText
             this.mHelperView!!.visibility = View.VISIBLE
+            @Suppress("DEPRECATION")
             ViewCompat.setAlpha(this.mHelperView!!, 0.0f)
             ViewCompat.animate(this.mHelperView)
                     .alpha(1.0f).setDuration(200L)

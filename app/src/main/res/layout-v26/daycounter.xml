@@ -24,10 +24,12 @@
         android:orientation="vertical" >
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/lytText"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:orientation="vertical"
-            android:layout_weight="63" >
+            android:layout_weight="66"
+            android:gravity="center" >
 
             <TextView
                 android:id="@+id/txtThereAreHaveBeen"
@@ -49,16 +51,6 @@
                 android:textColor="@android:color/white" />
 
             <TextView
-                android:id="@+id/txtNoDays"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:textAlignment="center"
-                android:textSize="24sp"
-                android:autoSizeTextType="uniform"
-                android:textColor="@android:color/white"
-                android:visibility="gone" />
-
-            <TextView
                 android:id="@+id/txtLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -77,19 +69,23 @@
             tools:ignore="ContentDescription" />
 
         <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="5"
-            tools:ignore="ContentDescription">
-        </ImageView>
-
-        <ImageView
             android:id="@+id/btnReset"
             android:layout_width="match_parent"
             android:layout_height="0dp"
-            android:layout_weight="32"
+            android:layout_weight="34"
             android:src="@drawable/reset_counter"
             tools:ignore="ContentDescription" />
     </LinearLayout>
+
+    <TextView
+        android:id="@+id/txtNoDays"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:textAlignment="center"
+        android:gravity="center_vertical"
+        android:textSize="24sp"
+        android:autoSizeTextType="uniform"
+        android:textColor="@android:color/white"
+        android:visibility="gone" />
 
 </RelativeLayout>

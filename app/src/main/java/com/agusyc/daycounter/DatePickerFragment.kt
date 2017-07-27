@@ -8,17 +8,14 @@ import android.util.Log
 import android.widget.DatePicker
 import android.widget.EditText
 import android.widget.Spinner
-
 import org.joda.time.DateTime
 import org.joda.time.Days
-
 import java.text.DecimalFormat
-import java.util.Calendar
+import java.util.*
 
 class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener {
 
-    override fun onCreateDialog(savedInstanceSateate: Bundle): Dialog {
-
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val c = Calendar.getInstance()
         val year = c.get(Calendar.YEAR)
         val month = c.get(Calendar.MONTH)

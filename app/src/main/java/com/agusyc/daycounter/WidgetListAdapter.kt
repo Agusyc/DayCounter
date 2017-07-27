@@ -82,12 +82,11 @@ internal class WidgetListAdapter(context: Context, alarms: ArrayList<Widget>) : 
 
         val brightness = (1 - hsv[1] + hsv[2]) / 2
 
-        Log.d("WidgetListAdapter", "Brightness is " + brightness)
-
-        if (brightness >= 0.7) {
+        if (brightness >= 0.65) {
             txtDays.setTextColor(Color.BLACK)
             txtLabel.setTextColor(Color.BLACK)
             (newConvertView.findViewById<TextView>(R.id.txtThereAreHaveBeen) as TextView).setTextColor(Color.BLACK)
+            btnReset.setColorFilter(Color.BLACK)
         }
 
         Log.d("ListUpdater", "Don't animate is " + (context as MainActivity).dontAnimate)
