@@ -4,6 +4,8 @@ import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
@@ -20,6 +22,7 @@ import org.joda.time.Days
 import java.text.DecimalFormat
 import java.util.*
 
+
 class ConfigurationActivity : AppCompatActivity() {
 
     private var mAppWidgetId: Int = 0
@@ -29,6 +32,10 @@ class ConfigurationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_configuration)
+
+        if (!isTablet(applicationContext)) {
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+        }
 
         val colorView = findViewById(R.id.colorView) as GridLayout
 
@@ -281,5 +288,9 @@ class ConfigurationActivity : AppCompatActivity() {
                 cp.dismiss()
             }
         }
+    }
+
+    fun isTablet(context: Context): Boolean {
+        return context.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK >= Configuration.SCREENLAYOUT_SIZE_LARGE
     }
 }

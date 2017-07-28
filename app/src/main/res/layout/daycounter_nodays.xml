@@ -23,6 +23,8 @@
         android:textAlignment="center"
         android:gravity="center"
         android:textSize="24sp"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
         android:textColor="@android:color/white" />
 
 </RelativeLayout>

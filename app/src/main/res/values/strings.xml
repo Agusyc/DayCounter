@@ -2,7 +2,7 @@
     <string name="app_name">Day Counter</string>
     <string name="days_since">days since %1$s</string>
     <string name="days_until">days until %1$s</string>
-    <string name="there_are_no_days_since">There are no days since %1$s. It is today!</string>
+    <string name="there_are_no_days_since">There are no days until %1$s. It is today!</string>
     <string name="there_are">There are</string>
     <string name="there_have_been">There have been</string>
     <string name="ok">OK</string>
