@@ -7,7 +7,7 @@ A simple, customizable, material design widget that counts days since or until a
 - [ ] Add the good/bad option. Suggested by u/ollomulder
 - [x] Add a manager GUI, to edit and delete widgets (If deletion is possible) (Spoiler: it wasn't)
 - [x] Change the widget design
-- [ ] Change the preview image
+- [x] Change the preview image
 - [x] Change the MainActivity design
 - [x] Add an icon
 
