@@ -53,6 +53,8 @@
         android:paddingEnd="32dp"
         android:src="@drawable/reset_counter"
         tools:ignore="ContentDescription"
-        android:layout_gravity="center" />
+        android:layout_gravity="center"
+        android:maxHeight="10px"
+        android:maxWidth="10px"/>
 
 </LinearLayout>
