@@ -56,7 +56,7 @@ class WidgetUpdater : AppWidgetProvider() {
     private fun deleteWidget(context: Context, id: Int) {
         Log.d("MainActivity", "Removing widget with id " + id)
 
-        // We remove the label and date from the preferences
+        // We remove the label, date and color from the preferences
         val prefs = context.getSharedPreferences("DaysPrefs", Context.MODE_PRIVATE)
         prefs.edit().remove(id.toString() + "label").apply()
         prefs.edit().remove(id.toString() + "date").apply()
@@ -69,7 +69,7 @@ class WidgetUpdater : AppWidgetProvider() {
         val iterator = ids_set!!.iterator()
         while (iterator.hasNext()) {
             if (iterator.next() == Integer.toString(id)) {
-                Log.d("WidgetUpdater", "Removing widget ID from preferences")
+                Log.d("WidgetUpdater", "Removing counter ID from preferences")
                 iterator.remove()
                 break
             }

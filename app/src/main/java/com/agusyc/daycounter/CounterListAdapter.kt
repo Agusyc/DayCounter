@@ -15,24 +15,24 @@ import org.joda.time.Days
 import java.text.DecimalFormat
 import java.util.*
 
-internal class WidgetListAdapter(context: Context, alarms: ArrayList<Widget>) : ArrayAdapter<Widget>(context, 0, alarms) {
+internal class CounterListAdapter(context: Context, alarms: ArrayList<Counter>) : ArrayAdapter<Counter>(context, 0, alarms) {
 
     // This method runs as much times as there are alarms defined by the user, so it adds everyone to the listview.
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
         // We get the widget for the current position
-        val widget = getItem(position)
+        val counter = getItem(position)
 
         val newConvertView: View
 
         // Check if an existing view is being reused, otherwise inflate the view
         if (convertView == null) {
-            newConvertView = LayoutInflater.from(context).inflate(R.layout.widget_row, parent, false)
+            newConvertView = LayoutInflater.from(context).inflate(R.layout.counter_row, parent, false)
         } else {
             newConvertView = convertView
         }
 
-        assert(widget != null)
-        val date = widget!!.date
+        assert(counter != null)
+        val date = counter!!.date
         val currentTime = System.currentTimeMillis()
 
         val difference = Days.daysBetween(DateTime(date), DateTime(currentTime)).days
@@ -50,18 +50,19 @@ internal class WidgetListAdapter(context: Context, alarms: ArrayList<Widget>) : 
 
         // We check the sign of the number (Positive or negative)
         if (difference > 0) {
-            txtLabel.text = context.getString(R.string.days_since, widget.label)
-            btnReset.setWidgetID(widget.id)
+            txtLabel.text = context.getString(R.string.days_since, counter.label)
+            btnReset.setWidgetID(counter.id)
+            btnReset.setIsWidget(counter.isWidget)
             txtDays.visibility = View.VISIBLE
             btnReset.visibility = View.VISIBLE
             txtThereAreHaveBeen.visibility = View.VISIBLE
         } else if (difference < 0) {
-            txtLabel.text = context.getString(R.string.days_until, widget.label)
+            txtLabel.text = context.getString(R.string.days_until, counter.label)
             txtDays.visibility = View.VISIBLE
             txtThereAreHaveBeen.visibility = View.VISIBLE
             btnReset.visibility = View.GONE
         } else {
-            txtLabel.text = context.getString(R.string.there_are_no_days_since, widget.label)
+            txtLabel.text = context.getString(R.string.there_are_no_days_since, counter.label)
             txtLabel.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
 
             txtDays.visibility = View.GONE
@@ -69,11 +70,11 @@ internal class WidgetListAdapter(context: Context, alarms: ArrayList<Widget>) : 
             txtThereAreHaveBeen.visibility = View.GONE
         }
 
-        Log.d("WidgetUpdater", "Adding widget " + widget.id + " with label " + widget.label + ", original/target date " + date)
+        Log.d("WidgetUpdater", "Adding widget " + counter.id + " with label " + counter.label + ", original/target date " + date)
 
         Log.d("WidgetUpdater", "The new difference is $difference. The current time is $currentTime")
 
-        val color = widget.color
+        val color = counter.color
 
         newConvertView.setBackgroundColor(color)
 

@@ -9,7 +9,7 @@
     <string name="number_of_days">Number of days</string>
     <string name="event">Event</string>
     <string name="there_is_nothing1">There is nothing here!</string>
-    <string name="there_is_nothing2">Add some widgets on your home screen and you will be able to see and edit them here.</string>
+    <string name="there_is_nothing2">Add some counters on your home screen or using the button at the bottom of the screen and you will be able to see and edit them here.</string>
     <string name="about_title">About</string>
     <string name="about_title_1">Licensing and GitHub</string>
     <string name="about_section_1">Day Counter is licensed under the MIT open source license, and the source code can be found on GitHub.</string>
@@ -30,4 +30,6 @@
     <string name="event_desc_image">Choose the date manually</string>
     <string name="custom_color_desc">Choose a custom color</string>
     <string name="info">Information about the app</string>
+    <string name="delete">Delete this counter</string>
+    <string name="configuration">Configuration</string>
 </resources>

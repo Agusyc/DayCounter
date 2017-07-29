@@ -8,7 +8,7 @@
     <string name="number_of_days">Número de días</string>
     <string name="event">Evento</string>
     <string name="there_is_nothing1">¡No hay nada aquí!</string>
-    <string name="there_is_nothing2">Añade algunos widgets en tu pantalla de inicio y podrás verlos y editarlos aquí.</string>
+    <string name="there_is_nothing2">Añade algunos contadores en tu pantalla de inicio o usando el botón en el fondo de la pantalla y podrás verlos y editarlos aquí.</string>
     <string name="about_title">Acerca de</string>
     <string name="about_title_1">Licencia y  GitHub</string>
     <string name="about_section_1">Day Counter está licenciado sobre la licencia de código abierto MIT, y el código fuente puede ser encontrado en GitHub.</string>
@@ -30,4 +30,6 @@
     <string name="custom_color_desc">Elige un color personalizado</string>
     <string name="there_have_been">Han pasado</string>
     <string name="info">Información acerca de la aplicación</string>
+    <string name="delete">Borrar este contador</string>
+    <string name="configuration">Configuración</string>
 </resources>

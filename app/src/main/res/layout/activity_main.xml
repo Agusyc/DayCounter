@@ -7,7 +7,7 @@
     tools:context="com.agusyc.daycounter.MainActivity" >
 
     <ListView
-        android:id="@+id/lstWidgets"
+        android:id="@+id/lstCounters"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:divider="#50000000"
@@ -34,4 +34,14 @@
         android:textSize="16sp"
         android:gravity="center"
         app:layout_constraintTop_toBottomOf="@+id/txtThere_Is_Nothing1" />
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_margin="10dp"
+        app:srcCompat="@drawable/add" />
 </android.support.constraint.ConstraintLayout>

@@ -4,6 +4,7 @@ import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
+import android.content.SharedPreferences
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.graphics.Color
@@ -13,6 +14,8 @@ import android.os.Bundle
 import android.support.v4.content.ContextCompat
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import com.pes.androidmaterialcolorpickerdialog.ColorPicker
@@ -28,13 +31,16 @@ class ConfigurationActivity : AppCompatActivity() {
     private var mAppWidgetId: Int = 0
     private var selectedColor: Int = 0
     private var selectedColor_index: Int = 0
+    private var isWidget: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_configuration)
 
+        title = getString(R.string.configuration)
+
         if (!isTablet(applicationContext)) {
-            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT;
+            requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
 
         val colorView = findViewById(R.id.colorView) as GridLayout
@@ -65,17 +71,24 @@ class ConfigurationActivity : AppCompatActivity() {
                     AppWidgetManager.INVALID_APPWIDGET_ID)
         }
 
-        val prefs = getSharedPreferences("DaysPrefs", Context.MODE_PRIVATE)
+        val prefs: SharedPreferences
 
-        val widget: Widget
+        isWidget = getIntent().getBooleanExtra("isWidget", true)
 
-        if (intent.hasExtra("widget_id")) {
-            widget = Widget(applicationContext, Integer.parseInt(intent.getStringExtra("widget_id")))
+        if (isWidget)
+            prefs = getSharedPreferences("DaysPrefs", Context.MODE_PRIVATE)
+        else
+            prefs = getSharedPreferences("ListDaysPrefs", Context.MODE_PRIVATE)
 
-            selectedColor = widget.color
-            selectedColor_index = widget.colorIndex
+        val counter: Counter
 
-            val date = widget.date
+        if (intent.hasExtra("counter_id")) {
+            counter = Counter(applicationContext, Integer.parseInt(intent.getStringExtra("counter_id")), isWidget)
+
+            selectedColor = counter.color
+            selectedColor_index = counter.colorIndex
+
+            val date = counter.date
             val currentTime = System.currentTimeMillis()
 
             val difference = Days.daysBetween(DateTime(date), DateTime(currentTime)).days
@@ -83,7 +96,7 @@ class ConfigurationActivity : AppCompatActivity() {
             val formatter = DecimalFormat("#,###,###")
 
             edtDays.setText(formatter.format(Math.abs(difference).toLong()))
-            edtLabel.setText(widget.label)
+            edtLabel.setText(counter.label)
 
             if (difference >= 0) {
                 spnType.setSelection(1)
@@ -127,11 +140,19 @@ class ConfigurationActivity : AppCompatActivity() {
 
             val currentIDs_set = prefs.getStringSet("ids", HashSet<String>())
 
-            if (intent.hasExtra("widget_id")) {
-                key_base = intent.getStringExtra("widget_id")
+            if (intent.hasExtra("counter_id")) {
+                key_base = intent.getStringExtra("counter_id")
             } else {
-                key_base = Integer.toString(mAppWidgetId)
-
+                if (isWidget)
+                    key_base = Integer.toString(mAppWidgetId)
+                else {
+                    if (currentIDs_set.isEmpty()) {
+                        currentIDs_set.add("0")
+                        key_base = "0"
+                    } else {
+                        key_base = (Integer.parseInt(currentIDs_set.last()) + 1).toString()
+                    }
+                }
                 currentIDs_set!!.add(key_base)
             }
 
@@ -171,25 +192,30 @@ class ConfigurationActivity : AppCompatActivity() {
                 prefs.edit().putInt(key_base + "color", selectedColor).apply()
                 prefs.edit().putInt(key_base + "color_index", selectedColor_index).apply()
                 prefs.edit().putStringSet("ids", currentIDs_set).apply()
+                prefs.edit().putBoolean(key_base + "isWidget", isWidget).apply()
 
-                Log.d("ConfigurationActivity", "Added new Widget with label" + edtLabel.text + ", ID " + key_base + " and date " + date.millis)
+                Log.d("ConfigurationActivity", "Added new counter with label" + edtLabel.text + ", ID " + key_base + " and date " + date.millis)
 
                 val IDs_array_str = currentIDs_set!!.toTypedArray<String>()
 
-                val IDs_array = IntArray(IDs_array_str.size)
+                if (isWidget) {
 
-                for (i in IDs_array_str.indices) {
-                    IDs_array[i] = Integer.parseInt(IDs_array_str[i])
-                    Log.d("UpdateReceiver", "Parsed ID: " + IDs_array[i])
+                    val IDs_array = IntArray(IDs_array_str.size)
+
+                    for (i in IDs_array_str.indices) {
+                        IDs_array[i] = Integer.parseInt(IDs_array_str[i])
+                        Log.d("UpdateReceiver", "Parsed ID: " + IDs_array[i])
+                    }
+
+                    val updaterIntent = Intent(applicationContext, WidgetUpdater::class.java)
+                    updaterIntent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+
+                    updaterIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, IDs_array)
+
+                    Log.d("UpdateReceiver", "Telling the WidgetUpdater to start")
+                    applicationContext.sendBroadcast(updaterIntent)
+
                 }
-
-                val updaterIntent = Intent(applicationContext, WidgetUpdater::class.java)
-                updaterIntent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
-
-                updaterIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, IDs_array)
-
-                Log.d("UpdateReceiver", "Telling the WidgetUpdater to start")
-                applicationContext.sendBroadcast(updaterIntent)
 
                 setResult(Activity.RESULT_OK, resultValue)
                 finish()
@@ -292,5 +318,48 @@ class ConfigurationActivity : AppCompatActivity() {
 
     fun isTablet(context: Context): Boolean {
         return context.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK >= Configuration.SCREENLAYOUT_SIZE_LARGE
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu): Boolean {
+        if (intent.extras.containsKey("counter_id") && !intent.extras.getBoolean("isWidget")) {
+            // Inflate the menu; this adds items to the action bar if it is present.
+            menuInflater.inflate(R.menu.configuration_activity, menu)
+            return true
+        } else {
+            return false
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        val menuId = item.itemId
+
+        if (menuId == R.id.action_delete) {
+            // We remove the label, date and color from the preferences
+            val prefs = applicationContext.getSharedPreferences("ListDaysPrefs", Context.MODE_PRIVATE)
+            val id = intent.getStringExtra("counter_id")
+            prefs.edit().remove(id + "label").apply()
+            prefs.edit().remove(id + "date").apply()
+            prefs.edit().remove(id + "color").apply()
+            prefs.edit().remove(id + "color_index").apply()
+
+            val ids_set = prefs.getStringSet("ids", HashSet<String>())
+
+            // We iterate trough the whole set, when we find the widget that is being deleted, we delete it from the set without mercy!
+            val iterator = ids_set!!.iterator()
+            while (iterator.hasNext()) {
+                if (iterator.next() == id) {
+                    Log.d("WidgetUpdater", "Removing counter ID from preferences")
+                    iterator.remove()
+                    break
+                }
+            }
+
+            // We put the new set to the prefs
+            prefs.edit().putStringSet("ids", ids_set).apply()
+            finish()
+            return true
+        }
+
+        return super.onOptionsItemSelected(item)
     }
 }
