@@ -1,9 +1,26 @@
 <resources>
     <string name="app_name">Day Counter</string>
-    <string name="days_since">días desde %1$s</string>
-    <string name="days_until">días hasta %1$s</string>
+    <plurals
+        name="days_since">
+        <item quantity="one">day since %1$s</item>
+        <item quantity="other">days since %1$s</item>
+    </plurals>
+    <plurals
+        name="days_until">
+        <item quantity="one">day until %1$s</item>
+        <item quantity="other">days until %1$s</item>
+    </plurals>
+    <plurals name="there_have_has_been">
+        <item quantity="one">Ha pasado</item>
+        <item quantity="other">Han pasado</item>
+    </plurals>
+    <plurals name="there_is_are">
+        <item quantity="one">Hay</item>
+        <item quantity="other">Hay</item>
+    </plurals>
+    <string name="days_since_al">días desde</string>
+    <string name="days_until_al">días hasta</string>
     <string name="there_are_no_days_since">No hay ningún día hasta %1$s. ¡Es hoy!</string>
-    <string name="there_are">Hay</string>
     <string name="ok">Aceptar</string>
     <string name="number_of_days">Número de días</string>
     <string name="event">Evento</string>
@@ -28,8 +45,15 @@
     <string name="kind_of_event_error">Debes seleccionar un tipo de evento</string>
     <string name="event_desc_image">Escoger la fecha manualmente</string>
     <string name="custom_color_desc">Elige un color personalizado</string>
-    <string name="there_have_been">Han pasado</string>
     <string name="info">Información acerca de la aplicación</string>
     <string name="delete">Borrar este contador</string>
     <string name="configuration">Configuración</string>
+    <string name="calculator">Calculadora de diferencia de días</string>
+    <string name="start_date">Fecha inicial</string>
+    <string name="end_date">Fecha final</string>
+    <string name="calculate">Calcular</string>
+    <string name="difference">La diferencia es %1$d días</string>
+    <string name="bad_format_title">Error de formateo</string>
+    <string name="bad_format_message">Una de las fechas que escribiste está formateada incorrectamente</string>
+    <string name="enable_notification">Mostrar este contador como una notificación</string>
 </resources>

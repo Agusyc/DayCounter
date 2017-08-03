@@ -16,6 +16,7 @@ import java.text.DecimalFormat
 import java.util.*
 
 internal class CounterListAdapter(context: Context, alarms: ArrayList<Counter>) : ArrayAdapter<Counter>(context, 0, alarms) {
+    val res = context.resources!!
 
     // This method runs as much times as there are alarms defined by the user, so it adds everyone to the listview.
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {
@@ -36,30 +37,32 @@ internal class CounterListAdapter(context: Context, alarms: ArrayList<Counter>) 
         val currentTime = System.currentTimeMillis()
 
         val difference = Days.daysBetween(DateTime(date), DateTime(currentTime)).days
+        val absDifference = Math.abs(difference)
 
         val txtDays = newConvertView.findViewById<TextView>(R.id.txtDays)
 
         val formatter = DecimalFormat("#,###,###")
 
         // We set the days text to the *absolute* difference
-        txtDays.text = formatter.format(Math.abs(difference).toLong())
-
+        txtDays.text = formatter.format(absDifference)
         val txtLabel = newConvertView.findViewById<TextView>(R.id.txtLabel)
         val txtThereAreHaveBeen = newConvertView.findViewById<TextView>(R.id.txtThereAreHaveBeen)
         val btnReset = newConvertView.findViewById<ResetButton>(R.id.btnReset)
 
         // We check the sign of the number (Positive or negative)
         if (difference > 0) {
-            txtLabel.text = context.getString(R.string.days_since, counter.label)
+            txtLabel.text = context.resources.getQuantityString(R.plurals.days_since, absDifference, counter.label)
             btnReset.setWidgetID(counter.id)
             btnReset.setIsWidget(counter.isWidget)
             txtDays.visibility = View.VISIBLE
             btnReset.visibility = View.VISIBLE
             txtThereAreHaveBeen.visibility = View.VISIBLE
+            txtThereAreHaveBeen.text = res.getQuantityText(R.plurals.there_has_have_been, absDifference)
         } else if (difference < 0) {
-            txtLabel.text = context.getString(R.string.days_until, counter.label)
+            txtLabel.text = res.getQuantityString(R.plurals.days_until, absDifference, counter.label)
             txtDays.visibility = View.VISIBLE
             txtThereAreHaveBeen.visibility = View.VISIBLE
+            txtThereAreHaveBeen.text = res.getQuantityText(R.plurals.there_is_are, absDifference)
             btnReset.visibility = View.GONE
         } else {
             txtLabel.text = context.getString(R.string.there_are_no_days_since, counter.label)

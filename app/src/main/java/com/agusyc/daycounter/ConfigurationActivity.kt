@@ -1,6 +1,7 @@
 package com.agusyc.daycounter
 
 import android.app.Activity
+import android.app.NotificationManager
 import android.appwidget.AppWidgetManager
 import android.content.Context
 import android.content.Intent
@@ -52,9 +53,11 @@ class ConfigurationActivity : AppCompatActivity() {
 
         val spnType = findViewById(R.id.spnType) as MaterialSpinner
 
+        val swtNotification = findViewById(R.id.swtNotification) as Switch
+
         val types = ArrayList<String>()
-        types.add(getString(R.string.days_since, ""))
-        types.add(getString(R.string.days_until, ""))
+        types.add(getString(R.string.days_since_al))
+        types.add(getString(R.string.days_until_al))
 
         // Creating adapter for the Spinner
         val dataAdapter = ArrayAdapter(this, android.R.layout.simple_spinner_item, types)
@@ -73,12 +76,9 @@ class ConfigurationActivity : AppCompatActivity() {
 
         val prefs: SharedPreferences
 
-        isWidget = getIntent().getBooleanExtra("isWidget", true)
+        isWidget = intent.getBooleanExtra("isWidget", true)
 
-        if (isWidget)
-            prefs = getSharedPreferences("DaysPrefs", Context.MODE_PRIVATE)
-        else
-            prefs = getSharedPreferences("ListDaysPrefs", Context.MODE_PRIVATE)
+        if (isWidget) prefs = getSharedPreferences("DaysPrefs", Context.MODE_PRIVATE) else prefs = getSharedPreferences("ListDaysPrefs", Context.MODE_PRIVATE)
 
         val counter: Counter
 
@@ -114,6 +114,8 @@ class ConfigurationActivity : AppCompatActivity() {
             circle.colorFilter = PorterDuffColorFilter(selectedColor, PorterDuff.Mode.SRC_ATOP)
 
             selected_view.setImageDrawable(ColorImageView.getOverlay(circle, checked))
+
+            swtNotification.isChecked = counter.notification
         } else {
             val colorImageView = colorView.getChildAt(4) as ColorImageView
 
@@ -193,29 +195,25 @@ class ConfigurationActivity : AppCompatActivity() {
                 prefs.edit().putInt(key_base + "color_index", selectedColor_index).apply()
                 prefs.edit().putStringSet("ids", currentIDs_set).apply()
                 prefs.edit().putBoolean(key_base + "isWidget", isWidget).apply()
+                prefs.edit().putBoolean(key_base + "notification", swtNotification.isChecked).apply()
+
+                (getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Integer.parseInt(key_base))
 
                 Log.d("ConfigurationActivity", "Added new counter with label" + edtLabel.text + ", ID " + key_base + " and date " + date.millis)
 
-                val IDs_array_str = currentIDs_set!!.toTypedArray<String>()
-
+                var updaterIntent: Intent
                 if (isWidget) {
-
-                    val IDs_array = IntArray(IDs_array_str.size)
-
-                    for (i in IDs_array_str.indices) {
-                        IDs_array[i] = Integer.parseInt(IDs_array_str[i])
-                        Log.d("UpdateReceiver", "Parsed ID: " + IDs_array[i])
-                    }
-
-                    val updaterIntent = Intent(applicationContext, WidgetUpdater::class.java)
+                    updaterIntent = Intent(applicationContext, WidgetUpdater::class.java)
                     updaterIntent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
-
-                    updaterIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, IDs_array)
-
+                    updaterIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(Integer.parseInt(key_base)))
                     Log.d("UpdateReceiver", "Telling the WidgetUpdater to start")
                     applicationContext.sendBroadcast(updaterIntent)
-
                 }
+
+                updaterIntent = Intent(applicationContext, CounterNotificator::class.java)
+                updaterIntent.action = CounterNotificator.ACTION_UPDATE_NOTIFICATIONS
+                updaterIntent.putExtra((if (isWidget) "widget_ids" else "list_ids"), intArrayOf(Integer.parseInt(key_base)))
+                applicationContext.sendBroadcast(updaterIntent)
 
                 setResult(Activity.RESULT_OK, resultValue)
                 finish()

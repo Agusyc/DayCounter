@@ -36,6 +36,12 @@ class WidgetUpdater : AppWidgetProvider() {
             val prefs = context.getSharedPreferences("DaysPrefs", Context.MODE_PRIVATE)
 
             prefs.edit().putLong(id_s + "date", System.currentTimeMillis()).apply()
+
+            val updaterIntent = Intent(context, CounterNotificator::class.java)
+            updaterIntent.action = CounterNotificator.ACTION_UPDATE_NOTIFICATIONS
+            updaterIntent.putExtra("widget_ids", intArrayOf(Integer.parseInt(id_s)))
+            context.sendBroadcast(updaterIntent)
+
             onUpdate(context, AppWidgetManager.getInstance(context), intArrayOf(Integer.parseInt(id_s)))
         } else if (AppWidgetManager.ACTION_APPWIDGET_UPDATE == intent.action) {
             Log.d("WidgetUpdater", "Updating widgets...")
@@ -82,31 +88,32 @@ class WidgetUpdater : AppWidgetProvider() {
     override fun onUpdate(context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray) {
         Log.d("WidgetUpdater", "WidgetUpdater onUpdate started")
 
-        val prefs = context.getSharedPreferences("DaysPrefs", Context.MODE_PRIVATE)
+        val res = context.resources
 
         // Perform this loop procedure for each App Widget that belongs to this provider
         for (appWidgetId in appWidgetIds) {
             val views: RemoteViews
 
             // / We get all the needed data
-            val key_base = Integer.toString(appWidgetId)
-            val label = prefs.getString(key_base + "label", "")
-            val date = prefs.getLong(key_base + "date", 0)
+            val counter = Counter(context, appWidgetId, true)
+            val label = counter.label
+            val date = counter.date
             val currentTime = System.currentTimeMillis()
-            val color = prefs.getInt(appWidgetId.toString() + "color", Color.BLUE)
+            val color = counter.color
             val hsv = FloatArray(3)
             Color.colorToHSV(color, hsv)
             val brightness = (1 - hsv[1] + hsv[2]) / 2
 
             // We use the Joda-Time method to calculate the difference
             val difference = Days.daysBetween(DateTime(date), DateTime(currentTime)).days
+            val absDifference = Math.abs(difference)
 
             // We check the sign of the number (Positive or negative). So we know if we use "since" or "until"
             if (difference > 0) {
                 views = RemoteViews(context.packageName, R.layout.daycounter_since)
-                views.setTextViewText(R.id.txtThereAreHaveBeen, context.getString(R.string.there_have_been))
-                views.setTextViewText(R.id.txtLabel, context.getString(R.string.days_since, label))
-                views.setTextViewText(R.id.txtDays, Math.abs(difference).toString())
+                views.setTextViewText(R.id.txtThereAreHaveBeen, res.getQuantityString(R.plurals.there_is_are, absDifference))
+                views.setTextViewText(R.id.txtLabel, res.getQuantityString(R.plurals.days_since, absDifference, label))
+                views.setTextViewText(R.id.txtDays, Integer.toString(absDifference))
 
                 if (brightness >= 0.65) {
                     views.setTextColor(R.id.txtThereAreHaveBeen, Color.BLACK)
@@ -118,9 +125,9 @@ class WidgetUpdater : AppWidgetProvider() {
                 views.setOnClickPendingIntent(R.id.btnReset, getPendingSelfIntent(context, WIDGET_BUTTON, appWidgetId))
             } else if (difference < 0) {
                 views = RemoteViews(context.packageName, R.layout.daycounter_until)
-                views.setTextViewText(R.id.txtThereAreHaveBeen, context.getString(R.string.there_are))
-                views.setTextViewText(R.id.txtLabel, context.getString(R.string.days_until, label))
-                views.setTextViewText(R.id.txtDays, Math.abs(difference).toString())
+                views.setTextViewText(R.id.txtThereAreHaveBeen, res.getQuantityString(R.plurals.there_is_are, absDifference))
+                views.setTextViewText(R.id.txtLabel, res.getQuantityString(R.plurals.days_until, absDifference, label))
+                views.setTextViewText(R.id.txtDays, Integer.toString(absDifference))
 
                 if (brightness >= 0.65) {
                     views.setTextColor(R.id.txtThereAreHaveBeen, Color.BLACK)

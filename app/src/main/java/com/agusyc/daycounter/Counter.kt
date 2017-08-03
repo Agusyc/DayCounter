@@ -10,6 +10,7 @@ internal class Counter
     val date: Long
     val color: Int
     val colorIndex: Int
+    val notification: Boolean
 
     init {
         val prefs: SharedPreferences
@@ -22,5 +23,6 @@ internal class Counter
         date = prefs.getLong(id.toString() + "date", 0)
         color = prefs.getInt(id.toString() + "color", 0)
         colorIndex = prefs.getInt(id.toString() + "color_index", 0)
+        notification = prefs.getBoolean(id.toString() + "notification", false)
     }
 }

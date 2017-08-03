@@ -6,20 +6,19 @@
     android:paddingTop="8dp"
     android:paddingBottom="8dp"
     android:orientation="horizontal"
-    android:weightSum="16" >
+    android:weightSum="16">
 
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:orientation="vertical"
-        android:layout_weight="15" >
+        android:layout_weight="15">
 
         <TextView
             android:id="@+id/txtThereAreHaveBeen"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:textAlignment="center"
-            android:text="@string/there_are"
             android:paddingTop="2dp"
             android:textSize="18sp"
             android:textColor="@android:color/white" />
@@ -52,9 +51,6 @@
         android:paddingStart="0dp"
         android:paddingEnd="32dp"
         android:src="@drawable/reset_counter"
-        tools:ignore="ContentDescription"
-        android:layout_gravity="center"
-        android:maxHeight="10px"
-        android:maxWidth="10px"/>
+        android:layout_gravity="center" />
 
 </LinearLayout>

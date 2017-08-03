@@ -1,10 +1,28 @@
 <resources>
     <string name="app_name">Day Counter</string>
-    <string name="days_since">days since %1$s</string>
-    <string name="days_until">days until %1$s</string>
+    <plurals
+        name="days_since">
+        <item quantity="one">day since %1$s</item>
+        <item quantity="other">days since %1$s</item>
+    </plurals>
+    <plurals
+        name="days_until">
+        <item quantity="one">day until %1$s</item>
+        <item quantity="other">days until %1$s</item>
+    </plurals>
+    <plurals
+        name="there_has_have_been">
+        <item quantity="one">There has been</item>
+        <item quantity="other">There have been</item>
+    </plurals>
+    <plurals
+        name="there_is_are">
+        <item quantity="one">There is</item>
+        <item quantity="other">There are</item>
+    </plurals>
+    <string name="days_since_al">days since</string>
+    <string name="days_until_al">days until</string>
     <string name="there_are_no_days_since">There are no days until %1$s. It is today!</string>
-    <string name="there_are">There are</string>
-    <string name="there_have_been">There have been</string>
     <string name="ok">OK</string>
     <string name="number_of_days">Number of days</string>
     <string name="event">Event</string>
@@ -32,4 +50,12 @@
     <string name="info">Information about the app</string>
     <string name="delete">Delete this counter</string>
     <string name="configuration">Configuration</string>
+    <string name="calculator">Day difference calculator</string>
+    <string name="start_date">Start date</string>
+    <string name="end_date">End date</string>
+    <string name="calculate">Calculate</string>
+    <string name="difference">The difference is %1$d days</string>
+    <string name="bad_format_title">Formatting error</string>
+    <string name="bad_format_message">One of the dates you wrote is wrongly formatted</string>
+    <string name="enable_notification">Show this counter as a notification</string>
 </resources>

@@ -1,10 +1,8 @@
 package com.agusyc.daycounter
 
-import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
+import android.app.Activity
+import android.content.*
 import android.os.Bundle
-import android.support.annotation.MainThread
 import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AppCompatActivity
 import android.util.Log
@@ -15,6 +13,7 @@ import android.widget.AdapterView
 import android.widget.ListView
 import android.widget.TextView
 import java.util.*
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -35,6 +34,10 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        val updaterIntent = Intent(applicationContext, UpdaterBroadcastReceiver::class.java)
+        updaterIntent.action = UpdaterBroadcastReceiver.ACTION_UPDATE_ALL
+        sendBroadcast(updaterIntent)
 
         val fab = findViewById(R.id.fab) as FloatingActionButton
         fab.setOnClickListener { _ ->
@@ -84,11 +87,15 @@ class MainActivity : AppCompatActivity() {
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
         val id = item.itemId
 
-
         if (id == R.id.action_info) {
             startActivity(Intent(applicationContext, AboutActivity::class.java))
             return true
-        }
+        }/* else if (id == R.id.action_calculator) {
+            val cd = CalculatorDialog(this)
+            val window = cd.window
+            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            cd.show()
+        }*/
 
         return super.onOptionsItemSelected(item)
     }
@@ -123,5 +130,4 @@ class MainActivity : AppCompatActivity() {
 
         adapter!!.notifyDataSetChanged()
     }
-
 }

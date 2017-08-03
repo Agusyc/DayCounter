@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/lytWidget"
-    android:visibility="invisible" >
+    android:visibility="invisible">
 
     <ImageView
         android:id="@+id/bkgView"
@@ -16,38 +16,38 @@
         tools:ignore="ContentDescription"
         android:src="@drawable/widget_background" />
 
-        <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/lytText"
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/lytText"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center">
+
+        <TextView
+            android:id="@+id/txtThereAreHaveBeen"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:orientation="vertical"
-            android:gravity="center" >
+            android:layout_height="wrap_content"
+            android:textSize="24sp"
+            android:textAlignment="center"
+            android:textColor="@android:color/white" />
 
-            <TextView
-                android:id="@+id/txtThereAreHaveBeen"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="24sp"
-                android:textAlignment="center"
-                android:textColor="@android:color/white" />
+        <TextView
+            android:id="@+id/txtDays"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="48sp"
+            android:textStyle="bold"
+            android:gravity="center"
+            android:textColor="@android:color/white" />
 
-            <TextView
-                android:id="@+id/txtDays"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="48sp"
-                android:textStyle="bold"
-                android:gravity="center"
-                android:textColor="@android:color/white" />
+        <TextView
+            android:id="@+id/txtLabel"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:textSize="24sp"
+            android:textColor="@android:color/white" />
 
-            <TextView
-                android:id="@+id/txtLabel"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textAlignment="center"
-                android:textSize="24sp"
-                android:textColor="@android:color/white" />
-
-        </LinearLayout>
+    </LinearLayout>
 
 </RelativeLayout>

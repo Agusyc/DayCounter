@@ -9,20 +9,16 @@ import java.util.*
 
 class UpdaterBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        if (intent.action == Intent.ACTION_DATE_CHANGED || intent.action == Intent.ACTION_BOOT_COMPLETED) {
-            val updaterIntent = Intent(context, WidgetUpdater::class.java)
+        Log.d("UpdaterReceiver", "Broadcast received! Action is " + intent.action)
+            var updaterIntent = Intent(context, WidgetUpdater::class.java)
             updaterIntent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+            var prefs = context.getSharedPreferences("DaysPrefs", Context.MODE_PRIVATE)
 
-            Log.d("UpdaterReceiver", "Broadcast received! Updating widgets...")
+            var IDs_set = prefs.getStringSet("ids", HashSet<String>())
 
-            val prefs = context.getSharedPreferences("DaysPrefs", Context.MODE_PRIVATE)
+            var IDs_array_str = IDs_set!!.toTypedArray<String>()
 
-
-            val IDs_set = prefs.getStringSet("ids", HashSet<String>())
-
-            val IDs_array_str = IDs_set!!.toTypedArray<String>()
-
-            val IDs_array = IntArray(IDs_array_str.size)
+            var IDs_array = IntArray(IDs_array_str.size)
 
             for (i in IDs_array_str.indices) {
                 IDs_array[i] = Integer.parseInt(IDs_array_str[i])
@@ -33,6 +29,30 @@ class UpdaterBroadcastReceiver : BroadcastReceiver() {
 
             Log.d("UpdateReceiver", "Telling the WidgetUpdater to start")
             context.sendBroadcast(updaterIntent)
+
+            updaterIntent = Intent(context, CounterNotificator::class.java)
+            updaterIntent.action = CounterNotificator.ACTION_UPDATE_NOTIFICATIONS
+            updaterIntent.putExtra("widget_ids", IDs_array)
+
+            prefs = context.getSharedPreferences("ListDaysPrefs", Context.MODE_PRIVATE)
+
+            IDs_set = prefs.getStringSet("ids", HashSet<String>())
+
+            IDs_array_str = IDs_set!!.toTypedArray<String>()
+
+            IDs_array = IntArray(IDs_array_str.size)
+
+            for (i in IDs_array_str.indices) {
+                IDs_array[i] = Integer.parseInt(IDs_array_str[i])
+                Log.d("UpdateReceiver", "Parsed ID: " + IDs_array[i])
+            }
+
+            updaterIntent.putExtra("list_ids", IDs_array)
+            Log.d("UpdateReceiver", "Telling the CounterNotificator to start")
+            context.sendBroadcast(updaterIntent)
         }
+
+    companion object {
+        val ACTION_UPDATE_ALL = "com.agusyc.daycounter.UPDATE_ALL"
     }
 }

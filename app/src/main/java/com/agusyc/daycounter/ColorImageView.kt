@@ -11,8 +11,7 @@ import android.util.AttributeSet
 
 class ColorImageView(context: Context, attrs: AttributeSet?) : android.support.v7.widget.AppCompatImageView(context, attrs) {
 
-    var color: Int = 0
-        private set
+    internal var color: Int = 0
 
     init {
         val a = context.theme.obtainStyledAttributes(
