@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/lytWidget"
-    android:visibility="invisible" >
+    android:visibility="invisible">
 
     <ImageView
         android:id="@+id/bkgView"
@@ -20,7 +20,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:weightSum="100"
-        android:orientation="vertical" >
+        android:orientation="vertical">
 
         <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/lytText"

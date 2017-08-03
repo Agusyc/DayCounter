@@ -36,7 +36,7 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <ImageButton
+            <ImageView
                 android:id="@+id/btnDate"
                 android:layout_width="24dp"
                 android:layout_height="24dp"

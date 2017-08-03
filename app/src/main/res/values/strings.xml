@@ -1,28 +1,29 @@
 <resources>
     <string name="app_name">Day Counter</string>
-    <plurals
-        name="days_since">
+    <plurals name="days_since">
         <item quantity="one">day since %1$s</item>
         <item quantity="other">days since %1$s</item>
     </plurals>
-    <plurals
-        name="days_until">
+    <plurals name="days_until">
         <item quantity="one">day until %1$s</item>
         <item quantity="other">days until %1$s</item>
     </plurals>
-    <plurals
-        name="there_has_have_been">
+    <plurals name="there_has_have_been">
         <item quantity="one">There has been</item>
         <item quantity="other">There have been</item>
     </plurals>
-    <plurals
-        name="there_is_are">
+    <plurals name="there_is_are">
         <item quantity="one">There is</item>
         <item quantity="other">There are</item>
     </plurals>
+    <plurals name="difference">
+        <item quantity="one">There is %1$s day of difference</item>
+        <item quantity="other">There are %1$s days of difference</item>
+    </plurals>
+    <string name="no_difference">There are no days between the dates</string>
     <string name="days_since_al">days since</string>
     <string name="days_until_al">days until</string>
-    <string name="there_are_no_days_since">There are no days until %1$s. It is today!</string>
+    <string name="there_are_no_days_since">There are no days since %1$s. It is today!</string>
     <string name="ok">OK</string>
     <string name="number_of_days">Number of days</string>
     <string name="event">Event</string>
@@ -51,10 +52,10 @@
     <string name="delete">Delete this counter</string>
     <string name="configuration">Configuration</string>
     <string name="calculator">Day difference calculator</string>
+    <string name="calculator_short">Calculator</string>
     <string name="start_date">Start date</string>
     <string name="end_date">End date</string>
     <string name="calculate">Calculate</string>
-    <string name="difference">The difference is %1$d days</string>
     <string name="bad_format_title">Formatting error</string>
     <string name="bad_format_message">One of the dates you wrote is wrongly formatted</string>
     <string name="enable_notification">Show this counter as a notification</string>

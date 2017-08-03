@@ -6,11 +6,11 @@
     </declare-styleable>
 
     <declare-styleable name="CustomTextInputLayout">
-        <attr name="helperText" format="string"/>
-        <attr name="helperTextColor" format="color|reference"/>
+        <attr name="helperText" format="string" />
+        <attr name="helperTextColor" format="color|reference" />
     </declare-styleable>
 
-    <declare-styleable name="AutoGridLayout" >
+    <declare-styleable name="AutoGridLayout">
         <attr name="columnWidth" format="dimension" />
     </declare-styleable>
 
@@ -18,7 +18,7 @@
         <item name="android:textColor">#888888</item>
     </style>
 
-    <item name="visible" type="id"/>
-    <item name="masked" type="id"/>
+    <item name="visible" type="id" />
+    <item name="masked" type="id" />
 </resources>
 

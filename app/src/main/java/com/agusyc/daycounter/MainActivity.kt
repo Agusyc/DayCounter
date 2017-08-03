@@ -1,7 +1,8 @@
 package com.agusyc.daycounter
 
-import android.app.Activity
-import android.content.*
+import android.content.Context
+import android.content.Intent
+import android.content.SharedPreferences
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
 import android.support.v7.app.AppCompatActivity
@@ -9,6 +10,7 @@ import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ListView
 import android.widget.TextView
@@ -86,12 +88,11 @@ class MainActivity : AppCompatActivity() {
         if (id == R.id.action_info) {
             startActivity(Intent(applicationContext, AboutActivity::class.java))
             return true
-        }/* else if (id == R.id.action_calculator) {
-            val cd = CalculatorDialog(this)
-            val window = cd.window
-            window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        } else if (id == R.id.action_calculator) {
+            val cd = CalculatorDialog(this, R.style.CalculatorDialog, fragmentManager)
+            cd.window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
             cd.show()
-        }*/
+        }
 
         return super.onOptionsItemSelected(item)
     }

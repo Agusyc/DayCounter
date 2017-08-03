@@ -48,6 +48,7 @@ class ConfigurationActivity : AppCompatActivity() {
 
         // We instantiate all the Views
         val edtDays = findViewById(R.id.edtDays) as EditText
+        val newFragment = DatePickerFragment(edtDays)
 
         val edtLabel = findViewById(R.id.edtLabel) as EditText
 
@@ -89,10 +90,8 @@ class ConfigurationActivity : AppCompatActivity() {
             selectedColor_index = counter.colorIndex
 
             val date = counter.date
-            val currentTime = DateTime.now()
-            currentTime.withHourOfDay(0)
-            currentTime.withMinuteOfHour(0)
-            currentTime.withSecondOfMinute(0)
+            var currentTime = DateTime.now()
+            currentTime = currentTime.withTime(0, 0, 0, 0)
 
             val difference = Days.daysBetween(DateTime(date), DateTime(currentTime)).days
 
@@ -164,10 +163,7 @@ class ConfigurationActivity : AppCompatActivity() {
 
             try {
                 var date = DateTime.now()
-                date = date.withHourOfDay(0)
-                date = date.withMinuteOfHour(0)
-                date = date.withSecondOfMinute(0)
-                date = date.withMillisOfSecond(0)
+                date = date.withTime(0, 0, 0, 0)
 
                 val days_s = edtDays.text.toString()
 
@@ -269,9 +265,7 @@ class ConfigurationActivity : AppCompatActivity() {
             }
         }
 
-        val btnDate = findViewById(R.id.btnDate) as ImageView
-        btnDate.setOnClickListener {
-            val newFragment = DatePickerFragment()
+        findViewById(R.id.btnDate).setOnClickListener {
             newFragment.show(fragmentManager, "datePicker")
         }
 

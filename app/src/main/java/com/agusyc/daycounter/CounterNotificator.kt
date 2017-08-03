@@ -2,16 +2,16 @@ package com.agusyc.daycounter
 
 import android.app.Notification
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
 import android.support.v4.app.NotificationCompat
+import android.util.Log
 import org.joda.time.DateTime
 import org.joda.time.Days
-import android.app.PendingIntent
-import android.util.Log
-import java.util.HashSet
+import java.util.*
 
 
 class CounterNotificator : BroadcastReceiver() {

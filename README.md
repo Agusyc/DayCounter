@@ -12,7 +12,7 @@ A simple, customizable, material design widget that counts days since or until a
 - [x] Add an icon
 - [x] Add app-only counters (Not widgets)
 - [x] Add a notification function
-- [ ] Add a day calculator feature
+- [x] Add a day calculator feature (Design is WIP)
 - [ ] Improve the configuration activity design
 
 ## Bugs

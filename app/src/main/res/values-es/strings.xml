@@ -1,14 +1,12 @@
 <resources>
     <string name="app_name">Day Counter</string>
-    <plurals
-        name="days_since">
-        <item quantity="one">day since %1$s</item>
-        <item quantity="other">days since %1$s</item>
+    <plurals name="days_since">
+        <item quantity="one">día desde %1$s</item>
+        <item quantity="other">días desde %1$s</item>
     </plurals>
-    <plurals
-        name="days_until">
-        <item quantity="one">day until %1$s</item>
-        <item quantity="other">days until %1$s</item>
+    <plurals name="days_until">
+        <item quantity="one">día hasta %1$s</item>
+        <item quantity="other">días hasta %1$s</item>
     </plurals>
     <plurals name="there_have_has_been">
         <item quantity="one">Ha pasado</item>
@@ -18,6 +16,11 @@
         <item quantity="one">Hay</item>
         <item quantity="other">Hay</item>
     </plurals>
+    <plurals name="difference">
+        <item quantity="one">Hay %1$s día de diferencia</item>
+        <item quantity="other">Hay %1$s días de diferencia</item>
+    </plurals>
+    <string name="no_difference">No hay días entre las fechas</string>
     <string name="days_since_al">días desde</string>
     <string name="days_until_al">días hasta</string>
     <string name="there_are_no_days_since">No hay ningún día hasta %1$s. ¡Es hoy!</string>
@@ -49,10 +52,10 @@
     <string name="delete">Borrar este contador</string>
     <string name="configuration">Configuración</string>
     <string name="calculator">Calculadora de diferencia de días</string>
+    <string name="calculator_short">Calculadora</string>
     <string name="start_date">Fecha inicial</string>
     <string name="end_date">Fecha final</string>
     <string name="calculate">Calcular</string>
-    <string name="difference">La diferencia es %1$d días</string>
     <string name="bad_format_title">Error de formateo</string>
     <string name="bad_format_message">Una de las fechas que escribiste está formateada incorrectamente</string>
     <string name="enable_notification">Mostrar este contador como una notificación</string>

@@ -11,9 +11,10 @@ import android.widget.Spinner
 import org.joda.time.DateTime
 import org.joda.time.Days
 import java.text.DecimalFormat
+import java.text.SimpleDateFormat
 import java.util.*
 
-class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener {
+class DatePickerFragment(val edtText: EditText) : DialogFragment(), DatePickerDialog.OnDateSetListener {
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
         val c = Calendar.getInstance()
@@ -26,24 +27,29 @@ class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener 
 
     override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
         Log.d("DatePickerFragment", "User picked year, month, day: " + year + " " + month + 1 + " " + day)
+        if (activity is ConfigurationActivity) {
+            val spnType = activity.findViewById<Spinner>(R.id.spnType)
 
-        val edtDays = activity.findViewById<EditText>(R.id.edtDays)
-        val spnType = activity.findViewById<Spinner>(R.id.spnType)
+            val currentTime = System.currentTimeMillis()
 
-        val currentTime = System.currentTimeMillis()
+            // We use the Joda-Time method to calculate the difference
+            val difference = Days.daysBetween(DateTime().withDate(year, month + 1, day), DateTime(currentTime)).days
 
-        // We use the Joda-Time method to calculate the difference
-        val difference = Days.daysBetween(DateTime().withDate(year, month + 1, day), DateTime(currentTime)).days
+            if (difference >= 0) {
+                spnType.setSelection(1)
+            } else {
+                spnType.setSelection(2)
+            }
 
-        if (difference >= 0) {
-            spnType.setSelection(1)
-        } else {
-            spnType.setSelection(2)
+            val formatter = DecimalFormat("#,###,###")
+
+            // We set the days text to the *absolute* difference
+            edtText.setText(formatter.format(Math.abs(difference)))
+        } else if (activity is MainActivity) {
+            val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+            val cal = Calendar.getInstance()
+            cal.set(year, month, day, 0, 0, 0)
+            edtText.setText(sdf.format(cal.time))
         }
-
-        val formatter = DecimalFormat("#,###,###")
-
-        // We set the days text to the *absolute* difference
-        edtDays.setText(formatter.format(Math.abs(difference).toLong()))
     }
 }

@@ -37,7 +37,7 @@
                 android:resource="@xml/widgetconfiguration" />
         </receiver>
 
-        <receiver android:name=".UpdaterBroadcastReceiver" >
+        <receiver android:name=".UpdaterBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.DATE_CHANGED" />
