@@ -335,10 +335,15 @@ class ConfigurationActivity : AppCompatActivity() {
             // We remove the label, date and color from the preferences
             val prefs = applicationContext.getSharedPreferences("ListDaysPrefs", Context.MODE_PRIVATE)
             val id = intent.getStringExtra("counter_id")
+
+            // We dismiss the notification
+            (applicationContext.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(Integer.parseInt(id))
+
             prefs.edit().remove(id + "label").apply()
             prefs.edit().remove(id + "date").apply()
             prefs.edit().remove(id + "color").apply()
             prefs.edit().remove(id + "color_index").apply()
+            prefs.edit().remove(id + "notification").apply()
 
             val ids_set = prefs.getStringSet("ids", HashSet<String>())
 
@@ -359,5 +364,10 @@ class ConfigurationActivity : AppCompatActivity() {
         }
 
         return super.onOptionsItemSelected(item)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        finish()
     }
 }

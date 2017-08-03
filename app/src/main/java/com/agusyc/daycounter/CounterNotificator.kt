@@ -9,6 +9,9 @@ import android.content.res.Resources
 import android.support.v4.app.NotificationCompat
 import org.joda.time.DateTime
 import org.joda.time.Days
+import android.app.PendingIntent
+
+
 
 
 class CounterNotificator : BroadcastReceiver() {
@@ -45,12 +48,22 @@ class CounterNotificator : BroadcastReceiver() {
                     contentText = context.getString(R.string.there_are_no_days_since, counter.label)
                 }
 
+                val notificationIntent = Intent(context, MainActivity::class.java)
+
+                notificationIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+
+                val main_act_intent = PendingIntent.getActivity(context, 0,
+                        notificationIntent, 0)
+
                 val mBuilder = NotificationCompat.Builder(context)
                         .setSmallIcon(R.drawable.reset_counter)
                         .setContentTitle(context.getString(R.string.app_name))
                         .setOngoing(true)
                         .setColor(counter.color)
+                        .setContentIntent(main_act_intent)
                         .setContentText(contentText)
+                        .setVisibility(Notification.VISIBILITY_PUBLIC)
+                        .setCategory(Notification.CATEGORY_STATUS)
                         .setPriority(Notification.PRIORITY_MIN)
 
                 nm!!.notify(id, mBuilder.build())

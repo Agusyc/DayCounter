@@ -1,5 +1,6 @@
 package com.agusyc.daycounter
 
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProvider
@@ -62,12 +63,16 @@ class WidgetUpdater : AppWidgetProvider() {
     private fun deleteWidget(context: Context, id: Int) {
         Log.d("MainActivity", "Removing widget with id " + id)
 
+        // We dismiss the notification
+        (context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager).cancel(id)
+
         // We remove the label, date and color from the preferences
         val prefs = context.getSharedPreferences("DaysPrefs", Context.MODE_PRIVATE)
         prefs.edit().remove(id.toString() + "label").apply()
         prefs.edit().remove(id.toString() + "date").apply()
         prefs.edit().remove(id.toString() + "color").apply()
         prefs.edit().remove(id.toString() + "color_index").apply()
+        prefs.edit().remove(id.toString() + "notification").apply()
 
         val ids_set = prefs.getStringSet("ids", HashSet<String>())
 
@@ -112,7 +117,7 @@ class WidgetUpdater : AppWidgetProvider() {
             if (difference > 0) {
                 views = RemoteViews(context.packageName, R.layout.daycounter_since)
                 views.setTextViewText(R.id.txtThereAreHaveBeen, res.getQuantityString(R.plurals.there_is_are, absDifference))
-                views.setTextViewText(R.id.txtLabel, res.getQuantityString(R.plurals.days_since, absDifference, label))
+                views.setTextViewText(R.id.txtLabel, res.getQuantityString(R.plurals.days_since, absDifference, if (label.length >= 17) label.substring(0, 16) + "..." else label))
                 views.setTextViewText(R.id.txtDays, Integer.toString(absDifference))
 
                 if (brightness >= 0.65) {
@@ -126,7 +131,7 @@ class WidgetUpdater : AppWidgetProvider() {
             } else if (difference < 0) {
                 views = RemoteViews(context.packageName, R.layout.daycounter_until)
                 views.setTextViewText(R.id.txtThereAreHaveBeen, res.getQuantityString(R.plurals.there_is_are, absDifference))
-                views.setTextViewText(R.id.txtLabel, res.getQuantityString(R.plurals.days_until, absDifference, label))
+                views.setTextViewText(R.id.txtLabel, res.getQuantityString(R.plurals.days_until, absDifference, if (label.length >= 17) label.substring(0, 16) + "..." else label))
                 views.setTextViewText(R.id.txtDays, Integer.toString(absDifference))
 
                 if (brightness >= 0.65) {
@@ -136,7 +141,7 @@ class WidgetUpdater : AppWidgetProvider() {
                 }
             } else {
                 views = RemoteViews(context.packageName, R.layout.daycounter_nodays)
-                views.setTextViewText(R.id.txtNoDays, context.getString(R.string.there_are_no_days_since, label))
+                views.setTextViewText(R.id.txtNoDays, context.getString(R.string.there_are_no_days_since, if (label.length >= 17) label.substring(0, 16) + "..." else label))
             }
 
             Log.d("WidgetUpdater", "Updating widget $appWidgetId with label $label, original/target date $date")

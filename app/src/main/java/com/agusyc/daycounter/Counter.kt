@@ -19,7 +19,7 @@ internal class Counter
         else
             prefs = context.getSharedPreferences("ListDaysPrefs", Context.MODE_PRIVATE)
 
-        label = prefs.getString(id.toString() + "label", null)
+        label = prefs.getString(id.toString() + "label", "")
         date = prefs.getLong(id.toString() + "date", 0)
         color = prefs.getInt(id.toString() + "color", 0)
         colorIndex = prefs.getInt(id.toString() + "color_index", 0)
