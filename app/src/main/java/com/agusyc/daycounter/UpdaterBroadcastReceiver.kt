@@ -30,26 +30,7 @@ class UpdaterBroadcastReceiver : BroadcastReceiver() {
             Log.d("UpdateReceiver", "Telling the WidgetUpdater to start")
             context.sendBroadcast(updaterIntent)
 
-            updaterIntent = Intent(context, CounterNotificator::class.java)
-            updaterIntent.action = CounterNotificator.ACTION_UPDATE_NOTIFICATIONS
-            updaterIntent.putExtra("widget_ids", IDs_array)
-
-            prefs = context.getSharedPreferences("ListDaysPrefs", Context.MODE_PRIVATE)
-
-            IDs_set = prefs.getStringSet("ids", HashSet<String>())
-
-            IDs_array_str = IDs_set!!.toTypedArray<String>()
-
-            IDs_array = IntArray(IDs_array_str.size)
-
-            for (i in IDs_array_str.indices) {
-                IDs_array[i] = Integer.parseInt(IDs_array_str[i])
-                Log.d("UpdateReceiver", "Parsed ID: " + IDs_array[i])
-            }
-
-            updaterIntent.putExtra("list_ids", IDs_array)
-            Log.d("UpdateReceiver", "Telling the CounterNotificator to start")
-            context.sendBroadcast(updaterIntent)
+            CounterNotificator().updateAll(context)
         }
 
     companion object {

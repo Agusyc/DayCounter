@@ -35,10 +35,6 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val updaterIntent = Intent(applicationContext, UpdaterBroadcastReceiver::class.java)
-        updaterIntent.action = UpdaterBroadcastReceiver.ACTION_UPDATE_ALL
-        sendBroadcast(updaterIntent)
-
         val fab = findViewById(R.id.fab) as FloatingActionButton
         fab.setOnClickListener { _ ->
             val configuration_intent = Intent(applicationContext, ConfigurationActivity::class.java)

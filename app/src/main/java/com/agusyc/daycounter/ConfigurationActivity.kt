@@ -89,7 +89,10 @@ class ConfigurationActivity : AppCompatActivity() {
             selectedColor_index = counter.colorIndex
 
             val date = counter.date
-            val currentTime = System.currentTimeMillis()
+            val currentTime = DateTime.now()
+            currentTime.withHourOfDay(0)
+            currentTime.withMinuteOfHour(0)
+            currentTime.withSecondOfMinute(0)
 
             val difference = Days.daysBetween(DateTime(date), DateTime(currentTime)).days
 
@@ -160,7 +163,11 @@ class ConfigurationActivity : AppCompatActivity() {
 
 
             try {
-                var date = DateTime(System.currentTimeMillis())
+                var date = DateTime.now()
+                date = date.withHourOfDay(0)
+                date = date.withMinuteOfHour(0)
+                date = date.withSecondOfMinute(0)
+                date = date.withMillisOfSecond(0)
 
                 val days_s = edtDays.text.toString()
 
