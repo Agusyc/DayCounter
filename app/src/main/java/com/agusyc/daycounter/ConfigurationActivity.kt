@@ -318,7 +318,7 @@ class ConfigurationActivity : AppCompatActivity(), View.OnClickListener {
                     if (label.isEmpty()) {
                         edtLabel.error = getString(R.string.input_something_error)
                         return
-                    } 
+                    }
 
                     // We add the key to the set only if it's a new counter, not an existing one
                     if (!intent.hasExtra("counter_id"))

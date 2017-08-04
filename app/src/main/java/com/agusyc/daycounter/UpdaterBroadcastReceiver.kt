@@ -9,16 +9,11 @@ import java.util.*
 
 class UpdaterBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
-        Log.d("UpdaterReceiver", "Broadcast received! Action is " + intent.action)
-	// We tell the WidgetUpdater to update every widget in the list
-        val updaterIntent = Intent(context, WidgetUpdater::class.java)
-        updaterIntent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
         val prefs = context.getSharedPreferences("DaysPrefs", Context.MODE_PRIVATE)
 
+        // We parse all the widget data
         val IDs_set = prefs.getStringSet("ids", HashSet<String>())
-
         val IDs_array_str = IDs_set!!.toTypedArray<String>()
-
         val IDs_array = IntArray(IDs_array_str.size)
 
         for (i in IDs_array_str.indices) {
@@ -26,12 +21,13 @@ class UpdaterBroadcastReceiver : BroadcastReceiver() {
             Log.d("UpdateReceiver", "Parsed ID: " + IDs_array[i])
         }
 
+        // We create and set the Intent up, then we send it to the WidgetUpdater
+        val updaterIntent = Intent(context, WidgetUpdater::class.java)
+        updaterIntent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
         updaterIntent.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, IDs_array)
-
-        Log.d("UpdateReceiver", "Telling the WidgetUpdater to start")
         context.sendBroadcast(updaterIntent)
 
-	// We tell the Notificator to update all the counters
+        // We tell the Notificator to update all the counters
         CounterNotificator().updateAll(context)
     }
 

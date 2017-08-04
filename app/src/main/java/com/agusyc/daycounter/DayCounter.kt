@@ -15,11 +15,11 @@ class DayCounter : Application() {
     override fun onCreate() {
         super.onCreate()
         Log.i("DayCounter", "DayCounter was started")
-	// We update all our notifications
+        // We update all our notifications
         CounterNotificator().updateAll(applicationContext)
-        
-	// We set up an alarm that repeats itself at midnight everyday, and updates all the counters
-	val calendar = Calendar.getInstance()
+
+        // We set up an alarm that repeats itself at midnight everyday, and updates all the counters
+        val calendar = Calendar.getInstance()
         calendar.set(Calendar.HOUR_OF_DAY, 0)
         calendar.set(Calendar.MINUTE, 0)
         calendar.set(Calendar.SECOND, 0)
