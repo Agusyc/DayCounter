@@ -12,6 +12,7 @@ import android.view.View
 import android.widget.RemoteViews
 import org.joda.time.DateTime
 import org.joda.time.Days
+import java.text.DecimalFormat
 import java.util.*
 
 class WidgetUpdater : AppWidgetProvider() {
@@ -21,36 +22,35 @@ class WidgetUpdater : AppWidgetProvider() {
 
         // The receiver caught a broadcast:
         Log.d("WidgetUpdater", "Broadcast received!")
-
-
         Log.d("WidgetUpdater", "The action is: " + intent.action!!)
         // We check if the broadcast is telling us that a widget has been deleted
         if ("android.appwidget.action.APPWIDGET_DELETED" == intent.action) {
             // We call the deleteWidget method, that deletes the widget from the prefs
             deleteWidget(context, intent.extras!!.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID))
         } else if (intent.action != null && intent.action!!.startsWith(WIDGET_BUTTON)) {
+	    // We get the widget's id which reset button was clicked
             val id_s = intent.action!!.replace(WIDGET_BUTTON, "")
 
             Log.d("WidgetUpdater", "The reset counter button was clicked for id " + id_s)
 
-            // Here, the button was clicked
             val prefs = context.getSharedPreferences("DaysPrefs", Context.MODE_PRIVATE)
 
-            prefs.edit().putLong(id_s + "date", System.currentTimeMillis()).apply()
+	    // We set the date to today's
+            prefs.edit().putLong(id_s + "date", DateTime.now().withTime(0, 0, 0, 0).millis).apply()
 
+	    // We tell the Notificator to update this widget
             val updaterIntent = Intent(context, CounterNotificator::class.java)
             updaterIntent.action = CounterNotificator.ACTION_UPDATE_NOTIFICATIONS
             updaterIntent.putExtra("widget_ids", intArrayOf(Integer.parseInt(id_s)))
             context.sendBroadcast(updaterIntent)
 
+	    // We update this widget
             onUpdate(context, AppWidgetManager.getInstance(context), intArrayOf(Integer.parseInt(id_s)))
         } else if (AppWidgetManager.ACTION_APPWIDGET_UPDATE == intent.action) {
-            Log.d("WidgetUpdater", "Updating widgets...")
+            // We update all the widgets that are in the EXTRA_APPWIDGET_IDS array
+	    Log.d("WidgetUpdater", "Updating widgets...")
             val ids = intent.extras!!.getIntArray(AppWidgetManager.EXTRA_APPWIDGET_IDS)
-            // We update the widgets
             onUpdate(context, AppWidgetManager.getInstance(context), ids)
-        } else if ("android.appwidget.action.APPWIDGET_UPDATE_OPTIONS" == intent.action) {
-            onUpdate(context, AppWidgetManager.getInstance(context), intArrayOf(intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, 0)))
         }
     }
 
@@ -111,6 +111,7 @@ class WidgetUpdater : AppWidgetProvider() {
 
             // We use the Joda-Time method to calculate the difference
             val difference = Days.daysBetween(DateTime(date), DateTime(currentTime)).days
+            val formatter = DecimalFormat("#,###,###")
             val absDifference = Math.abs(difference)
 
             // We check the sign of the number (Positive or negative). So we know if we use "since" or "until"
@@ -118,7 +119,7 @@ class WidgetUpdater : AppWidgetProvider() {
                 views = RemoteViews(context.packageName, R.layout.daycounter_since)
                 views.setTextViewText(R.id.txtThereAreHaveBeen, res.getQuantityString(R.plurals.there_is_are, absDifference))
                 views.setTextViewText(R.id.txtLabel, res.getQuantityString(R.plurals.days_since, absDifference, if (label.length >= 17) label.substring(0, 16) + "..." else label))
-                views.setTextViewText(R.id.txtDays, Integer.toString(absDifference))
+                views.setTextViewText(R.id.txtDays, formatter.format(absDifference))
 
                 if (brightness >= 0.65) {
                     views.setTextColor(R.id.txtThereAreHaveBeen, Color.BLACK)
@@ -132,7 +133,7 @@ class WidgetUpdater : AppWidgetProvider() {
                 views = RemoteViews(context.packageName, R.layout.daycounter_until)
                 views.setTextViewText(R.id.txtThereAreHaveBeen, res.getQuantityString(R.plurals.there_is_are, absDifference))
                 views.setTextViewText(R.id.txtLabel, res.getQuantityString(R.plurals.days_until, absDifference, if (label.length >= 17) label.substring(0, 16) + "..." else label))
-                views.setTextViewText(R.id.txtDays, Integer.toString(absDifference))
+                views.setTextViewText(R.id.txtDays, formatter.format(absDifference))
 
                 if (brightness >= 0.65) {
                     views.setTextColor(R.id.txtThereAreHaveBeen, Color.BLACK)

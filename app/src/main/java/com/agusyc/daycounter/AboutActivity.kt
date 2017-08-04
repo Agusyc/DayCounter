@@ -14,13 +14,11 @@ class AboutActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_about)
 
+        // We set the title that is shown on the ActionBar
         title = getString(R.string.about_title)
 
-        if (supportActionBar != null) {
-            supportActionBar!!.setHomeButtonEnabled(true)
-            supportActionBar!!.setDisplayHomeAsUpEnabled(true)
-        }
-
+        // We reuse this textView three times in this method, so we use a var for it
+        // We configure and set the text for the GitHub section
         var textView = findViewById(R.id.txtGithub) as TextView
         textView.movementMethod = LinkMovementMethod.getInstance()
         textView.isClickable = true
@@ -30,6 +28,7 @@ class AboutActivity : AppCompatActivity() {
             textView.text = Html.fromHtml("<a href='https://www.github.com/Agusyc/DayCounter'>" + getString(R.string.source_link) + "</a>")
         }
 
+        // We configure and set the text for the Reddit section
         textView = findViewById(R.id.txtReddit) as TextView
         textView.movementMethod = LinkMovementMethod.getInstance()
         textView.isClickable = true
@@ -39,6 +38,7 @@ class AboutActivity : AppCompatActivity() {
             textView.text = Html.fromHtml("<a href='https://www.reddit.com/r/Android/comments/6knhlo/request_any_app_you_want_i_will_make_it_if_i_can/djnks5x/'>" + getString(R.string.reddit_link) + "</a>")
         }
 
+        // We configure and set the text for the Donation section
         textView = findViewById(R.id.txtDonate) as TextView
         textView.movementMethod = LinkMovementMethod.getInstance()
         textView.isClickable = true

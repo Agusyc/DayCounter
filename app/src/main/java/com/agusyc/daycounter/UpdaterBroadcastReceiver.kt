@@ -10,6 +10,7 @@ import java.util.*
 class UpdaterBroadcastReceiver : BroadcastReceiver() {
     override fun onReceive(context: Context, intent: Intent) {
         Log.d("UpdaterReceiver", "Broadcast received! Action is " + intent.action)
+	// We tell the WidgetUpdater to update every widget in the list
         val updaterIntent = Intent(context, WidgetUpdater::class.java)
         updaterIntent.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
         val prefs = context.getSharedPreferences("DaysPrefs", Context.MODE_PRIVATE)
@@ -30,6 +31,7 @@ class UpdaterBroadcastReceiver : BroadcastReceiver() {
         Log.d("UpdateReceiver", "Telling the WidgetUpdater to start")
         context.sendBroadcast(updaterIntent)
 
+	// We tell the Notificator to update all the counters
         CounterNotificator().updateAll(context)
     }
 

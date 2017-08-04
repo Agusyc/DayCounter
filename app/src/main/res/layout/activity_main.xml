@@ -23,6 +23,8 @@
         android:text="@string/there_is_nothing1"
         android:textSize="24sp"
         android:gravity="center"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent" />
 
@@ -33,6 +35,8 @@
         android:text="@string/there_is_nothing2"
         android:textSize="16sp"
         android:gravity="center"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
         app:layout_constraintTop_toBottomOf="@+id/txtThere_Is_Nothing1" />
 
 

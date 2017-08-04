@@ -6,6 +6,7 @@ import android.content.SharedPreferences
 // This class represents a Counter
 internal class Counter
 (context: Context, val id: Int, val isWidget: Boolean) {
+    // We declare all the needed variables
     val label: String
     val date: Long
     val color: Int
@@ -13,11 +14,9 @@ internal class Counter
     val notification: Boolean
 
     init {
+        // We get the right prefs file, according to the isWidget variable, and we parse all the needed data
         val prefs: SharedPreferences
-        if (isWidget)
-            prefs = context.getSharedPreferences("DaysPrefs", Context.MODE_PRIVATE)
-        else
-            prefs = context.getSharedPreferences("ListDaysPrefs", Context.MODE_PRIVATE)
+        if (isWidget) prefs = context.getSharedPreferences("DaysPrefs", Context.MODE_PRIVATE) else prefs = context.getSharedPreferences("ListDaysPrefs", Context.MODE_PRIVATE)
 
         label = prefs.getString(id.toString() + "label", "")
         date = prefs.getLong(id.toString() + "date", 0)

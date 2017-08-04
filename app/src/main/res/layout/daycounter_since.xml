@@ -4,6 +4,8 @@
     android:layout_width="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/lytWidget"
+    android:paddingStart="8dp"
+    android:paddingEnd="8dp"
     android:visibility="invisible">
 
     <ImageView
@@ -43,7 +45,7 @@
                 android:id="@+id/txtDays"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="36sp"
+                android:textSize="28sp"
                 android:textStyle="bold"
                 android:gravity="center"
                 android:textColor="@android:color/white" />
