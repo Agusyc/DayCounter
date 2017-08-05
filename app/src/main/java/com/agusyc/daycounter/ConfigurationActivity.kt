@@ -1,6 +1,7 @@
 package com.agusyc.daycounter
 
 import android.app.Activity
+import android.app.DatePickerDialog
 import android.app.NotificationManager
 import android.appwidget.AppWidgetManager
 import android.content.Context
@@ -26,7 +27,7 @@ import org.joda.time.Days
 import java.util.*
 
 
-class ConfigurationActivity : AppCompatActivity(), View.OnClickListener {
+class ConfigurationActivity : AppCompatActivity(), View.OnClickListener, DatePickerDialog.OnDateSetListener {
     private var mAppWidgetId: Int = 0
     private var selectedColor: Int = 0
     private var selectedColor_index: Int = 0
@@ -36,11 +37,15 @@ class ConfigurationActivity : AppCompatActivity(), View.OnClickListener {
     private lateinit var edtLabel: EditText
     private lateinit var spnType: MaterialSpinner
     private lateinit var swtNotification: Switch
-    private lateinit var newFragment: DatePickerFragment
+    private lateinit var dateDialog: DatePickerDialog
     private lateinit var btnCustomColor: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        // We get the selected theme and set it
+        val settings = getSharedPreferences("Settings", Context.MODE_PRIVATE)
+        val dark_theme = settings!!.getBoolean("dark_theme", false)
+        if (dark_theme) setTheme(R.style.AppDarkTheme)
         setContentView(R.layout.activity_configuration)
 
         // We set the title that is shown in the ActionBar
@@ -56,12 +61,19 @@ class ConfigurationActivity : AppCompatActivity(), View.OnClickListener {
         btnCustomColor.setOnClickListener(this)
         colorView = findViewById(R.id.colorView) as GridLayout
         edtDays = findViewById(R.id.edtDays) as EditText
-        newFragment = DatePickerFragment(edtDays)
+        val cal = Calendar.getInstance()
+        dateDialog = DatePickerDialog(this@ConfigurationActivity, R.style.DatePickerDarkTheme, this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
         edtLabel = findViewById(R.id.edtLabel) as EditText
         spnType = findViewById(R.id.spnType) as MaterialSpinner
         swtNotification = findViewById(R.id.swtNotification) as Switch
         findViewById(R.id.okButton).setOnClickListener(this)
-        findViewById(R.id.btnDate).setOnClickListener(this)
+        val btnDate = findViewById(R.id.btnDate) as ImageView
+        btnDate.setOnClickListener(this)
+        if (dark_theme) {
+            btnDate.setColorFilter(Color.WHITE)
+            edtDays.setTextColor(Color.WHITE)
+            edtLabel.setTextColor(Color.WHITE)
+        }
 
         // We add strings to the Spinner
         val types = ArrayList<String>()
@@ -286,6 +298,13 @@ class ConfigurationActivity : AppCompatActivity(), View.OnClickListener {
                     // We remove all the time values
                     date = date.withTime(0, 0, 0, 0)
 
+                    // This variable contains the selectedItem (Whether the counter is "since" or "until")
+                    val selectedPosition = spnType.selectedItemPosition
+                    if (selectedPosition == 0) {
+                        spnType.error = getString(R.string.kind_of_event_error)
+                        return
+                    }
+
                     // The string that contains what the user wrote
                     val days_s = edtDays.text.toString()
 
@@ -298,15 +317,8 @@ class ConfigurationActivity : AppCompatActivity(), View.OnClickListener {
                     // We can parse the integer now that we checked if it's empty
                     val days = Integer.parseInt(days_s)
 
-                    // This variable contains the selectedItem (Wether the counter is "since" or "until")
-                    val selectedPosition = spnType.selectedItemPosition
-
                     // We check what the position is and act accordingly. If it's the default one, we show an error and stop the method
                     when (selectedPosition) {
-                        0 -> {
-                            spnType.error = getString(R.string.kind_of_event_error)
-                            return
-                        }
                         1 -> date = date.minusDays(days)
                         2 -> date = date.plusDays(days + 1)
                     }
@@ -406,8 +418,26 @@ class ConfigurationActivity : AppCompatActivity(), View.OnClickListener {
             }
             R.id.btnDate -> {
                 // We show the date picker
-                newFragment.show(fragmentManager, "datePicker")
+                dateDialog.show()
             }
         }
+    }
+
+    // This method is executed when the user selects a date
+    override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
+            // We calculate the difference in days
+            val currentTime = System.currentTimeMillis()
+            // We use the Joda-Time method to calculate the difference
+            val difference = Days.daysBetween(DateTime().withDate(year, month + 1, day), DateTime(currentTime).withTime(0, 0, 0, 0)).days
+
+            // We set the spinner on the configuration activity depending on the sign of the difference (Until, since or today)
+            if (difference >= 0) {
+                spnType.setSelection(1)
+            } else {
+                spnType.setSelection(2)
+            }
+
+            // We set the days text to the *absolute* difference
+            edtDays.setText(Math.abs(difference).toString())
     }
 }

@@ -59,4 +59,5 @@
     <string name="bad_format_title">Formatting error</string>
     <string name="bad_format_message">One of the dates you wrote is wrongly formatted</string>
     <string name="enable_notification">Show this counter as a notification</string>
+    <string name="dark_theme">Toggle the dark theme</string>
 </resources>

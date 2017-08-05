@@ -6,7 +6,14 @@
         android:id="@+id/action_info"
         android:icon="@drawable/info"
         android:title="@string/info"
-        app:showAsAction="always"
+        app:showAsAction="never"
+        android:orderInCategory="1" />
+
+    <item
+        android:id="@+id/action_dark_theme"
+        android:icon="@drawable/info"
+        android:title="@string/dark_theme"
+        app:showAsAction="never"
         android:orderInCategory="0" />
 
     <item
@@ -14,6 +21,6 @@
         android:icon="@drawable/date_range"
         android:title="@string/calculator"
         app:showAsAction="ifRoom"
-        android:orderInCategory="1" />
+        android:orderInCategory="0" />
 
 </menu>

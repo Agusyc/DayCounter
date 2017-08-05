@@ -1,10 +1,13 @@
 package com.agusyc.daycounter
 
+import android.content.Context
+import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.support.v7.app.AppCompatActivity
 import android.text.Html
 import android.text.method.LinkMovementMethod
+import android.widget.ImageView
 import android.widget.TextView
 
 class AboutActivity : AppCompatActivity() {
@@ -12,6 +15,9 @@ class AboutActivity : AppCompatActivity() {
     @Suppress("DEPRECATION")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val settings = getSharedPreferences("Settings", Context.MODE_PRIVATE)
+        val dark_theme = settings!!.getBoolean("dark_theme", false)
+        if (dark_theme) setTheme(R.style.AppDarkTheme)
         setContentView(R.layout.activity_about)
 
         // We set the title that is shown on the ActionBar
@@ -46,6 +52,13 @@ class AboutActivity : AppCompatActivity() {
             textView.text = Html.fromHtml("<a href='http://www.paypal.me/agezro'>" + getString(R.string.paypal_link) + "</a>", Html.FROM_HTML_MODE_LEGACY)
         } else {
             textView.text = Html.fromHtml("<a href='http://www.paypal.me/agezro'>" + getString(R.string.paypal_link) + "</a>")
+        }
+
+        // We color all the icons depending on the theme:
+        if (dark_theme) {
+            (findViewById(R.id.imgGithub) as ImageView).setColorFilter(Color.WHITE)
+            (findViewById(R.id.imgReddit) as ImageView).setColorFilter(Color.WHITE)
+            (findViewById(R.id.imgDonate) as ImageView).setColorFilter(Color.WHITE)
         }
     }
 }

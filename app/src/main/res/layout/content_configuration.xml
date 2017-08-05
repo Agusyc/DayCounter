@@ -2,7 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/lytMain"
+    android:id="@+id/lytConfiguration"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.agusyc.daycounter.ConfigurationActivity"
@@ -47,14 +47,15 @@
             <com.agusyc.daycounter.CustomTextInputLayout
                 android:layout_height="wrap_content"
                 android:layout_width="match_parent"
-                app:helperText="@string/days_desc">
+                app:helperText="@string/days_desc" >
 
                 <EditText
                     android:id="@+id/edtDays"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:inputType="number"
-                    android:hint="@string/number_of_days" />
+                    android:hint="@string/number_of_days"
+                    android:textColorHint="@android:color/white"/>
 
             </com.agusyc.daycounter.CustomTextInputLayout>
 
@@ -63,7 +64,7 @@
         <com.agusyc.daycounter.CustomTextInputLayout
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
-            app:helperText="@string/event_desc">
+            app:helperText="@string/event_desc" >
 
             <android.support.design.widget.TextInputEditText
                 android:id="@+id/edtLabel"

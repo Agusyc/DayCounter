@@ -24,10 +24,7 @@
         android:gravity="center"
         android:textSize="24sp"
         android:autoSizeTextType="uniform"
-        android:textColor="@android:color/white"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:paddingTop="6dp"
-        android:paddingBottom="6dp" />
+        android:paddingHorizontal="8dp"
+        android:paddingVertical="6dp" />
 
 </RelativeLayout>

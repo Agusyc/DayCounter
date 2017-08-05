@@ -19,8 +19,7 @@
             android:layout_height="wrap_content"
             android:textAlignment="center"
             android:paddingTop="2dp"
-            android:textSize="18sp"
-            android:textColor="@android:color/white" />
+            android:textSize="18sp" />
 
         <TextView
             android:id="@+id/txtDays"
@@ -28,9 +27,8 @@
             android:layout_height="wrap_content"
             android:textSize="24sp"
             android:textStyle="bold"
-            android:textAlignment="center"
-            android:textColor="@android:color/white" />
-
+            android:textAlignment="center" />
+    
         <TextView
             android:id="@+id/txtLabel"
             android:layout_width="match_parent"
@@ -38,8 +36,7 @@
             android:textAlignment="center"
             android:paddingBottom="2dp"
             android:textSize="18sp"
-            android:maxWidth="5sp"
-            android:textColor="@android:color/white" />
+            android:maxWidth="5sp" />
 
     </LinearLayout>
 

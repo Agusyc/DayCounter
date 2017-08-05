@@ -59,4 +59,5 @@
     <string name="bad_format_title">Error de formateo</string>
     <string name="bad_format_message">Una de las fechas que escribiste está formateada incorrectamente</string>
     <string name="enable_notification">Mostrar este contador como una notificación</string>
+    <string name="dark_theme">Alternar el tema oscuro</string>
 </resources>

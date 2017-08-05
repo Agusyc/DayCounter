@@ -38,8 +38,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textSize="16sp"
-                android:textAlignment="center"
-                android:textColor="@android:color/white" />
+                android:textAlignment="center" />
 
             <TextView
                 android:id="@+id/txtDays"
@@ -47,16 +46,14 @@
                 android:layout_height="wrap_content"
                 android:textSize="28sp"
                 android:textStyle="bold"
-                android:gravity="center"
-                android:textColor="@android:color/white" />
+                android:gravity="center" />
 
             <TextView
                 android:id="@+id/txtLabel"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:textAlignment="center"
-                android:textSize="16sp"
-                android:textColor="@android:color/white" />
+                android:textSize="16sp" />
 
         </LinearLayout>
 
