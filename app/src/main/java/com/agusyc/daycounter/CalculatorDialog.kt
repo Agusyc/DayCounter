@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.os.Bundle
 import android.support.v7.app.AlertDialog
 import android.support.v7.app.AppCompatDialog
-import android.util.Log
 import android.view.View
 import android.widget.DatePicker
 import android.widget.EditText
@@ -18,7 +17,7 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class CalculatorDialog(context: Context?, val themeResId: Int) : AppCompatDialog(context, themeResId), View.OnClickListener, DatePickerDialog.OnDateSetListener {
+class CalculatorDialog(context: Context?, val themeResId: Int) : AppCompatDialog(context, themeResId), View.OnClickListener {
     // We declare all the vars here to use it on all methods
     private lateinit var edtStartDate: EditText
     private lateinit var edtEndDate: EditText
@@ -37,8 +36,22 @@ class CalculatorDialog(context: Context?, val themeResId: Int) : AppCompatDialog
         edtEndDate = findViewById(R.id.edtEndDate) as EditText
         txtResult = findViewById(R.id.txtResult) as TextView
         val cal = Calendar.getInstance()
-        datePickerEnd = DatePickerDialog(context, this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
-        datePickerStart = DatePickerDialog(context, this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
+        val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
+        val calendar = Calendar.getInstance()
+        // This are the listeners for the CalculatorDialogs
+        val startListener = DatePickerDialog.OnDateSetListener { _: DatePicker, year: Int, month: Int, day: Int ->
+            calendar.set(year, month, day, 0, 0, 0)
+            // We use the SimpleDateFormat-ter to format the date picked by the user
+            edtStartDate.setText(sdf.format(calendar.time))
+        }
+        val endListener = DatePickerDialog.OnDateSetListener { _: DatePicker, year: Int, month: Int, day: Int ->
+            calendar.set(year, month, day, 0, 0, 0)
+            // We use the SimpleDateFormat-ter to format the date picked by the user
+            edtEndDate.setText(sdf.format(calendar.time))
+        }
+        // We create the dialogs, setting the listener accordingly
+        datePickerEnd = DatePickerDialog(context, endListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
+        datePickerStart = DatePickerDialog(context, startListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
         findViewById(R.id.btnCalculate)!!.setOnClickListener(this)
         val btnStartDate = findViewById(R.id.btnStartDate) as ImageView
         btnStartDate.setOnClickListener(this)
@@ -94,17 +107,5 @@ class CalculatorDialog(context: Context?, val themeResId: Int) : AppCompatDialog
             // We show the datePicker and send it the start date editView
             datePickerStart.show()
         }
-    }
-
-    override fun onDateSet(view: DatePicker?, year: Int, day: Int, month: Int) {
-        val id = view!!.id
-        Log.d("Calculator", "Start is " + R.id.edtStartDate)
-        Log.d("Calculator", "End is " + R.id.edtEndDate)
-        Log.d("Calculator", "Chosen is " + id)
-        // We get the selected date, parse it and then set the edtText to the formatted string
-        val sdf = SimpleDateFormat("dd/MM/yyyy", Locale.getDefault())
-        val cal = Calendar.getInstance()
-        cal.set(year, month, day, 0, 0, 0)
-        if (id == R.id.edtStartDate) edtStartDate.setText(sdf.format(cal.time)) else edtEndDate.setText(sdf.format(cal.time))
     }
 }

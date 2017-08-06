@@ -51,7 +51,7 @@ class ConfigurationActivity : AppCompatActivity(), View.OnClickListener, DatePic
         // We set the title that is shown in the ActionBar
         title = getString(R.string.configuration)
 
-        // This if checks wether the device is a tablet or not. If the device is *not* a tablet, we force the portrait orientation
+        // This if checks whether the device is a tablet or not. If the device is *not* a tablet, we force the portrait orientation
         if (applicationContext.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK < Configuration.SCREENLAYOUT_SIZE_LARGE) {
             requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_PORTRAIT
         }
@@ -62,7 +62,7 @@ class ConfigurationActivity : AppCompatActivity(), View.OnClickListener, DatePic
         colorView = findViewById(R.id.colorView) as GridLayout
         edtDays = findViewById(R.id.edtDays) as EditText
         val cal = Calendar.getInstance()
-        dateDialog = DatePickerDialog(this@ConfigurationActivity, R.style.DatePickerDarkTheme, this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
+        if (dark_theme ) dateDialog = DatePickerDialog(this@ConfigurationActivity, R.style.DatePickerDarkTheme, this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)) else dateDialog = DatePickerDialog(this@ConfigurationActivity, this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
         edtLabel = findViewById(R.id.edtLabel) as EditText
         spnType = findViewById(R.id.spnType) as MaterialSpinner
         swtNotification = findViewById(R.id.swtNotification) as Switch
