@@ -50,8 +50,8 @@ class CalculatorDialog(context: Context?, val themeResId: Int) : AppCompatDialog
             edtEndDate.setText(sdf.format(calendar.time))
         }
         // We create the dialogs, setting the listener accordingly
-        datePickerEnd = DatePickerDialog(context, endListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
-        datePickerStart = DatePickerDialog(context, startListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
+        if (themeResId == R.style.CalculatorDarkTheme) datePickerEnd = DatePickerDialog(context, R.style.DatePickerDarkTheme, endListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)) else datePickerEnd = DatePickerDialog(context, endListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
+        if (themeResId == R.style.CalculatorDarkTheme) datePickerStart = DatePickerDialog(context, R.style.DatePickerDarkTheme, startListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)) else datePickerStart = DatePickerDialog(context, startListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
         findViewById(R.id.btnCalculate)!!.setOnClickListener(this)
         val btnStartDate = findViewById(R.id.btnStartDate) as ImageView
         btnStartDate.setOnClickListener(this)

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical"
     android:layout_width="match_parent"
-    android:layout_height="280dp"
+    android:layout_height="wrap_content"
     android:padding="16dp" >
 
     <LinearLayout
@@ -68,13 +68,13 @@
         android:layout_height="wrap_content"
         android:textSize="18sp"
         android:paddingTop="5dp"
-        android:paddingBottom="5dp"
-        android:textColor="@android:color/black" />
+        android:paddingBottom="5dp" />
 
     <Button
         android:id="@+id/btnCalculate"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
         android:text="@string/calculate" />
 
 </LinearLayout>

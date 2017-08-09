@@ -17,8 +17,8 @@
         <item quantity="other">There are</item>
     </plurals>
     <plurals name="difference">
-        <item quantity="one">There is %1$s day of difference</item>
-        <item quantity="other">There are %1$s days of difference</item>
+        <item quantity="one">There is a difference of %1$s day</item>
+        <item quantity="other">There is a difference of %1$s days</item>
     </plurals>
     <string name="no_difference">There are no days between the dates</string>
     <string name="days_since_al">days since</string>
