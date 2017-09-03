@@ -93,6 +93,7 @@ class ConfigurationActivity : AppCompatActivity(), View.OnClickListener, DatePic
 
         // If it does have the extra, then the configuration activity was opened from the MainActivity, for editing an existing widget
         if (intent.hasExtra("counter_id")) {
+            Log.d("DayCounter", "Editting existing widget")
             // The counter class takes care of parsing everything
             counter = Counter(applicationContext, Integer.parseInt(intent.getStringExtra("counter_id")), isWidget)
 
@@ -125,6 +126,7 @@ class ConfigurationActivity : AppCompatActivity(), View.OnClickListener, DatePic
             selected_view.setImageDrawable(ColorImageView.getOverlay(circle, checked))
             swtNotification.isChecked = counter.notification
         } else {
+            Log.d("DayCounter", "Creating new widget")
             // The widget is new, not an existing one. This block basically sets the default selected color
             val colorImageView = colorView.getChildAt(4) as ColorImageView
 
@@ -273,7 +275,7 @@ class ConfigurationActivity : AppCompatActivity(), View.OnClickListener, DatePic
                 // We need the current IDs so we can add the new one to it
                 val currentIDs_set = prefs.getStringSet("ids", HashSet<String>())
 
-                // We check wether the counter is new or already existing
+                // We check whether the counter is new or already existing
                 key_base = if (intent.hasExtra("counter_id")) {
                     intent.getStringExtra("counter_id")
                 } else {
@@ -282,7 +284,9 @@ class ConfigurationActivity : AppCompatActivity(), View.OnClickListener, DatePic
                     else {
                         // If the set is empty, we can't use the "last" method, so we just set the key base to the minimum integer
                         if (currentIDs_set.isEmpty()) {
-                            Int.MIN_VALUE.toString()
+                            currentIDs_set.add("0")
+                            Log.d("ConfigurationACtivity", "Was empty")
+                            "0"
                         } else {
                             (Integer.parseInt(currentIDs_set.last()) + 1).toString()
                         }
@@ -341,6 +345,8 @@ class ConfigurationActivity : AppCompatActivity(), View.OnClickListener, DatePic
                     prefs.edit().putStringSet("ids", currentIDs_set).apply()
                     prefs.edit().putBoolean(key_base + "isWidget", isWidget).apply()
                     prefs.edit().putBoolean(key_base + "notification", swtNotification.isChecked).apply()
+
+                    Log.d("ConfigurationActivity", "Widget: $key_base, $label, $date, $selectedColor, $isWidget")
 
                     Log.d("ConfigurationActivity", "Added new counter with label" + edtLabel.text + ", ID " + key_base + " and date " + date.millis)
 
