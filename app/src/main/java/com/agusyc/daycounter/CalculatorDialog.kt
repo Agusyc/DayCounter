@@ -17,7 +17,7 @@ import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.*
 
-class CalculatorDialog(context: Context?, val themeResId: Int) : AppCompatDialog(context, themeResId), View.OnClickListener {
+class CalculatorDialog(context: Context?, private val themeResId: Int) : AppCompatDialog(context, themeResId), View.OnClickListener {
     // We declare all the vars here to use it on all methods
     private lateinit var edtStartDate: EditText
     private lateinit var edtEndDate: EditText
@@ -50,8 +50,8 @@ class CalculatorDialog(context: Context?, val themeResId: Int) : AppCompatDialog
             edtEndDate.setText(sdf.format(calendar.time))
         }
         // We create the dialogs, setting the listener accordingly
-        if (themeResId == R.style.CalculatorDarkTheme) datePickerEnd = DatePickerDialog(context, R.style.DatePickerDarkTheme, endListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)) else datePickerEnd = DatePickerDialog(context, endListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
-        if (themeResId == R.style.CalculatorDarkTheme) datePickerStart = DatePickerDialog(context, R.style.DatePickerDarkTheme, startListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)) else datePickerStart = DatePickerDialog(context, startListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
+        datePickerEnd = if (themeResId == R.style.CalculatorDarkTheme) DatePickerDialog(context, R.style.DatePickerDarkTheme, endListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)) else DatePickerDialog(context, endListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
+        datePickerStart = if (themeResId == R.style.CalculatorDarkTheme) DatePickerDialog(context, R.style.DatePickerDarkTheme, startListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)) else DatePickerDialog(context, startListener, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
         findViewById(R.id.btnCalculate)!!.setOnClickListener(this)
         val btnStartDate = findViewById(R.id.btnStartDate) as ImageView
         btnStartDate.setOnClickListener(this)
@@ -71,8 +71,8 @@ class CalculatorDialog(context: Context?, val themeResId: Int) : AppCompatDialog
 
     override fun onClick(view: View) {
         // We check which view was clicked
-        if (view.id == R.id.btnCalculate) {
-            try {
+        when {
+            view.id == R.id.btnCalculate -> try {
                 if (edtStartDate.text.isEmpty()) {
                     // The start date text is empty
                     edtStartDate.error = context.getString(R.string.input_something_error)
@@ -100,12 +100,10 @@ class CalculatorDialog(context: Context?, val themeResId: Int) : AppCompatDialog
                 adb.setNeutralButton(R.string.ok, null)
                 adb.create().show()
             }
-        } else if (view.id == R.id.btnEndDate) {
-            // We show the datePicker and send it the end date editView
-            datePickerEnd.show()
-        } else if (view.id == R.id.btnStartDate) {
-            // We show the datePicker and send it the start date editView
-            datePickerStart.show()
+            view.id == R.id.btnEndDate -> // We show the datePicker and send it the end date editView
+                datePickerEnd.show()
+            view.id == R.id.btnStartDate -> // We show the datePicker and send it the start date editView
+                datePickerStart.show()
         }
     }
 }

@@ -1,12 +1,14 @@
 package com.agusyc.daycounter
 
 import android.app.Notification
+import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
+import android.os.Build
 import android.support.v4.app.NotificationCompat
 import android.util.Log
 import org.joda.time.DateTime
@@ -17,7 +19,7 @@ import java.util.*
 class CounterNotificator : BroadcastReceiver() {
     // This variables represent the context resources and system notification manager
     var res: Resources? = null
-    var nm: NotificationManager? = null
+    private var nm: NotificationManager? = null
 
     override fun onReceive(context: Context, intent: Intent) {
         // We initialise the variables
@@ -35,7 +37,7 @@ class CounterNotificator : BroadcastReceiver() {
         }
     }
 
-    internal fun notify(ids: IntArray, areWidget: Boolean, context: Context) {
+    private fun notify(ids: IntArray, areWidget: Boolean, context: Context) {
         // We go trough each id in the array
         for (id in ids) {
             // The current counter being processed by the for loop:
@@ -50,12 +52,10 @@ class CounterNotificator : BroadcastReceiver() {
                 val absDifference = Math.abs(difference)
                 val contentText: String
                 // We set the contentText depeding on the sign of the difference (Positive is since, negative is until and 0 is today)
-                if (difference > 0) {
-                    contentText = String.format("%s %d %s", res!!.getQuantityString(R.plurals.there_has_have_been, absDifference), absDifference, res!!.getQuantityString(R.plurals.days_since, absDifference, counter.label))
-                } else if (difference < 0) {
-                    contentText = String.format("%s %d %s", res!!.getQuantityString(R.plurals.there_is_are, absDifference), absDifference, res!!.getQuantityString(R.plurals.days_until, absDifference, counter.label))
-                } else {
-                    contentText = context.getString(R.string.there_are_no_days_since, counter.label)
+                contentText = when {
+                    difference > 0 -> String.format("%s %d %s", res!!.getQuantityString(R.plurals.there_has_have_been, absDifference), absDifference, res!!.getQuantityString(R.plurals.days_since, absDifference, counter.label))
+                    difference < 0 -> String.format("%s %d %s", res!!.getQuantityString(R.plurals.there_is_are, absDifference), absDifference, res!!.getQuantityString(R.plurals.days_until, absDifference, counter.label))
+                    else -> context.getString(R.string.there_are_no_days_since, counter.label)
                 }
 
                 // Variables for starting the MainActivity when the notification is clicked
@@ -63,22 +63,50 @@ class CounterNotificator : BroadcastReceiver() {
                 notificationIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
                 val main_act_intent = PendingIntent.getActivity(context, 0,
                         notificationIntent, 0)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    // The id of the channel.
+                    val channel_id = "daycounterchannel"
+                    // The user-visible name of the channel.
+                    val name = "DayCounter"
+                    // The user-visible description of the channel.
+                    val description = context.getString(R.string.channel_description)
+                    val importance = NotificationManager.IMPORTANCE_MIN
+                    val mChannel = NotificationChannel(channel_id, name, importance)
+                    // Configure the notification channel.
+                    mChannel.description = description
+                    mChannel.enableLights(false)
+                    mChannel.enableVibration(false)
+                    mChannel.setShowBadge(false)
+                    nm!!.createNotificationChannel(mChannel)
 
-                // We build and notify the notification
-                @Suppress("DEPRECATION")
-                val mBuilder = NotificationCompat.Builder(context)
-                        .setSmallIcon(R.drawable.reset_counter)
-                        .setContentTitle(context.getString(R.string.app_name))
-                        .setOngoing(true)
-                        .setColor(counter.color)
-                        .setContentIntent(main_act_intent)
-                        .setContentText(contentText)
-                        .setVisibility(Notification.VISIBILITY_PUBLIC)
-                        .setCategory(Notification.CATEGORY_STATUS)
-                        .setPriority(Notification.PRIORITY_MIN)
-                        .setShowWhen(false)
 
-                nm!!.notify(id, mBuilder.build())
+                    // We build and notify the notification
+                    val mBuilder = Notification.Builder(context, channel_id)
+                            .setSmallIcon(R.drawable.reset_counter)
+                            .setContentTitle(context.getString(R.string.app_name))
+                            .setOngoing(true)
+                            .setColor(counter.color)
+                            .setContentIntent(main_act_intent)
+                            .setContentText(contentText)
+                            .setCategory(Notification.CATEGORY_REMINDER)
+                            .setShowWhen(false)
+                            nm!!.notify(id, mBuilder.build())
+                } else {
+                    Log.i("DayCounter", "Using old notification system")
+                    // We build and notify the notification
+                    @Suppress("DEPRECATION")
+                    val mBuilder = NotificationCompat.Builder(context)
+                            .setSmallIcon(R.drawable.reset_counter)
+                            .setContentTitle(context.getString(R.string.app_name))
+                            .setOngoing(true)
+                            .setColor(counter.color)
+                            .setContentIntent(main_act_intent)
+                            .setContentText(contentText)
+                            .setCategory(Notification.CATEGORY_STATUS)
+                            .setPriority(Notification.PRIORITY_MIN)
+                            .setShowWhen(false)
+                            nm!!.notify(id, mBuilder.build())
+                }
             }
         }
     }
@@ -107,7 +135,7 @@ class CounterNotificator : BroadcastReceiver() {
 
         IDs_set = prefs.getStringSet("ids", HashSet<String>())
 
-        IDs_array_str = IDs_set!!.toTypedArray<String>()
+        IDs_array_str = IDs_set!!.toTypedArray()
 
         IDs_array = IntArray(IDs_array_str.size)
 

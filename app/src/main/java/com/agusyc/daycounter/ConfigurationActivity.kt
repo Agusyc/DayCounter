@@ -21,7 +21,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.*
 import com.pes.androidmaterialcolorpickerdialog.ColorPicker
-import fr.ganfra.materialspinner.MaterialSpinner
 import org.joda.time.DateTime
 import org.joda.time.Days
 import java.util.*
@@ -62,7 +61,7 @@ class ConfigurationActivity : AppCompatActivity(), View.OnClickListener, DatePic
         colorView = findViewById(R.id.colorView) as GridLayout
         edtDays = findViewById(R.id.edtDays) as EditText
         val cal = Calendar.getInstance()
-        if (dark_theme ) dateDialog = DatePickerDialog(this@ConfigurationActivity, R.style.DatePickerDarkTheme, this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)) else dateDialog = DatePickerDialog(this@ConfigurationActivity, this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
+        dateDialog = if (dark_theme) DatePickerDialog(this@ConfigurationActivity, R.style.DatePickerDarkTheme, this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH)) else DatePickerDialog(this@ConfigurationActivity, this, cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DAY_OF_MONTH))
         edtLabel = findViewById(R.id.edtLabel) as EditText
         spnType = findViewById(R.id.spnType) as MaterialSpinner
         swtNotification = findViewById(R.id.swtNotification) as Switch
@@ -148,7 +147,6 @@ class ConfigurationActivity : AppCompatActivity(), View.OnClickListener, DatePic
         for (i in 0..colorView.childCount - 2) {
             // This is the current color view being processed by the for loop
             val current_colorView = colorView.getChildAt(i) as ColorImageView
-            val index = i
             current_colorView.setOnClickListener { view ->
                 // This is the block that gets executed when a circle is clicked
                 var in_view: ColorImageView
@@ -163,7 +161,7 @@ class ConfigurationActivity : AppCompatActivity(), View.OnClickListener, DatePic
                 }
                 // we set these variables so the SharedPreferences are updated with them
                 selectedColor = current_colorView.color
-                selectedColor_index = index
+                selectedColor_index = i
 
                 // We set the CustomColor circle's image to custom_color (That is, its default state)
                 (colorView.getChildAt(colorView.childCount - 1) as ImageView).setImageDrawable(getDrawable(R.drawable.custom_color))
@@ -199,12 +197,12 @@ class ConfigurationActivity : AppCompatActivity(), View.OnClickListener, DatePic
     // This method inflates the option menu
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         // We inflate it only if the counter being added is an existing widget, because only those can be deleted
-        if (intent.extras.containsKey("counter_id") && !intent.extras.getBoolean("isWidget")) {
+        return if (intent.extras.containsKey("counter_id") && !intent.extras.getBoolean("isWidget")) {
             // Inflate the menu; this adds items to the action bar if it is present.
             menuInflater.inflate(R.menu.configuration_activity, menu)
-            return true
+            true
         } else {
-            return false
+            false
         }
     }
 
@@ -266,9 +264,8 @@ class ConfigurationActivity : AppCompatActivity(), View.OnClickListener, DatePic
         when (id) {
             R.id.okButton -> {
                 // This whole blocks puts all the changes in the prefs
-                val prefs: SharedPreferences
+                val prefs: SharedPreferences = if (isWidget) getSharedPreferences("DaysPrefs", Context.MODE_PRIVATE) else getSharedPreferences("ListDaysPrefs", Context.MODE_PRIVATE)
                 // We need to get the right file depending on wether the counter is a widget or a list counter
-                if (isWidget) prefs = getSharedPreferences("DaysPrefs", Context.MODE_PRIVATE) else prefs = getSharedPreferences("ListDaysPrefs", Context.MODE_PRIVATE)
 
                 // This stores the id of the counter
                 val key_base: String
@@ -277,17 +274,17 @@ class ConfigurationActivity : AppCompatActivity(), View.OnClickListener, DatePic
                 val currentIDs_set = prefs.getStringSet("ids", HashSet<String>())
 
                 // We check wether the counter is new or already existing
-                if (intent.hasExtra("counter_id")) {
-                    key_base = intent.getStringExtra("counter_id")
+                key_base = if (intent.hasExtra("counter_id")) {
+                    intent.getStringExtra("counter_id")
                 } else {
                     if (isWidget)
-                        key_base = Integer.toString(mAppWidgetId)
+                        Integer.toString(mAppWidgetId)
                     else {
                         // If the set is empty, we can't use the "last" method, so we just set the key base to the minimum integer
                         if (currentIDs_set.isEmpty()) {
-                            key_base = Int.MIN_VALUE.toString()
+                            Int.MIN_VALUE.toString()
                         } else {
-                            key_base = (Integer.parseInt(currentIDs_set.last()) + 1).toString()
+                            (Integer.parseInt(currentIDs_set.last()) + 1).toString()
                         }
                     }
                 }
@@ -301,6 +298,7 @@ class ConfigurationActivity : AppCompatActivity(), View.OnClickListener, DatePic
                     // This variable contains the selectedItem (Whether the counter is "since" or "until")
                     val selectedPosition = spnType.selectedItemPosition
                     if (selectedPosition == 0) {
+                        spnType.errorColor = Color.parseColor("#E7492E")
                         spnType.error = getString(R.string.kind_of_event_error)
                         return
                     }
@@ -425,19 +423,29 @@ class ConfigurationActivity : AppCompatActivity(), View.OnClickListener, DatePic
 
     // This method is executed when the user selects a date
     override fun onDateSet(view: DatePicker, year: Int, month: Int, day: Int) {
-            // We calculate the difference in days
-            val currentTime = System.currentTimeMillis()
-            // We use the Joda-Time method to calculate the difference
-            val difference = Days.daysBetween(DateTime().withDate(year, month + 1, day), DateTime(currentTime).withTime(0, 0, 0, 0)).days
+        // We calculate the difference in days
+        val currentTime = System.currentTimeMillis()
+        // We use the Joda-Time method to calculate the difference
+        val difference = Days.daysBetween(DateTime().withDate(year, month + 1, day), DateTime(currentTime).withTime(0, 0, 0, 0)).days
 
-            // We set the spinner on the configuration activity depending on the sign of the difference (Until, since or today)
-            if (difference >= 0) {
-                spnType.setSelection(1)
-            } else {
-                spnType.setSelection(2)
-            }
+        // We set the spinner on the configuration activity depending on the sign of the difference (Until, since or today)
+        if (difference >= 0) {
+            spnType.setSelection(1)
+        } else {
+            spnType.setSelection(2)
+        }
 
-            // We set the days text to the *absolute* difference
-            edtDays.setText(Math.abs(difference).toString())
+        // We set the days text to the *absolute* difference
+        edtDays.setText(Math.abs(difference).toString())
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Thread {
+            Thread.sleep(500)
+            runOnUiThread {
+                spnType.errorColor = Color.parseColor("#888888")
+                spnType.error = getString(R.string.until_or_since_desc) }
+        }.start()
     }
 }

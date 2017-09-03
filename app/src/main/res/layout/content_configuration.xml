@@ -8,41 +8,50 @@
     tools:context="com.agusyc.daycounter.ConfigurationActivity"
     android:orientation="vertical"
     android:paddingStart="16dp"
-    android:paddingEnd="16dp">
+    android:paddingEnd="16dp" >
 
-    <fr.ganfra.materialspinner.MaterialSpinner
+    <com.agusyc.daycounter.MaterialSpinner
         android:id="@+id/spnType"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:ms_hint="@string/until_or_since"
         app:ms_enableFloatingLabel="true" />
 
-    <TextView
+    <Space
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textSize="12sp"
-        android:text="@string/until_or_since_desc" />
+        android:layout_height="32dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:showDividers="middle"
-        android:divider="@drawable/empty_tall_divider"
-        android:paddingTop="4dp">
+        android:orientation="vertical">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
 
-            <ImageView
-                android:id="@+id/btnDate"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:src="@drawable/event"
-                android:layout_gravity="center_vertical"
-                android:contentDescription="@string/event_desc_image" />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:weightSum="5" >
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:id="@+id/btnDate"
+                    android:layout_weight="4"
+                    android:src="@drawable/event"
+                    android:layout_gravity="center"
+                    android:contentDescription="@string/event_desc_image" />
+
+                <Space
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1"/>
+
+            </LinearLayout>
 
             <com.agusyc.daycounter.CustomTextInputLayout
                 android:layout_height="wrap_content"
@@ -75,21 +84,25 @@
 
         </com.agusyc.daycounter.CustomTextInputLayout>
 
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="8dp" />
+
         <Switch
             android:id="@+id/swtNotification"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="@string/enable_notification"
-            android:paddingTop="8dp"
-            android:paddingBottom="8dp"
             android:textSize="18sp" />
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="20dp" />
 
         <com.agusyc.daycounter.AutoGridLayout
             android:id="@+id/colorView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:columnCount="6"
-            android:rowCount="4"
             app:columnWidth="48dp"
             android:layout_gravity="center">
 

@@ -8,7 +8,7 @@
         <item quantity="one">día hasta %1$s</item>
         <item quantity="other">días hasta %1$s</item>
     </plurals>
-    <plurals name="there_have_has_been">
+    <plurals name="there_has_have_been">
         <item quantity="one">Ha pasado</item>
         <item quantity="other">Han pasado</item>
     </plurals>
@@ -60,4 +60,5 @@
     <string name="bad_format_message">Una de las fechas que escribiste está formateada incorrectamente</string>
     <string name="enable_notification">Mostrar este contador como una notificación</string>
     <string name="dark_theme">Alternar el tema oscuro</string>
+    <string name="channel_description">Canal para todos los contadores</string>
 </resources>

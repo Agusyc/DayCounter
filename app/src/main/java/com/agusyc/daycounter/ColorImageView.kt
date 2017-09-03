@@ -37,9 +37,7 @@ class ColorImageView(context: Context, attrs: AttributeSet?) : android.support.v
 
     companion object {
         // This function overlays two drawables together
-        fun getOverlay(d1: Drawable, d2: Drawable): LayerDrawable {
-            return LayerDrawable(arrayOf(d1, d2))
-        }
+        fun getOverlay(d1: Drawable, d2: Drawable): LayerDrawable = LayerDrawable(arrayOf(d1, d2))
     }
 }
 

@@ -47,7 +47,7 @@ class CustomTextInputLayout : TextInputLayout {
         }
     }
 
-    fun setHelperTextEnabled(_enabled: Boolean) {
+    private fun setHelperTextEnabled(_enabled: Boolean) {
         if (mHelperTextEnabled == _enabled) return
         if (_enabled && mErrorEnabled) {
             isErrorEnabled = false
@@ -85,7 +85,7 @@ class CustomTextInputLayout : TextInputLayout {
         }
     }
 
-    fun setHelperText(_helperText: CharSequence) {
+    private fun setHelperText(_helperText: CharSequence) {
         mHelperText = _helperText
         if (!this.mHelperTextEnabled) {
             if (TextUtils.isEmpty(mHelperText)) {

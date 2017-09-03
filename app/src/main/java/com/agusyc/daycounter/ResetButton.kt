@@ -14,12 +14,11 @@ class ResetButton(context: Context, attrs: AttributeSet?) : android.support.v7.w
     init {
         // This click listener resets the counter's date
         setOnClickListener {
-            val prefs: SharedPreferences
-            // We get the right preferences depeding on isWidget
-            if (isWidget)
-                prefs = context.getSharedPreferences("DaysPrefs", Context.MODE_PRIVATE)
+            // We get the right preferences depending on isWidget
+            val prefs: SharedPreferences = if (isWidget)
+                context.getSharedPreferences("DaysPrefs", Context.MODE_PRIVATE)
             else
-                prefs = context.getSharedPreferences("ListDaysPrefs", Context.MODE_PRIVATE)
+                context.getSharedPreferences("ListDaysPrefs", Context.MODE_PRIVATE)
             prefs.edit().putLong(widget_id.toString() + "date", DateTime.now().withTime(0, 0, 0, 0).millis).apply()
 
             var updaterIntent: Intent

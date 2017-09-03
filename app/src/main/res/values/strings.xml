@@ -41,7 +41,7 @@
     <string name="paypal_link">Donate here</string>
     <string name="until_or_since">Until or Since</string>
     <string name="event_desc">What is the event?</string>
-    <string name="until_or_since_desc">Are you counting the days since and event, or until an event?</string>
+    <string name="until_or_since_desc">Are you counting the days since an event, or until an event?</string>
     <string name="days_desc">How many days until/since the event?</string>
     <string name="input_something_error">You have to type something here</string>
     <string name="number_too_big_error">This number is too big!</string>
@@ -60,4 +60,5 @@
     <string name="bad_format_message">One of the dates you wrote is wrongly formatted</string>
     <string name="enable_notification">Show this counter as a notification</string>
     <string name="dark_theme">Toggle the dark theme</string>
+    <string name="channel_description">Channel for all the day counters</string>
 </resources>

@@ -24,14 +24,7 @@ internal class CounterListAdapter(context: Context, alarms: ArrayList<Counter>) 
         // We get the counter for the current position
         val counter = getItem(position)
 
-        val newConvertView: View
-
-        // Check if an existing view is being reused, otherwise inflate the view
-        if (convertView == null) {
-            newConvertView = LayoutInflater.from(context).inflate(R.layout.counter_row, parent, false)
-        } else {
-            newConvertView = convertView
-        }
+        val newConvertView: View = convertView ?: LayoutInflater.from(context).inflate(R.layout.counter_row, parent, false)
 
         // We get all the needed data, views and objects
         val date = counter!!.date
@@ -49,30 +42,34 @@ internal class CounterListAdapter(context: Context, alarms: ArrayList<Counter>) 
         val btnReset = newConvertView.findViewById<ResetButton>(R.id.btnReset)
 
         // We check the sign of the number (Positive or negative, since or until), so we can set up the list's views accordingly
-        if (difference > 0) {
-            // The counter's date is behind current time
-            txtLabel.text = context.resources.getQuantityString(R.plurals.days_since, absDifference, counter.label)
-            btnReset.widget_id = counter.id
-            btnReset.isWidget = counter.isWidget
-            txtDays.visibility = View.VISIBLE
-            btnReset.visibility = View.VISIBLE
-            txtThereAreHaveBeen.visibility = View.VISIBLE
-            txtThereAreHaveBeen.text = res.getQuantityText(R.plurals.there_has_have_been, absDifference)
-        } else if (difference < 0) {
-            // The counter's date is after the current time
-            txtLabel.text = res.getQuantityString(R.plurals.days_until, absDifference, counter.label)
-            txtDays.visibility = View.VISIBLE
-            txtThereAreHaveBeen.visibility = View.VISIBLE
-            txtThereAreHaveBeen.text = res.getQuantityText(R.plurals.there_is_are, absDifference)
-            btnReset.visibility = View.GONE
-        } else {
-            // The counter's date is today
-            txtLabel.text = context.getString(R.string.there_are_no_days_since, counter.label)
-            txtLabel.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
+        when {
+            difference > 0 -> {
+                // The counter's date is behind current time
+                txtLabel.text = context.resources.getQuantityString(R.plurals.days_since, absDifference, counter.label)
+                btnReset.widget_id = counter.id
+                btnReset.isWidget = counter.isWidget
+                txtDays.visibility = View.VISIBLE
+                btnReset.visibility = View.VISIBLE
+                txtThereAreHaveBeen.visibility = View.VISIBLE
+                txtThereAreHaveBeen.text = res.getQuantityText(R.plurals.there_has_have_been, absDifference)
+            }
+            difference < 0 -> {
+                // The counter's date is after the current time
+                txtLabel.text = res.getQuantityString(R.plurals.days_until, absDifference, counter.label)
+                txtDays.visibility = View.VISIBLE
+                txtThereAreHaveBeen.visibility = View.VISIBLE
+                txtThereAreHaveBeen.text = res.getQuantityText(R.plurals.there_is_are, absDifference)
+                btnReset.visibility = View.GONE
+            }
+            else -> {
+                // The counter's date is today
+                txtLabel.text = context.getString(R.string.there_are_no_days_since, counter.label)
+                txtLabel.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24f)
 
-            txtDays.visibility = View.GONE
-            btnReset.visibility = View.GONE
-            txtThereAreHaveBeen.visibility = View.GONE
+                txtDays.visibility = View.GONE
+                btnReset.visibility = View.GONE
+                txtThereAreHaveBeen.visibility = View.GONE
+            }
         }
 
         Log.i("CounterListAdapter", "Adding widget " + counter.id + " with label " + counter.label + ", original/target date " + date)
@@ -90,11 +87,16 @@ internal class CounterListAdapter(context: Context, alarms: ArrayList<Counter>) 
 
         // We calculate the brightness of the background color and set icons and text color accordingly
         val brightness = (1 - hsv[1] + hsv[2]) / 2
-        if (brightness >= 0.65) {
+        if (brightness >= 0.61) {
             txtDays.setTextColor(Color.BLACK)
             txtLabel.setTextColor(Color.BLACK)
             (newConvertView.findViewById<TextView>(R.id.txtThereAreHaveBeen) as TextView).setTextColor(Color.BLACK)
             btnReset.setColorFilter(Color.BLACK)
+        } else {
+            txtDays.setTextColor(Color.WHITE)
+            txtLabel.setTextColor(Color.WHITE)
+            (newConvertView.findViewById<TextView>(R.id.txtThereAreHaveBeen) as TextView).setTextColor(Color.WHITE)
+            btnReset.setColorFilter(Color.WHITE)
         }
 
         // This is for controlling the animations when adding a new widget

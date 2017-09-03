@@ -53,7 +53,7 @@ class MainActivity : AppCompatActivity() {
         txtThereIsNothing2 = findViewById(R.id.txtThere_Is_Nothing2) as TextView
         widgetPrefs = getSharedPreferences("DaysPrefs", Context.MODE_PRIVATE)
         listPrefs = getSharedPreferences("ListDaysPrefs", Context.MODE_PRIVATE)
-        lstCounters = ArrayList<Counter>()
+        lstCounters = ArrayList()
         adapter = CounterListAdapter(this, lstCounters)
         // We attach the adapter to the listview
         lstCountersView = findViewById(R.id.lstCounters) as ListView
@@ -72,7 +72,7 @@ class MainActivity : AppCompatActivity() {
         if (savedInstanceState != null) {
             if (savedInstanceState.getBoolean("animate_layout", false)) {
                 // We go trough each object and animate it
-                for (i in 0..lytMain.childCount - 1) {
+                for (i in 0 until lytMain.childCount) {
                     val anim = ObjectAnimator.ofFloat(lytMain.getChildAt(i), "alpha", 0f, 1.0f)
                     anim.duration = 250
                     anim.start()
@@ -110,8 +110,7 @@ class MainActivity : AppCompatActivity() {
             }
             R.id.action_calculator -> {
                 // We create and show the CalculatorDialog
-                val cd: CalculatorDialog
-                if (dark_theme) cd = CalculatorDialog(this, R.style.CalculatorDarkTheme) else cd = CalculatorDialog(this, R.style.CalculatorTheme)
+                val cd: CalculatorDialog = if (dark_theme) CalculatorDialog(this, R.style.CalculatorDarkTheme) else CalculatorDialog(this, R.style.CalculatorTheme)
                 cd.window.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT)
                 cd.show()
             }
@@ -124,11 +123,11 @@ class MainActivity : AppCompatActivity() {
                 val dark_background = Color.parseColor("#303030")
                 val light_background = Color.parseColor("#fafafa")
                 val colorAnimation: ValueAnimator
-                if (dark_theme) colorAnimation = ValueAnimator.ofObject(ArgbEvaluator(), dark_background, light_background) else colorAnimation = ValueAnimator.ofObject(ArgbEvaluator(), light_background, dark_background)
+                colorAnimation = if (dark_theme) ValueAnimator.ofObject(ArgbEvaluator(), dark_background, light_background) else ValueAnimator.ofObject(ArgbEvaluator(), light_background, dark_background)
                 colorAnimation.duration = 250
                 colorAnimation.addUpdateListener { animator -> lytMain.setBackgroundColor(animator.animatedValue as Int) }
                 // We go through each child and animate it
-                for (i in 0..lytMain.childCount-1) {
+                for (i in 0 until lytMain.childCount) {
                     val anim = ObjectAnimator.ofFloat(lytMain.getChildAt(i), "alpha", 0f)
                     anim.duration = 250
                     anim.start()

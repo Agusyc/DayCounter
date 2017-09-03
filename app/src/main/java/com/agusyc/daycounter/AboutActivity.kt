@@ -23,7 +23,6 @@ class AboutActivity : AppCompatActivity() {
         // We set the title that is shown on the ActionBar
         title = getString(R.string.about_title)
 
-        // We reuse this textView three times in this method, so we use a var for it
         // We configure and set the text for the GitHub section
         var textView = findViewById(R.id.txtGithub) as TextView
         textView.movementMethod = LinkMovementMethod.getInstance()
