@@ -119,11 +119,11 @@ class WidgetUpdater : AppWidgetProvider() {
                 views.setOnClickPendingIntent(R.id.btnReset, getPendingSelfIntent(context, WIDGET_BUTTON, appWidgetId))
 
                 // We check the brightness and auto-color the texts and icons accordingly
-                if (brightness >= 0.65) {
-                    views.setTextColor(R.id.txtThereAreHaveBeen, Color.BLACK)
-                    views.setTextColor(R.id.txtLabel, Color.BLACK)
-                    views.setTextColor(R.id.txtDays, Color.BLACK)
-                    views.setInt(R.id.btnReset, "setColorFilter", Color.BLACK)
+                if (brightness < 0.61) {
+                    views.setTextColor(R.id.txtThereAreHaveBeen, Color.WHITE)
+                    views.setTextColor(R.id.txtLabel, Color.WHITE)
+                    views.setTextColor(R.id.txtDays, Color.WHITE)
+                    views.setInt(R.id.btnReset, "setColorFilter", Color.WHITE)
                 }
             } else if (difference < 0) {
                 // We set the right layout
@@ -133,16 +133,19 @@ class WidgetUpdater : AppWidgetProvider() {
                 views.setTextViewText(R.id.txtLabel, res.getQuantityString(R.plurals.days_until, absDifference, if (label.length >= 17) label.substring(0, 16) + "..." else label))
                 views.setTextViewText(R.id.txtDays, formatter.format(absDifference))
 
-                // We check the brightness and auto-color the texts and icons accordingly
-                if (brightness >= 0.65) {
-                    views.setTextColor(R.id.txtThereAreHaveBeen, Color.BLACK)
-                    views.setTextColor(R.id.txtLabel, Color.BLACK)
-                    views.setTextColor(R.id.txtDays, Color.BLACK)
+                // We check the brightness and auto-color the texts accordingly
+                if (brightness < 0.61) {
+                    views.setTextColor(R.id.txtThereAreHaveBeen, Color.WHITE)
+                    views.setTextColor(R.id.txtLabel, Color.WHITE)
+                    views.setTextColor(R.id.txtDays, Color.WHITE)
                 }
             } else {
-                // We set the right layout and just set the noDays text
+                // We set the right layout and the noDays text
                 views = RemoteViews(context.packageName, R.layout.daycounter_nodays)
                 views.setTextViewText(R.id.txtNoDays, context.getString(R.string.there_are_no_days_since, if (label.length >= 17) label.substring(0, 16) + "..." else label))
+                // We check the brightness and auto-color the texts accordingly
+                if (brightness < 0.61)
+                    views.setTextColor(R.id.txtNoDays, Color.WHITE)
             }
 
             // We set the background  color and we make the widget visible

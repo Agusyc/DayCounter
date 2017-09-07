@@ -29,6 +29,10 @@ class UpdaterBroadcastReceiver : BroadcastReceiver() {
 
         // We tell the Notificator to update all the counters
         CounterNotificator().updateAll(context)
+
+        // We tell the MainActivity to update its ListView
+        val updateListView = Intent("com.agusyc.daycounter.UPDATE_LISTVIEW")
+        context.sendBroadcast(updateListView)
     }
 
     companion object {

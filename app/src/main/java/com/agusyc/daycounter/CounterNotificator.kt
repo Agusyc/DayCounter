@@ -4,10 +4,12 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
+import android.appwidget.AppWidgetManager
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.res.Resources
+import android.graphics.drawable.Icon
 import android.os.Build
 import android.support.v4.app.NotificationCompat
 import android.util.Log
@@ -34,6 +36,28 @@ class CounterNotificator : BroadcastReceiver() {
             // We notify all the list counters
             if (intent.hasExtra("list_ids"))
                 notify(intent.getIntArrayExtra("list_ids"), false, context)
+        } else if (intent.action.startsWith(ACTION_RESET_COUNTER)) {
+            // The reset button was pressed on the notification
+            // We do some magic trickery to get the data from the action... (Intent extras don't work here)
+            val data = intent.action.replace(ACTION_RESET_COUNTER, "").split(" ")
+            val isWidget = Integer.parseInt(data[1]) == 1
+            val prefs = if (isWidget) context.getSharedPreferences("DaysPrefs", Context.MODE_PRIVATE) else context.getSharedPreferences("ListDaysPrefs", Context.MODE_PRIVATE)
+            val id = Integer.parseInt(data[0])
+
+            // We set the date to today's
+            prefs.edit().putLong("${id}date", DateTime.now().withTime(0, 0, 0, 0).millis).apply()
+
+            // We tell the MainActivity to update its ListView
+            val updateListView = Intent("com.agusyc.daycounter.UPDATE_LISTVIEW")
+            context.sendBroadcast(updateListView)
+            notify(intArrayOf(id), isWidget, context)
+            // We update its widget (Only if it is a widget)
+            if (isWidget) {
+                val updateWidget = Intent(context, WidgetUpdater::class.java)
+                updateWidget.action = AppWidgetManager.ACTION_APPWIDGET_UPDATE
+                updateWidget.putExtra(AppWidgetManager.EXTRA_APPWIDGET_IDS, intArrayOf(id))
+                context.sendBroadcast(updateWidget)
+            }
         }
     }
 
@@ -53,16 +77,20 @@ class CounterNotificator : BroadcastReceiver() {
                 val contentText: String
                 // We set the contentText depeding on the sign of the difference (Positive is since, negative is until and 0 is today)
                 contentText = when {
-                    difference > 0 -> String.format("%s %d %s", res!!.getQuantityString(R.plurals.there_has_have_been, absDifference), absDifference, res!!.getQuantityString(R.plurals.days_since, absDifference, counter.label))
-                    difference < 0 -> String.format("%s %d %s", res!!.getQuantityString(R.plurals.there_is_are, absDifference), absDifference, res!!.getQuantityString(R.plurals.days_until, absDifference, counter.label))
+                    difference > 0 -> "${res!!.getQuantityString(R.plurals.there_has_have_been, absDifference)} $absDifference ${res!!.getQuantityString(R.plurals.days_since, absDifference, counter.label)}"
+                    difference < 0 -> "${res!!.getQuantityString(R.plurals.there_is_are, absDifference)} $absDifference ${res!!.getQuantityString(R.plurals.days_until, absDifference, counter.label)}"
                     else -> context.getString(R.string.there_are_no_days_since, counter.label)
                 }
 
                 // Variables for starting the MainActivity when the notification is clicked
                 val notificationIntent = Intent(context, MainActivity::class.java)
+                val resetIntent = Intent(context, CounterNotificator::class.java)
+                resetIntent.action = "$ACTION_RESET_COUNTER$id ${if (areWidget) 1 else 0}"
+                val resetPIntent = PendingIntent.getBroadcast(context, 0, resetIntent, PendingIntent.FLAG_ONE_SHOT)
                 notificationIntent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
                 val main_act_intent = PendingIntent.getActivity(context, 0,
                         notificationIntent, 0)
+                // We now have channels in Android Oreo, so we use it *only* if the version is O or greater
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                     // The id of the channel.
                     val channel_id = "daycounterchannel"
@@ -79,7 +107,6 @@ class CounterNotificator : BroadcastReceiver() {
                     mChannel.setShowBadge(false)
                     nm!!.createNotificationChannel(mChannel)
 
-
                     // We build and notify the notification
                     val mBuilder = Notification.Builder(context, channel_id)
                             .setSmallIcon(R.drawable.reset_counter)
@@ -90,7 +117,9 @@ class CounterNotificator : BroadcastReceiver() {
                             .setContentText(contentText)
                             .setCategory(Notification.CATEGORY_REMINDER)
                             .setShowWhen(false)
-                            nm!!.notify(id, mBuilder.build())
+                            // We add the reset button only if it's a "since" counter
+                            if (absDifference > 0) mBuilder.addAction(Notification.Action.Builder(Icon.createWithResource(context, R.drawable.reset_counter), context.getString(R.string.reset_counter), resetPIntent).build())
+                    nm!!.notify(id, mBuilder.build())
                 } else {
                     Log.i("DayCounter", "Using old notification system")
                     // We build and notify the notification
@@ -105,6 +134,8 @@ class CounterNotificator : BroadcastReceiver() {
                             .setCategory(Notification.CATEGORY_STATUS)
                             .setPriority(Notification.PRIORITY_MIN)
                             .setShowWhen(false)
+                            // We add the reset button only if it's a "since" counter
+                            if (absDifference > 0) mBuilder.addAction(R.drawable.reset_counter, context.getString(R.string.reset_counter), resetPIntent)
                             nm!!.notify(id, mBuilder.build())
                 }
             }
@@ -151,5 +182,6 @@ class CounterNotificator : BroadcastReceiver() {
 
     companion object {
         internal val ACTION_UPDATE_NOTIFICATIONS = "com.agusyc.daycounter.ACTION_UPDATE_NOTIFICATIONS"
+        internal val ACTION_RESET_COUNTER = "com.agusyc.daycounter.ACTION_RESET_COUNTER"
     }
 }

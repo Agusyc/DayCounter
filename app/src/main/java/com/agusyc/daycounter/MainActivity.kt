@@ -5,6 +5,7 @@ import android.animation.ObjectAnimator
 import android.animation.ValueAnimator
 import android.content.Context
 import android.content.Intent
+import android.content.IntentFilter
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
@@ -19,6 +20,7 @@ import android.widget.AdapterView
 import android.widget.ListView
 import android.widget.TextView
 import java.util.*
+import android.content.BroadcastReceiver
 
 class MainActivity : AppCompatActivity() {
     private lateinit var widgetPrefs: SharedPreferences
@@ -34,6 +36,14 @@ class MainActivity : AppCompatActivity() {
     private var dark_theme: Boolean = false
     private var animate_layout: Boolean = false
 
+    // This is for receiving broadcasts for updating the list view
+    private var broadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context, intent: Intent) {
+            Log.d("MainActivity", "Updating list view")
+            updateListView()
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         settings = getSharedPreferences("Settings", Context.MODE_PRIVATE)
@@ -41,7 +51,8 @@ class MainActivity : AppCompatActivity() {
         if (dark_theme) setTheme(R.style.AppDarkTheme)
         setContentView(R.layout.activity_main)
 
-        lytMain = findViewById(R.id.lytMain) as ConstraintLayout
+        // We register the ListView receiver
+        registerReceiver(broadcastReceiver, IntentFilter("com.agusyc.daycounter.UPDATE_LISTVIEW"))
 
         // We initialise all the views and objects
         findViewById(R.id.fab).setOnClickListener { _ ->
@@ -55,7 +66,7 @@ class MainActivity : AppCompatActivity() {
         listPrefs = getSharedPreferences("ListDaysPrefs", Context.MODE_PRIVATE)
         lstCounters = ArrayList()
         adapter = CounterListAdapter(this, lstCounters)
-        // We attach the adapter to the listview
+        // We attach the adapter to the ListView
         lstCountersView = findViewById(R.id.lstCounters) as ListView
         lstCountersView.adapter = adapter
 
@@ -91,6 +102,12 @@ class MainActivity : AppCompatActivity() {
         dontAnimate = true
         // We update the list view (In case the user changed a counter)
         updateListView()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        // We unregister the ListView receiver
+        unregisterReceiver(broadcastReceiver)
     }
 
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
