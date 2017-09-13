@@ -70,6 +70,8 @@ class MainActivity : AppCompatActivity() {
         lstCountersView = findViewById(R.id.lstCounters) as ListView
         lstCountersView.adapter = adapter
 
+        lytMain = findViewById(R.id.lytMain) as ConstraintLayout
+
         // This is executed when a list item is clicked
         lstCountersView.onItemClickListener = AdapterView.OnItemClickListener { _, _, i, _ ->
             // We open the configuration activity, sending it the counter data (Whether it's widget or not and the id)
