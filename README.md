@@ -1,5 +1,6 @@
 # DayCounter
-A simple, customizable, material design widget that counts days since or until an event.
+A simple, customizable, material design app for creatung counters or countdowns until or for an event.
+It's available on Play Store: https://play.google.com/store/apps/details?id=com.agusyc.daycounter
 
 ## TODO
 - [x] Add the basic day counting functions
