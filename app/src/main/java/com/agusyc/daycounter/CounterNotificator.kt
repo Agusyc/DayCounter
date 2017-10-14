@@ -118,7 +118,7 @@ class CounterNotificator : BroadcastReceiver() {
                             .setCategory(Notification.CATEGORY_REMINDER)
                             .setShowWhen(false)
                             // We add the reset button only if it's a "since" counter
-                            if (absDifference > 0) mBuilder.addAction(Notification.Action.Builder(Icon.createWithResource(context, R.drawable.reset_counter), context.getString(R.string.reset_counter), resetPIntent).build())
+                            if (difference > 0) mBuilder.addAction(Notification.Action.Builder(Icon.createWithResource(context, R.drawable.reset_counter), context.getString(R.string.reset_counter), resetPIntent).build())
                     nm!!.notify(id, mBuilder.build())
                 } else {
                     Log.i("DayCounter", "Using old notification system")
@@ -135,7 +135,7 @@ class CounterNotificator : BroadcastReceiver() {
                             .setPriority(Notification.PRIORITY_MIN)
                             .setShowWhen(false)
                             // We add the reset button only if it's a "since" counter
-                            if (absDifference > 0) mBuilder.addAction(R.drawable.reset_counter, context.getString(R.string.reset_counter), resetPIntent)
+                            if (difference > 0) mBuilder.addAction(R.drawable.reset_counter, context.getString(R.string.reset_counter), resetPIntent)
                             nm!!.notify(id, mBuilder.build())
                 }
             }
